@@ -3,9 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartHomeManager.BackEnd", "SmartHomeManager.BackEnd\SmartHomeManager.BackEnd.csproj", "{BBEB3085-1BD3-4AE1-960F-3C2D73C9C1F7}"
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "SmartHomeManager.View", "SmartHomeManager.View\SmartHomeManager.View.esproj", "{66B218A5-137B-4437-A78A-92A227516965}"
 EndProject
-Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "SmartHomeManager.FrontEnd", "SmartHomeManager.FrontEnd\SmartHomeManager.FrontEnd.esproj", "{66B218A5-137B-4437-A78A-92A227516965}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartHomeManager.API", "SmartHomeManager.API\SmartHomeManager.API.csproj", "{AD7EC35E-3EB6-4F82-9A1B-98A7441ABF27}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartHomeManager.DataSource", "SmartHomeManager.DataSource\SmartHomeManager.DataSource.csproj", "{E4255651-21AF-4DFA-A0B8-A8B88219767D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartHomeManager.Domain", "SmartHomeManager.Domain\SmartHomeManager.Domain.csproj", "{48ED0B54-25E9-45D6-870A-2816C2109D51}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,16 +17,24 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{BBEB3085-1BD3-4AE1-960F-3C2D73C9C1F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BBEB3085-1BD3-4AE1-960F-3C2D73C9C1F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BBEB3085-1BD3-4AE1-960F-3C2D73C9C1F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BBEB3085-1BD3-4AE1-960F-3C2D73C9C1F7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{66B218A5-137B-4437-A78A-92A227516965}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{66B218A5-137B-4437-A78A-92A227516965}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{66B218A5-137B-4437-A78A-92A227516965}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{66B218A5-137B-4437-A78A-92A227516965}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{66B218A5-137B-4437-A78A-92A227516965}.Release|Any CPU.Build.0 = Release|Any CPU
 		{66B218A5-137B-4437-A78A-92A227516965}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{AD7EC35E-3EB6-4F82-9A1B-98A7441ABF27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD7EC35E-3EB6-4F82-9A1B-98A7441ABF27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD7EC35E-3EB6-4F82-9A1B-98A7441ABF27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD7EC35E-3EB6-4F82-9A1B-98A7441ABF27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4255651-21AF-4DFA-A0B8-A8B88219767D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4255651-21AF-4DFA-A0B8-A8B88219767D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4255651-21AF-4DFA-A0B8-A8B88219767D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4255651-21AF-4DFA-A0B8-A8B88219767D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48ED0B54-25E9-45D6-870A-2816C2109D51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48ED0B54-25E9-45D6-870A-2816C2109D51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48ED0B54-25E9-45D6-870A-2816C2109D51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48ED0B54-25E9-45D6-870A-2816C2109D51}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

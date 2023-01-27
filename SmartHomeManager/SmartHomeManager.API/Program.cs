@@ -1,5 +1,11 @@
 
-namespace SmartHomeManager.BackEnd
+using SmartHomeManager.DataSource.Repositories;
+using SmartHomeManager.DataSource.Services;
+using SmartHomeManager.Domain.Entities;
+using SmartHomeManager.Domain.Interfaces;
+using SmartHomeManager.Domain.Interfaces.Services;
+
+namespace SmartHomeManager.API
 {
     public class Program
     {
@@ -7,10 +13,14 @@ namespace SmartHomeManager.BackEnd
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+            #region DEPENDENCY INJECTION
+
+            builder.Services.AddScoped<IGenericRepository<Device>, DeviceRepository>();
+            builder.Services.AddScoped<IDeviceService, DeviceService>();
+            #endregion
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
@@ -26,7 +36,6 @@ namespace SmartHomeManager.BackEnd
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 
