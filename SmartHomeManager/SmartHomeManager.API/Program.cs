@@ -1,9 +1,11 @@
-
-using SmartHomeManager.DataSource.Repositories;
-using SmartHomeManager.DataSource.Services;
-using SmartHomeManager.Domain.Entities;
-using SmartHomeManager.Domain.Interfaces;
-using SmartHomeManager.Domain.Interfaces.Services;
+using Microsoft.EntityFrameworkCore;
+using SmartHomeManager.DataSource.DeviceDataSource;
+using SmartHomeManager.DataSource.DeviceDataSource.Services;
+using SmartHomeManager.DataSource.SampleDataSource;
+using SmartHomeManager.Domain.Common;
+using SmartHomeManager.Domain.DeviceDomain.Entities;
+using SmartHomeManager.Domain.DeviceDomain.Services;
+using SmartHomeManager.Domain.SampleDomain.Entities;
 
 namespace SmartHomeManager.API
 {
@@ -15,11 +17,16 @@ namespace SmartHomeManager.API
 
             builder.Services.AddControllers();
 
-            #region DEPENDENCY INJECTION
+            #region DEPENDENCY INJECTIONS
+            #region SAMPLE
+            builder.Services.AddDbContext<SampleDbContext>(options =>
+            {
+                options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
+            });
 
-            builder.Services.AddScoped<IGenericRepository<Device>, DeviceRepository>();
-            builder.Services.AddScoped<IDeviceService, DeviceService>();
-            #endregion
+            builder.Services.AddScoped<IGenericRepository<Sample>, SampleRepository>();
+            #endregion SAMPLE
+            #endregion DEPENDENCY INJECTIONS
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
