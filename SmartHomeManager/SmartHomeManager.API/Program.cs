@@ -1,10 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using SmartHomeManager.DataSource.DeviceDataSource;
-using SmartHomeManager.DataSource.DeviceDataSource.Services;
 using SmartHomeManager.DataSource.SampleDataSource;
 using SmartHomeManager.Domain.Common;
-using SmartHomeManager.Domain.DeviceDomain.Entities;
-using SmartHomeManager.Domain.DeviceDomain.Services;
 using SmartHomeManager.Domain.SampleDomain.Entities;
 
 namespace SmartHomeManager.API
