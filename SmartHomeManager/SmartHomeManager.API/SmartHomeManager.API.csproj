@@ -17,4 +17,8 @@
     <ProjectReference Include="..\SmartHomeManager.Domain\SmartHomeManager.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
 </Project>
