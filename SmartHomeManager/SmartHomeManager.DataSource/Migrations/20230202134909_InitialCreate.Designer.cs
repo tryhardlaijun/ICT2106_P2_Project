@@ -11,7 +11,7 @@ using SmartHomeManager.DataSource;
 namespace SmartHomeManager.DataSource.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230202131540_InitialCreate")]
+    [Migration("20230202134909_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
