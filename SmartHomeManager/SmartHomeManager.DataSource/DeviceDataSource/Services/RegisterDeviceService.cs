@@ -1,10 +1,5 @@
 ﻿using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.DeviceDomain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SmartHomeManager.DataSource.DeviceDataSource.Services
 {
@@ -24,13 +19,26 @@ namespace SmartHomeManager.DataSource.DeviceDataSource.Services
             return await _deviceTypeRepository.GetAllAsync();
         }
 
-        public async Task<bool> CreateDeviceAsync(Device device)
-        { 
+        public async Task<bool> RegisterDeviceAsync(string deviceName, string deviceBrand, string deviceModel, string deviceTypeName)
+        {
+            Device device = new()
+            {
+                DeviceName = deviceName,
+                DeviceBrand = deviceBrand,
+                DeviceModel = deviceModel,
+                DeviceTypeName = deviceTypeName,
+            };
+
             return await _deviceRepository.AddAsync(device);
         }
 
-        public async Task<bool> AddDeviceType(DeviceType deviceType)
+        public async Task<bool> AddDeviceTypeAsync(string deviceTypeName)
         {
+            DeviceType deviceType = new()
+            {
+                DeviceTypeName = deviceTypeName,
+            };
+
             return await _deviceTypeRepository.AddAsync(deviceType);
         }
     }
