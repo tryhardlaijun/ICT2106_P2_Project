@@ -1,26 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tfoot,
-  Tr,
-  Th,
-  Td,
-  TableCaption,
-  TableContainer,
-} from '@chakra-ui/react'
+import React from "react";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 
-import { WithSubnavigation } from './components/Header'
+import { NavBar } from "./components/NavBar";
+import Home from "./pages/Home";
+import Devices from "./pages/Devices";
+import Profiles from "./pages/Profiles";
 
-function App() {
+export function App() {
   return (
-    <div className="App">
-        <body>
-          <WithSubnavigation/>
-        </body>
-    </div>
+    <>
+      <Router>
+        <NavBar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/devices" element={<Devices />} />
+          <Route path="/profiles" element={<Profiles />} />
+        </Routes>
+      </Router>
+    </>
   );
 }
 
