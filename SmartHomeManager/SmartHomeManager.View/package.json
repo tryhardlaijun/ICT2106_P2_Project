@@ -40,6 +40,7 @@
     ]
   },
   "devDependencies": {
+    "@chakra-ui/icons": "^2.0.17",
     "eslint-config-react-app": "^7.0.1",
     "jest-editor-support": "^31.0.1"
   }
