@@ -12,7 +12,7 @@ namespace SmartHomeManager.DataSource.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Account",
+                name: "Accounts",
                 columns: table => new
                 {
                     AccountId = table.Column<Guid>(type: "TEXT", nullable: false),
@@ -24,7 +24,7 @@ namespace SmartHomeManager.DataSource.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Account", x => x.AccountId);
+                    table.PrimaryKey("PK_Accounts", x => x.AccountId);
                 });
 
             migrationBuilder.CreateTable(
@@ -59,21 +59,22 @@ namespace SmartHomeManager.DataSource.Migrations
                 {
                     NotificationId = table.Column<Guid>(type: "TEXT", nullable: false),
                     AccountId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    NotificationMessage = table.Column<string>(type: "TEXT", nullable: false)
+                    NotificationMessage = table.Column<string>(type: "TEXT", nullable: false),
+                    SentTime = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Notifications", x => x.NotificationId);
                     table.ForeignKey(
-                        name: "FK_Notifications_Account_AccountId",
+                        name: "FK_Notifications_Accounts_AccountId",
                         column: x => x.AccountId,
-                        principalTable: "Account",
+                        principalTable: "Accounts",
                         principalColumn: "AccountId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Profile",
+                name: "Profiles",
                 columns: table => new
                 {
                     ProfileId = table.Column<Guid>(type: "TEXT", nullable: false),
@@ -82,11 +83,11 @@ namespace SmartHomeManager.DataSource.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Profile", x => x.ProfileId);
+                    table.PrimaryKey("PK_Profiles", x => x.ProfileId);
                     table.ForeignKey(
-                        name: "FK_Profile_Account_AccountId",
+                        name: "FK_Profiles_Accounts_AccountId",
                         column: x => x.AccountId,
-                        principalTable: "Account",
+                        principalTable: "Accounts",
                         principalColumn: "AccountId",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -96,19 +97,16 @@ namespace SmartHomeManager.DataSource.Migrations
                 columns: table => new
                 {
                     RoomId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    XCoordinate = table.Column<int>(type: "INTEGER", nullable: false),
-                    YCoordinate = table.Column<int>(type: "INTEGER", nullable: false),
-                    Width = table.Column<int>(type: "INTEGER", nullable: false),
-                    Height = table.Column<int>(type: "INTEGER", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
                     AccountId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Rooms", x => x.RoomId);
                     table.ForeignKey(
-                        name: "FK_Rooms_Account_AccountId",
+                        name: "FK_Rooms_Accounts_AccountId",
                         column: x => x.AccountId,
-                        principalTable: "Account",
+                        principalTable: "Accounts",
                         principalColumn: "AccountId",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -126,9 +124,9 @@ namespace SmartHomeManager.DataSource.Migrations
                 {
                     table.PrimaryKey("PK_Scenarios", x => x.ScenarioId);
                     table.ForeignKey(
-                        name: "FK_Scenarios_Profile_ProfileId",
+                        name: "FK_Scenarios_Profiles_ProfileId",
                         column: x => x.ProfileId,
-                        principalTable: "Profile",
+                        principalTable: "Profiles",
                         principalColumn: "ProfileId",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -142,7 +140,7 @@ namespace SmartHomeManager.DataSource.Migrations
                     DeviceBrand = table.Column<string>(type: "TEXT", nullable: false),
                     DeviceModel = table.Column<string>(type: "TEXT", nullable: false),
                     DeviceTypeName = table.Column<string>(type: "TEXT", nullable: false),
-                    RoomId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    RoomId = table.Column<Guid>(type: "TEXT", nullable: true),
                     AccountId = table.Column<Guid>(type: "TEXT", nullable: false),
                     ProfileId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
@@ -150,9 +148,9 @@ namespace SmartHomeManager.DataSource.Migrations
                 {
                     table.PrimaryKey("PK_Devices", x => x.DeviceId);
                     table.ForeignKey(
-                        name: "FK_Devices_Account_AccountId",
+                        name: "FK_Devices_Accounts_AccountId",
                         column: x => x.AccountId,
-                        principalTable: "Account",
+                        principalTable: "Accounts",
                         principalColumn: "AccountId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -163,6 +161,28 @@ namespace SmartHomeManager.DataSource.Migrations
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Devices_Rooms_RoomId",
+                        column: x => x.RoomId,
+                        principalTable: "Rooms",
+                        principalColumn: "RoomId",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RoomCoordinates",
+                columns: table => new
+                {
+                    RoomCoordinateId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    XCoordinate = table.Column<int>(type: "INTEGER", nullable: false),
+                    YCoordinate = table.Column<int>(type: "INTEGER", nullable: false),
+                    Width = table.Column<int>(type: "INTEGER", nullable: false),
+                    Height = table.Column<int>(type: "INTEGER", nullable: false),
+                    RoomId = table.Column<Guid>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RoomCoordinates", x => x.RoomCoordinateId);
+                    table.ForeignKey(
+                        name: "FK_RoomCoordinates_Rooms_RoomId",
                         column: x => x.RoomId,
                         principalTable: "Rooms",
                         principalColumn: "RoomId",
@@ -190,6 +210,28 @@ namespace SmartHomeManager.DataSource.Migrations
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_DeviceConfigurations_Devices_DeviceId",
+                        column: x => x.DeviceId,
+                        principalTable: "Devices",
+                        principalColumn: "DeviceId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DeviceCoordinates",
+                columns: table => new
+                {
+                    DeviceCoordinateId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    XCoordinate = table.Column<int>(type: "INTEGER", nullable: false),
+                    YCoordinate = table.Column<int>(type: "INTEGER", nullable: false),
+                    Width = table.Column<int>(type: "INTEGER", nullable: false),
+                    Height = table.Column<int>(type: "INTEGER", nullable: false),
+                    DeviceId = table.Column<Guid>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DeviceCoordinates", x => x.DeviceCoordinateId);
+                    table.ForeignKey(
+                        name: "FK_DeviceCoordinates_Devices_DeviceId",
                         column: x => x.DeviceId,
                         principalTable: "Devices",
                         principalColumn: "DeviceId",
@@ -237,9 +279,9 @@ namespace SmartHomeManager.DataSource.Migrations
                         principalColumn: "DeviceId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_DeviceProfile_Profile_ProfilesProfileId",
+                        name: "FK_DeviceProfile_Profiles_ProfilesProfileId",
                         column: x => x.ProfilesProfileId,
-                        principalTable: "Profile",
+                        principalTable: "Profiles",
                         principalColumn: "ProfileId",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -304,6 +346,12 @@ namespace SmartHomeManager.DataSource.Migrations
                 column: "DeviceId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_DeviceCoordinates_DeviceId",
+                table: "DeviceCoordinates",
+                column: "DeviceId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_DeviceLogs_DeviceId",
                 table: "DeviceLogs",
                 column: "DeviceId");
@@ -326,7 +374,8 @@ namespace SmartHomeManager.DataSource.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Devices_RoomId",
                 table: "Devices",
-                column: "RoomId");
+                column: "RoomId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Notifications_AccountId",
@@ -334,9 +383,15 @@ namespace SmartHomeManager.DataSource.Migrations
                 column: "AccountId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Profile_AccountId",
-                table: "Profile",
+                name: "IX_Profiles_AccountId",
+                table: "Profiles",
                 column: "AccountId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoomCoordinates_RoomId",
+                table: "RoomCoordinates",
+                column: "RoomId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Rooms_AccountId",
@@ -371,6 +426,9 @@ namespace SmartHomeManager.DataSource.Migrations
                 name: "DeviceConfigurations");
 
             migrationBuilder.DropTable(
+                name: "DeviceCoordinates");
+
+            migrationBuilder.DropTable(
                 name: "DeviceLogs");
 
             migrationBuilder.DropTable(
@@ -378,6 +436,9 @@ namespace SmartHomeManager.DataSource.Migrations
 
             migrationBuilder.DropTable(
                 name: "Notifications");
+
+            migrationBuilder.DropTable(
+                name: "RoomCoordinates");
 
             migrationBuilder.DropTable(
                 name: "Rules");
@@ -395,7 +456,7 @@ namespace SmartHomeManager.DataSource.Migrations
                 name: "Devices");
 
             migrationBuilder.DropTable(
-                name: "Profile");
+                name: "Profiles");
 
             migrationBuilder.DropTable(
                 name: "DeviceTypes");
@@ -404,7 +465,7 @@ namespace SmartHomeManager.DataSource.Migrations
                 name: "Rooms");
 
             migrationBuilder.DropTable(
-                name: "Account");
+                name: "Accounts");
         }
     }
 }

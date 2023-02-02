@@ -59,7 +59,7 @@ namespace SmartHomeManager.DataSource.Migrations
 
                     b.HasKey("AccountId");
 
-                    b.ToTable("Account");
+                    b.ToTable("Accounts");
                 });
 
             modelBuilder.Entity("SmartHomeManager.Domain.AccountDomain.Entities.Profile", b =>
@@ -79,7 +79,7 @@ namespace SmartHomeManager.DataSource.Migrations
 
                     b.HasIndex("AccountId");
 
-                    b.ToTable("Profile");
+                    b.ToTable("Profiles");
                 });
 
             modelBuilder.Entity("SmartHomeManager.Domain.DeviceDomain.Entities.Device", b =>
@@ -110,7 +110,7 @@ namespace SmartHomeManager.DataSource.Migrations
                     b.Property<Guid>("ProfileId")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("RoomId")
+                    b.Property<Guid?>("RoomId")
                         .HasColumnType("TEXT");
 
                     b.HasKey("DeviceId");
@@ -119,7 +119,8 @@ namespace SmartHomeManager.DataSource.Migrations
 
                     b.HasIndex("DeviceTypeName");
 
-                    b.HasIndex("RoomId");
+                    b.HasIndex("RoomId")
+                        .IsUnique();
 
                     b.ToTable("Devices");
                 });
@@ -233,6 +234,9 @@ namespace SmartHomeManager.DataSource.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime>("SentTime")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("NotificationId");
 
                     b.HasIndex("AccountId");
@@ -240,13 +244,13 @@ namespace SmartHomeManager.DataSource.Migrations
                     b.ToTable("Notifications");
                 });
 
-            modelBuilder.Entity("SmartHomeManager.Domain.RoomDomain.Entities.Room", b =>
+            modelBuilder.Entity("SmartHomeManager.Domain.RoomDomain.Entities.DeviceCoordinate", b =>
                 {
-                    b.Property<Guid>("RoomId")
+                    b.Property<Guid>("DeviceCoordinateId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("AccountId")
+                    b.Property<Guid>("DeviceId")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Height")
@@ -261,11 +265,61 @@ namespace SmartHomeManager.DataSource.Migrations
                     b.Property<int>("YCoordinate")
                         .HasColumnType("INTEGER");
 
+                    b.HasKey("DeviceCoordinateId");
+
+                    b.HasIndex("DeviceId")
+                        .IsUnique();
+
+                    b.ToTable("DeviceCoordinates");
+                });
+
+            modelBuilder.Entity("SmartHomeManager.Domain.RoomDomain.Entities.Room", b =>
+                {
+                    b.Property<Guid>("RoomId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("AccountId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.HasKey("RoomId");
 
                     b.HasIndex("AccountId");
 
                     b.ToTable("Rooms");
+                });
+
+            modelBuilder.Entity("SmartHomeManager.Domain.RoomDomain.Entities.RoomCoordinate", b =>
+                {
+                    b.Property<Guid>("RoomCoordinateId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Height")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("RoomId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Width")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("XCoordinate")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("YCoordinate")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("RoomCoordinateId");
+
+                    b.HasIndex("RoomId")
+                        .IsUnique();
+
+                    b.ToTable("RoomCoordinates");
                 });
 
             modelBuilder.Entity("SmartHomeManager.Domain.SceneDomain.Entities.Rule", b =>
@@ -389,10 +443,9 @@ namespace SmartHomeManager.DataSource.Migrations
                         .IsRequired();
 
                     b.HasOne("SmartHomeManager.Domain.RoomDomain.Entities.Room", "Room")
-                        .WithMany()
-                        .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithOne("Device")
+                        .HasForeignKey("SmartHomeManager.Domain.DeviceDomain.Entities.Device", "RoomId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Account");
 
@@ -442,6 +495,17 @@ namespace SmartHomeManager.DataSource.Migrations
                     b.Navigation("Account");
                 });
 
+            modelBuilder.Entity("SmartHomeManager.Domain.RoomDomain.Entities.DeviceCoordinate", b =>
+                {
+                    b.HasOne("SmartHomeManager.Domain.DeviceDomain.Entities.Device", "Device")
+                        .WithOne("DeviceCoordinate")
+                        .HasForeignKey("SmartHomeManager.Domain.RoomDomain.Entities.DeviceCoordinate", "DeviceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Device");
+                });
+
             modelBuilder.Entity("SmartHomeManager.Domain.RoomDomain.Entities.Room", b =>
                 {
                     b.HasOne("SmartHomeManager.Domain.AccountDomain.Entities.Account", "Account")
@@ -451,6 +515,17 @@ namespace SmartHomeManager.DataSource.Migrations
                         .IsRequired();
 
                     b.Navigation("Account");
+                });
+
+            modelBuilder.Entity("SmartHomeManager.Domain.RoomDomain.Entities.RoomCoordinate", b =>
+                {
+                    b.HasOne("SmartHomeManager.Domain.RoomDomain.Entities.Room", "Room")
+                        .WithOne("RoomCoordinate")
+                        .HasForeignKey("SmartHomeManager.Domain.RoomDomain.Entities.RoomCoordinate", "RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Room");
                 });
 
             modelBuilder.Entity("SmartHomeManager.Domain.SceneDomain.Entities.Rule", b =>
@@ -497,6 +572,21 @@ namespace SmartHomeManager.DataSource.Migrations
             modelBuilder.Entity("SmartHomeManager.Domain.AccountDomain.Entities.Profile", b =>
                 {
                     b.Navigation("Scenarios");
+                });
+
+            modelBuilder.Entity("SmartHomeManager.Domain.DeviceDomain.Entities.Device", b =>
+                {
+                    b.Navigation("DeviceCoordinate")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SmartHomeManager.Domain.RoomDomain.Entities.Room", b =>
+                {
+                    b.Navigation("Device")
+                        .IsRequired();
+
+                    b.Navigation("RoomCoordinate")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
