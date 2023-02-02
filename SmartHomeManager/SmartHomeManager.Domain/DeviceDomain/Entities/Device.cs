@@ -22,8 +22,7 @@ namespace SmartHomeManager.Domain.DeviceDomain.Entities
         [Required]
         public string DeviceTypeName { get; set; }
 
-        [Required]
-        public Guid RoomId { get; set; }
+        public Guid? RoomId { get; set; }
 
         [Required]
         public Guid AccountId { get; set; }
@@ -42,5 +41,7 @@ namespace SmartHomeManager.Domain.DeviceDomain.Entities
 
         [InverseProperty("Devices")]
         public ICollection<Profile> Profiles { get; set; }
+
+        public DeviceCoordinate DeviceCoordinate { get; set; }
     }
 }

@@ -15,6 +15,9 @@ namespace SmartHomeManager.Domain.NotificationDomain.Entities
         [Required]
         public string NotificationMessage { get; set; }
 
+        [Required]
+        public DateTime SentTime { get; set; }
+
         [ForeignKey("AccountId")]
         public Account Account { get; set; }
     }
