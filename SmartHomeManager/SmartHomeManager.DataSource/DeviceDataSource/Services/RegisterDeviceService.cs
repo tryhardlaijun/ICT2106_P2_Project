@@ -19,7 +19,7 @@ namespace SmartHomeManager.DataSource.DeviceDataSource.Services
             return await _deviceTypeRepository.GetAllAsync();
         }
 
-        public async Task<bool> RegisterDeviceAsync(string deviceName, string deviceBrand, string deviceModel, string deviceTypeName)
+        public async Task<bool> RegisterDeviceAsync(string deviceName, string deviceBrand, string deviceModel, string deviceTypeName, Guid accountId, Guid profileId)
         {
             Device device = new()
             {
@@ -27,6 +27,8 @@ namespace SmartHomeManager.DataSource.DeviceDataSource.Services
                 DeviceBrand = deviceBrand,
                 DeviceModel = deviceModel,
                 DeviceTypeName = deviceTypeName,
+                AccountId = accountId,
+                ProfileId = profileId
             };
 
             return await _deviceRepository.AddAsync(device);
