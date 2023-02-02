@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.DataSource;
+using SmartHomeManager.DataSource.DeviceDataSource;
 using SmartHomeManager.Domain.Common;
+using SmartHomeManager.Domain.DeviceDomain.Entities;
 
 namespace SmartHomeManager.API
 {
@@ -17,6 +19,9 @@ namespace SmartHomeManager.API
             {
                 options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            builder.Services.AddScoped<IGenericRepository<Device>, DeviceRepository>();
+            builder.Services.AddScoped<IGenericRepository<DeviceType>, DeviceTypeRepository>();
             #endregion DEPENDENCY INJECTIONS
 
             builder.Services.AddEndpointsApiExplorer();
