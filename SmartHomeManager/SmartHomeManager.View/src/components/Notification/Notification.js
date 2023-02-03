@@ -27,14 +27,14 @@ export default function Notification({open}) {
             
             <Popover>
                 <PopoverTrigger>                  
-                    <Button w={7} h={7} mr={4} onClick={isOpen ? onClose : onToggle}>
-                        <BellIcon/>    
+                    <Button w={12} h={12} mr={4} onClick={isOpen ? onClose : onToggle}>
+                        <BellIcon w={8} h={8}/>    
                     </Button> 
                 </PopoverTrigger>
             
-            <PopoverContent>
+            <PopoverContent mt={5}>
                 
-                <PopoverHeader fontWeight="bold">Welcome back xxxx</PopoverHeader>
+                <PopoverHeader ml={2} fontWeight="bold" fontSize={25}>Welcome back xxxx</PopoverHeader>
                 <PopoverBody>
                     <NotificationPopup/>
                 </PopoverBody>
