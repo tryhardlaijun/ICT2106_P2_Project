@@ -62,6 +62,8 @@ export function NavBar() {
           </Flex>
         </Flex>
 
+
+        <Notification />
         <Stack
           flex={{ base: 1, md: 0 }}
           justify={"flex-end"}
@@ -91,7 +93,7 @@ export function NavBar() {
             Sign Up
             </Button>
 
-            <Notification />
+            
         </Stack>
       </Flex>
 
