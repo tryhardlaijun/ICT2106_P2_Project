@@ -8,7 +8,7 @@ using SmartHomeManager.Domain.NotificationDomain.Entities;
 
 namespace SmartHomeManager.DataSource.NotificationDataSource
 {
-    public class NotificationRepo : IGenericRepository<Notification>
+    public class NotificationRepository : IGenericRepository<Notification>
     {
         public Task<bool> AddAsync(Notification entity)
         {

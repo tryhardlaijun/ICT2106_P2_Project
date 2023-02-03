@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SmartHomeManager.DataSource.NotificationDataSource
 {
-    public class NotificationRepoSeeder
+    public class NotificationRepositorySeeder
     {
     }
 }
