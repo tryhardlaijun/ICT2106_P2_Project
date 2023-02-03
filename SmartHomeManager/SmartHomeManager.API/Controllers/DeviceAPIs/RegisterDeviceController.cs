@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SmartHomeManager.DataSource.DeviceDataSource.Services;
+using SmartHomeManager.Domain.DeviceDomain.Services;
 using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.DeviceDomain.Entities;
 
@@ -28,16 +28,16 @@ namespace SmartHomeManager.API.Controllers.DeviceAPIs
 
         // POST api/<RegisterDeviceController>/RegisterDevice
         [HttpPost("RegisterDevice")]
-        public async Task RegisterDevice([FromBody] string deviceName, string deviceBrand, string deviceModel, string deviceTypeName, Guid accountId, Guid profileId)
+        public async Task RegisterDevice([FromBody] Device device)
         {
-            await _registerDeviceService.RegisterDeviceAsync(deviceName, deviceBrand, deviceModel, deviceTypeName, accountId, profileId);   
+            await _registerDeviceService.RegisterDeviceAsync(device);   
         }
 
         // POST api/<RegisterDeviceController>/AddDeviceType
         [HttpPost("AddDeviceType")]
-        public async Task AddDeviceType([FromBody] string deviceTypeName)
+        public async Task AddDeviceType([FromBody] DeviceType deviceType)
         {
-            await _registerDeviceService.AddDeviceTypeAsync(deviceTypeName);   
+            await _registerDeviceService.AddDeviceTypeAsync(deviceType);   
         }
     }
 }

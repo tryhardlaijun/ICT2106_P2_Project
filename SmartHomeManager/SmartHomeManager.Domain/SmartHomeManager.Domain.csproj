@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DeviceDomain\Services\" />
+    <Folder Include="DeviceDomain\Interfaces\" />
   </ItemGroup>
 
 </Project>
