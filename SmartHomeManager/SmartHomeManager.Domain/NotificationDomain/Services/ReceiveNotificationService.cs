@@ -12,17 +12,22 @@ namespace SmartHomeManager.Domain.NotificationDomain.Services
     {
         private readonly IGenericRepository<Notification> _notificationRepository;
 
+
         public ReceiveNotificationService(IGenericRepository<Notification> notificationRepository)
         {
             _notificationRepository = notificationRepository;
         }
 
-        public async Task<IEnumerable<Notification>> GetNotificationsAsync(Guid accountId)
-        {   
-            // TODO: Pass in accountId as well
-
+        public async Task<IEnumerable<Notification>> GetAllNotificationsAsync()
+        {
+            // TODO: Pass in accountId
             return await _notificationRepository.GetAllAsync();
         }
 
+        public async Task<IEnumerable<Notification>> GetNotificationsAsync(Guid accountId)
+        {
+            // TODO: Pass in accountId
+            return await _notificationRepository.GetAllAsync();
+        }
     }
 }

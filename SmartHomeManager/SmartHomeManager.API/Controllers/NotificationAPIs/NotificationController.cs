@@ -5,6 +5,8 @@ using SmartHomeManager.Domain.NotificationDomain.Services;
 
 namespace SmartHomeManager.API.Controllers.NotificationAPIs
 {
+    [Route("api/notification")]
+    [ApiController]
     public class NotificationController : Controller
     {
 
@@ -17,10 +19,23 @@ namespace SmartHomeManager.API.Controllers.NotificationAPIs
             _sendNotificationService = new(notificationRepository);
             _receiveNotificationService = new(notificationRepository);
         }
-        
+
         // API routes....
 
         // GET /api/notification/{accountId}
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllNotifications()
+        {
+            try
+            {
+                IEnumerable<Notification> notifications = (await _receiveNotificationService.GetAllNotificationsAsync()).ToList();
+                return StatusCode(200, notifications);
+            } 
+            catch(Exception ex)
+            {
+                return StatusCode(500, "Internal Server error!");
+            }
+        }
 
         // POST /api/notification
         // Request body...

@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.DataSource;
+using SmartHomeManager.DataSource.NotificationDataSource;
 using SmartHomeManager.Domain.Common;
+using SmartHomeManager.Domain.NotificationDomain.Entities;
 
 namespace SmartHomeManager.API
 {
@@ -26,7 +28,13 @@ namespace SmartHomeManager.API
             {
                 options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            // Inject dependencies for Notification Repository, so all implementations of IGenericRepository<Notification> will use the NotificationRepository implementation...
+            builder.Services.AddScoped<IGenericRepository<Notification>, NotificationRepository>();
+
             #endregion DEPENDENCY INJECTIONS
+
+
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
