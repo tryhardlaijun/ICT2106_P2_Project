@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.DataSource;
 using SmartHomeManager.DataSource.AccountDataSource;
 using SmartHomeManager.DataSource.ProfileDataSource;
+using SmartHomeManager.Domain.AccountDomain.Interfaces;
+using SmartHomeManager.Domain.AccountDomain.Services;
 using SmartHomeManager.Domain.Common;
 using System.Diagnostics;
 
@@ -13,6 +15,8 @@ namespace SmartHomeManager.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            
+
             builder.Services.AddControllers();
             
             #region DEPENDENCY INJECTIONS
@@ -20,10 +24,16 @@ namespace SmartHomeManager.API
             {
                 options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+            builder.Services.AddScoped<IAccountRepository, AccountRepository>();
             #endregion DEPENDENCY INJECTIONS
+
+            builder.Services.AddScoped<AccountService, AccountService>();
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            
+            
+            /*builder.Services.AddHttpContextAccessor();*/
 
             var app = builder.Build();
 
@@ -42,6 +52,8 @@ namespace SmartHomeManager.API
 
             using var scope = app.Services.CreateScope();
             var services = scope.ServiceProvider;
+
+            
 
             var logger = services.GetRequiredService<ILogger<Program>>();
 

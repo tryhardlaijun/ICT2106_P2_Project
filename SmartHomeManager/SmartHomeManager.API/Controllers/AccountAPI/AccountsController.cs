@@ -6,7 +6,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.DataSource;
+using SmartHomeManager.DataSource.AccountDataSource;
 using SmartHomeManager.Domain.AccountDomain.Entities;
+using SmartHomeManager.Domain.AccountDomain.Interfaces;
+using SmartHomeManager.Domain.AccountDomain.Services;
 
 namespace SmartHomeManager.API.Controllers.AccountController
 {
@@ -14,48 +17,58 @@ namespace SmartHomeManager.API.Controllers.AccountController
     [ApiController]
     public class AccountsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
-        
-        public AccountsController(ApplicationDbContext context)
+        // dependency injection is just saying this class can use this thing
+        // in this context - accounts controller can use account service
+        private readonly AccountService _accountService;
+
+        public AccountsController(AccountService accountService)
         {
-            _context = context;
+            _accountService = accountService;
         }
+
+        /*private readonly AccountRepository _accountRepository;
+        
+        public AccountsController(AccountRepository accountRepository)
+        {
+            _accountRepository = accountRepository;
+        }*/
 
         // GET: api/Accounts
-        [HttpGet]
+        /*[HttpGet]
         public async Task<ActionResult<IEnumerable<Account>>> GetAccounts()
         {
-            if (_context.Accounts == null)
+            if (_accountRepository.GetAllAsync() == null)
             {
                 return NotFound();
             }
-            return await _context.Accounts.ToListAsync();
-        }
+            *//*return await _accountRepository.GetAllAsync();*//*
+            return await _accountRepository.GetAllAsync();
+        }*/
 
         // GET: api/Accounts/5
-        [HttpGet("{id}")]
+        /*[HttpGet("{id}")]
         public async Task<ActionResult<Account>> GetAccount(Guid id)
         {
-            if (_context.Accounts == null)
+            *//*if (_accountService.GetAllAsync() == null)
             {
                 return NotFound();
             }
-            var account = await _context.Accounts.FindAsync(id);
+            var account = await _accountService.GetByIdAsync(id);
 
             if (account == null)
             {
                 return NotFound();
-            }
+            }*//*
 
             return account;
-        }
+        }*/
 
         // PUT: api/Accounts/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAccount(Guid id, Account account)
         {
-            if (id != account.AccountId)
+           /* if (id != account.AccountId)
             {
                 return BadRequest();
             }
@@ -76,49 +89,56 @@ namespace SmartHomeManager.API.Controllers.AccountController
                 {
                     throw;
                 }
-            }
+            }*/
 
             return NoContent();
         }
 
+        // this is an API endpoint
+        
         // POST: api/Accounts
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Account>> PostAccount(Account account)
+        public async Task<ActionResult> PostAccount([FromBody]AccountWebRequest account)
         {
-            if (_context.Accounts == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.Accounts'  is null.");
-            }
-            _context.Accounts.Add(account);
-            await _context.SaveChangesAsync();
+            // controller will invoke a service function
+            bool dbResponse = await _accountService.CreateAccount(account);
 
-            return CreatedAtAction("GetAccount", new { id = account.AccountId }, account);
+            if (dbResponse)
+            {
+                return Ok("Account created");
+            }
+
+            return NotFound("Account could not be created");
         }
 
+
         // DELETE: api/Accounts/5
-        [HttpDelete("{id}")]
+        /*[HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAccount(Guid id)
         {
-            if (_context.Accounts == null)
+            if (_accountRepository.GetAllAsync() == null)
             {
                 return NotFound();
             }
-            var account = await _context.Accounts.FindAsync(id);
+            var account = await _accountRepository.GetByIdAsync(id);
             if (account == null)
             {
                 return NotFound();
             }
 
-            _context.Accounts.Remove(account);
-            await _context.SaveChangesAsync();
+            await _accountRepository.DeleteAsync(account);
+            await _accountRepository.SaveAsync();
+
+            *//*_context.Accounts.Remove(account);
+            await _context.SaveChangesAsync();*//*
 
             return NoContent();
-        }
+        }*/
 
-        private bool AccountExists(Guid id)
+        /*private bool AccountExists(Guid id)
         {
             return (_context.Accounts?.Any(e => e.AccountId == id)).GetValueOrDefault();
-        }
+        }*/
     }
 }
