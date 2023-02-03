@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.DataSource;
 using SmartHomeManager.Domain.RoomDomain.Entities;
 
-namespace SmartHomeManager.API.Controllers.RoomControllers
+namespace SmartHomeManager.API.Controllers.RoomAPI
 {
     [Route("api/[controller]")]
     [ApiController]

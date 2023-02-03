@@ -1,11 +1,8 @@
-﻿using global::SmartHomeManager.DataSource.RoomRepo;
-using global::SmartHomeManager.DataSource;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.DataSource;
-using SmartHomeManager.DataSource.RoomRepo;
-using SmartHomeManager.Domain.Common;
+using SmartHomeManager.DataSource.RoomDataSource;
 
-namespace SmartHomeManager.API.Controllers.RoomControllers
+namespace SmartHomeManager.API.Controllers.RoomAPI
 {
     public class RoomProgram
     {

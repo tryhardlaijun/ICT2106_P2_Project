@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using SmartHomeManager.Domain.RoomDomain;
 using SmartHomeManager.Domain.RoomDomain.Entities;
+using SmartHomeManager.Domain.RoomDomain.Interfaces;
 
-namespace SmartHomeManager.DataSource.RoomRepo;
+namespace SmartHomeManager.DataSource.RoomDataSource;
 public class RoomRepository : IRoomRepository
 {
     // readonly - can only be set in ctor, can't be set after ctor exits

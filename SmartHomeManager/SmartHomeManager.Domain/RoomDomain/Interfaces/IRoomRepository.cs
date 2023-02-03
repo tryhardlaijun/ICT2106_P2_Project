@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SmartHomeManager.Domain.RoomDomain;
+namespace SmartHomeManager.Domain.RoomDomain.Interfaces;
 public interface IRoomRepository
 {
     Room? Get(int? id);

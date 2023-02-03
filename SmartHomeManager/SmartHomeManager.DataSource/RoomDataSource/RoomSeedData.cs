@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SmartHomeManager.Domain.AccountDomain.Entities;
+﻿using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.DeviceDomain.Entities;
 using SmartHomeManager.Domain.RoomDomain.Entities;
 
-namespace SmartHomeManager.DataSource.RoomRepo;
+namespace SmartHomeManager.DataSource.RoomDataSource;
 public class RoomSeedData
 {
     public static async Task Seed(ApplicationDbContext context)
