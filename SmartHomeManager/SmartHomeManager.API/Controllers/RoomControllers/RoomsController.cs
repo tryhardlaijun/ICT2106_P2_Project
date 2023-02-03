@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.DataSource;
 using SmartHomeManager.Domain.RoomDomain.Entities;
 
-namespace SmartHomeManager.API.Controllers
+namespace SmartHomeManager.API.Controllers.RoomControllers
 {
     [Route("api/[controller]")]
     [ApiController]

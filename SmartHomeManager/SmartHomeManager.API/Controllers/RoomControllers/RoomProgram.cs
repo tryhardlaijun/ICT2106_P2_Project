@@ -5,7 +5,7 @@ using SmartHomeManager.DataSource;
 using SmartHomeManager.DataSource.RoomRepo;
 using SmartHomeManager.Domain.Common;
 
-namespace SmartHomeManager.API.Controllers.Room
+namespace SmartHomeManager.API.Controllers.RoomControllers
 {
     public class Program
     {
