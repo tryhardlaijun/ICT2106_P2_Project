@@ -17,6 +17,8 @@ import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 
 import { Link as RouterLink } from "react-router-dom";
 
+import Notification from "components/Notification/Notification"
+
 export function NavBar() {
   const { isOpen, onToggle } = useDisclosure();
   return (
@@ -60,6 +62,8 @@ export function NavBar() {
           </Flex>
         </Flex>
 
+
+        <Notification />
         <Stack
           flex={{ base: 1, md: 0 }}
           justify={"flex-end"}
@@ -87,7 +91,9 @@ export function NavBar() {
             }}
           >
             Sign Up
-          </Button>
+            </Button>
+
+            
         </Stack>
       </Flex>
 
@@ -177,4 +183,5 @@ const NAV_ITEMS = [
     label: "Profiles",
     href: "/profiles",
   },
+    
 ];
