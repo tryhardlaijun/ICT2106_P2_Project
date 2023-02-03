@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.DataSource;
+using SmartHomeManager.DataSource.AccountDataSource;
+using SmartHomeManager.DataSource.ProfileDataSource;
 using SmartHomeManager.Domain.Common;
 using System.Diagnostics;
 

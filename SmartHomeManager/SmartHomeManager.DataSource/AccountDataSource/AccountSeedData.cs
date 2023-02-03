@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SmartHomeManager.Domain.AccountDomain.Entities;
 
-namespace SmartHomeManager.DataSource
+namespace SmartHomeManager.DataSource.AccountDataSource
 {
     public class AccountSeedData
     {

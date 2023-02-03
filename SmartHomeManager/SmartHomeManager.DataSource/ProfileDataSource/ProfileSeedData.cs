@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SmartHomeManager.Domain.AccountDomain.Entities;
 
-namespace SmartHomeManager.DataSource
+namespace SmartHomeManager.DataSource.ProfileDataSource
 {
     public class ProfileSeedData
     {
@@ -21,16 +21,7 @@ namespace SmartHomeManager.DataSource
                 {
                     ProfileId = Guid.NewGuid(),
                     AccountId = Guid.Parse("11111111-1111-1111-1111-111111111111"),
-                    Name = "Default Profile",
-                    Account = new Account()
-                    {
-                        AccountId = Guid.Parse("11111111-1111-1111-1111-111111111111"),
-                        Email = "abc@xyz.com",
-                        Username = "username",
-                        Password = "password",
-                        Address = "123 abc 456 888888",
-                        Timezone = 8
-                    }
+                    Name = "Default Profile"
                 }
             };
 
