@@ -1,13 +1,16 @@
 using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.DataSource;
 using SmartHomeManager.Domain.Common;
+using Microsoft.Extensions.DependencyInjection;
+using SmartHomeManager.DataSource.DeviceLogDataSource;
 
 namespace SmartHomeManager.API
 {
     public class Program
     {
-        public static void Main(string[] args)
-        {
+
+        public async void  Main(string[] args)
+        {   
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddControllers();
@@ -21,6 +24,7 @@ namespace SmartHomeManager.API
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
 
             var app = builder.Build();
 
@@ -37,7 +41,26 @@ namespace SmartHomeManager.API
 
             app.MapControllers();
 
+            using var scope = app.Services.CreateScope();
+            var services = scope.ServiceProvider; 
+           
+
+            try
+            {
+                var context = services.GetRequiredService<ApplicationDbContext>();
+                // in order to use await in a method, the caller method must be async as well
+                await DeviceLogSeedData.Seed(context);
+            }
+            catch (Exception e)
+            {
+                // Tells the logger to log against the Program class
+                var logger = services.GetRequiredService<ILogger<Program>>();
+                logger.LogError(e, "An error occurred during migration.");
+            }
+
             app.Run();
+
+
         }
     }
 }
