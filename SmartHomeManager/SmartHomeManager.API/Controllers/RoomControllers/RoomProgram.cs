@@ -7,7 +7,7 @@ using SmartHomeManager.Domain.Common;
 
 namespace SmartHomeManager.API.Controllers.RoomControllers
 {
-    public class Program
+    public class RoomProgram
     {
         public static async Task RoomMain(string[] args)
         {
