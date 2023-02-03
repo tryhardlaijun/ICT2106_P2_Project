@@ -6,16 +6,15 @@ import { Box } from "@chakra-ui/react";
 export default function Notification() {
     return (
         <>
-            <div>
-                
-                <BellIcon w={7} h={7} mr={4}/>
+
+                <BellIcon w="7" h="7" mr="7"/>
                 {/* <Box>
                     <div>
                         heading
                     </div>
                 </Box> */}
                 
-            </div>
+          
         </>
         )
         
