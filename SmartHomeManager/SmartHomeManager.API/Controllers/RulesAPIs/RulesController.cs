@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SmartHomeManager.Domain.SceneDomain.Entities;
 using SmartHomeManager.Domain.Common;
 using Microsoft.EntityFrameworkCore;
@@ -62,7 +58,7 @@ public class RulesController : ControllerBase
         _context.Rules.Add(rule);
         await _context.SaveChangesAsync();
 
-        return CreatedAtAction("GetRule", new { id = rule.RuleId }, rule);
+        return CreatedAtAction(nameof(GetRule), new { id = rule.RuleId }, rule);
     }
 
     // PUT api/Rules/5
@@ -74,7 +70,7 @@ public class RulesController : ControllerBase
 
     // DELETE api/Rules/1
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteRules([FromBody]Guid id)
+    public async Task<IActionResult> DeleteRule([FromBody]Guid id)
     { 
         if(_context.Rules == null)
         {
