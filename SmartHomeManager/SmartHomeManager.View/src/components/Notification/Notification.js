@@ -13,7 +13,8 @@ import {
     PopoverAnchor,
     Flex,
     Box, 
-    useDisclosure
+    useDisclosure,
+    Button
 } from '@chakra-ui/react'
 
 
@@ -26,12 +27,14 @@ export default function Notification({open}) {
             
             <Popover>
                 <PopoverTrigger>                  
-                    <BellIcon w={7} h={7} mr={4} onClick={onToggle}/>
+                    <Button w={7} h={7} mr={4} onClick={isOpen ? onClose : onToggle}>
+                        <BellIcon/>    
+                    </Button> 
                 </PopoverTrigger>
             
             <PopoverContent>
                 
-                <PopoverHeader>Welcome back xxxx</PopoverHeader>
+                <PopoverHeader fontWeight="bold">Welcome back xxxx</PopoverHeader>
                 <PopoverBody>
                     <NotificationPopup/>
                 </PopoverBody>
