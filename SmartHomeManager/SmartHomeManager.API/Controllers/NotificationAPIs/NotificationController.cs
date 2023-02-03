@@ -22,7 +22,7 @@ namespace SmartHomeManager.API.Controllers.NotificationAPIs
 
         // API routes....
 
-        // GET /api/notification/{accountId}
+        // GET /api/notification/all
         [HttpGet("all")]
         public async Task<IActionResult> GetAllNotifications()
         {
@@ -37,8 +37,7 @@ namespace SmartHomeManager.API.Controllers.NotificationAPIs
             }
         }
 
-        // POST /api/notification
-        // Request body...
-            
+        // TODO:    GET /api/notification/{accountId}
+        // TODO:    POST /api/notification
     }
 }
