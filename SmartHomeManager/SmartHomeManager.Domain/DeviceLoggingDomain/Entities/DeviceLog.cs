@@ -37,4 +37,6 @@ namespace SmartHomeManager.Domain.DeviceLoggingDomain.Entities
         [ForeignKey("DeviceId")]
         public Device Device { get; set; }
     }
+
+
 }

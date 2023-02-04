@@ -1,4 +1,5 @@
-﻿using SmartHomeManager.Domain.DeviceLoggingDomain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using SmartHomeManager.Domain.DeviceLoggingDomain.Entities;
 using SmartHomeManager.Domain.DeviceLoggingDomain.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -10,58 +11,29 @@ namespace SmartHomeManager.DataSource.DeviceLogDataSource
 {
     public class DeviceLogRepository: iDeviceLogRepository
     {
-        private ApplicationDbContext context;
+        protected readonly ApplicationDbContext _db;
 
-        public DeviceLogRepository(ApplicationDbContext context) {
-            this.context = context;
-        }
+        protected DbSet<DeviceLog> _dbSet;
+        public DeviceLogRepository(ApplicationDbContext db) {
+            _db = db;
 
-        public void DeleteDeviceLog(Guid id)
-        {
-            DeviceLog deviceLog = context.DeviceLogs.Find(id);
-            context.DeviceLogs.Remove(deviceLog);
+            this._dbSet = db.Set<DeviceLog>();
         }
 
         public IEnumerable<DeviceLog> GetAll()
         {
-            return context.DeviceLogs.ToList();
+            IQueryable<DeviceLog> query = _dbSet;
+            return query.ToList();
         }
 
         public DeviceLog GetById(Guid id)
         {
-           return context.DeviceLogs.Find(id);
+            throw new NotImplementedException();
         }
 
-        public void InsertDeviceLog(DeviceLog deviceLog)
+        public void UpdateDeviceLog(IEnumerable<DeviceLog> entities)
         {
-            context.DeviceLogs.Add(deviceLog);
-        }
-        public void UpdateDeviceLog(DeviceLog deviceLog)
-        {
-            context.Entry(deviceLog).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-        }
-
-        public void Save()
-        {
-            context.SaveChanges();
-        }
-        private bool disposed = false;
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!this.disposed)
-            {
-                if (disposing)
-                {
-                    context.Dispose();
-                }
-            }
-            this.disposed = true;
-        }
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            throw new NotImplementedException();
         }
     }
 }

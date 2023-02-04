@@ -9,11 +9,9 @@ namespace SmartHomeManager.Domain.DeviceLoggingDomain.Interfaces
 {
     public interface iDeviceLogRepository
     {
-           IEnumerable<DeviceLog> GetAll();
+        IEnumerable<DeviceLog> GetAll();
         DeviceLog GetById(Guid id);
-        void InsertDeviceLog(DeviceLog deviceLog);
-        void UpdateDeviceLog(DeviceLog deviceLog);
-        void DeleteDeviceLog(Guid id);
-        void Save();
+        void UpdateDeviceLog(IEnumerable<DeviceLog> entities);
+
     }
 }

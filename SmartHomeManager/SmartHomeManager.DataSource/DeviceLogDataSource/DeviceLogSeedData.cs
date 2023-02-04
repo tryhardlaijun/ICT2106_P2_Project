@@ -13,10 +13,8 @@ namespace SmartHomeManager.DataSource.DeviceLogDataSource
         {
             // If there is data, don't do anything
             if (context.DeviceLogs.Any()) return;
-
-​
-        // create objects
-        var DeviceLog = new List<DeviceLog>
+            // create objects
+            var DeviceLog = new List<DeviceLog>
             {
                 new DeviceLog()
                 {
@@ -27,12 +25,7 @@ namespace SmartHomeManager.DataSource.DeviceLogDataSource
                     DeviceEnergyUsage = 0,
                     DeviceActivity = 0,
                     DeviceState = true,
-                    DeviceId = Guid.NewGuid()
-                }
-            };
-​
-        
-​
+                    DeviceId = Guid.NewGuid() } };
         // add to repository and commit those changes
             await context.DeviceLogs.AddRangeAsync(DeviceLog);
             await context.SaveChangesAsync();
