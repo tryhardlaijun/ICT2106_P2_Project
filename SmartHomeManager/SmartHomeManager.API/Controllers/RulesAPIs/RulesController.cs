@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SmartHomeManager.Domain.SceneDomain.Entities;
+using SmartHomeManager.Domain.SceneDomain.Services;
 using SmartHomeManager.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.DataSource;
+using SmartHomeManager.Domain.DeviceDomain.Entities;
+
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -12,53 +15,38 @@ namespace SmartHomeManager.API.Controllers.RulesAPIs;
 [ApiController]
 public class RulesController : ControllerBase
 {
-    private readonly ApplicationDbContext _context;
 
-    public RulesController(ApplicationDbContext context)
+    private readonly RuleServices _registerRuleService;
+
+    public RulesController(IGenericRepository<Rule> ruleRepository)
     {
-        _context = context;
+        _registerRuleService = new(ruleRepository);
     }
     // GET: api/Rules/GetAllRules
     [HttpGet("GetAllRules")]
-    public async Task<ActionResult<IEnumerable<Rule>>> GetAllRules()
+    public async Task<ActionResult> GetAllRules()
     {
-        if(_context.Rules == null)
-        {
-            return NotFound();
-        }
-        var result = await _context.Rules.ToListAsync();
-
-        return Ok(result);
+        IEnumerable<Rule> rules = (await _registerRuleService.GetAllRulesAsync()).ToList();
+        return StatusCode(200, rules);
     }
 
     // GET api/Rules/1
     [HttpGet("{id}")]
     public async Task<ActionResult<Rule>> GetRule([FromBody] Guid id)
     {
-        if(_context.Rules == null)
+        var rule = await _registerRuleService.GetRuleByIdAsync(id);
+        if(rule != null)
         {
-            return NotFound();
+            return StatusCode(200, rule);
         }
-        var rule = await _context.Rules.FindAsync(id);
-        if(rule == null)
-        {
-            return NotFound();
-        }
-        return rule;
+        return StatusCode(404, "rule not exist");
     }
 
     // POST api/Rules
     [HttpPost("CreateRule")]
-    public async Task<ActionResult<Rule>> CreateRule([FromBody] Rule rule)
+    public async Task CreateRule([FromBody] Rule rule)
     {
-        if(_context.Rooms == null)
-        {
-            return Problem("Entity set 'ApplicationDbContext.Rules'  is null.");
-        }
-        _context.Rules.Add(rule);
-        await _context.SaveChangesAsync();
-
-        return CreatedAtAction(nameof(GetRule), new { id = rule.RuleId }, rule);
+        await _registerRuleService.CreateRuleAsync(rule);
     }
 
     // PUT api/Rules/5
@@ -70,21 +58,9 @@ public class RulesController : ControllerBase
 
     // DELETE api/Rules/1
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteRule([FromBody]Guid id)
-    { 
-        if(_context.Rules == null)
-        {
-            return NotFound();
-        }
-        var rule = await _context.Rules.FindAsync(id);
-        if(rule == null)
-        {
-            return NotFound();
-        }
-        _context.Rules.Remove(rule);
-        await _context.SaveChangesAsync();
-
-        return NoContent();
+    public async Task DeleteRule([FromBody]Guid id)
+    {
+        await _registerRuleService.DeleteRuleByIdAsync(id);
     }
 }
 
