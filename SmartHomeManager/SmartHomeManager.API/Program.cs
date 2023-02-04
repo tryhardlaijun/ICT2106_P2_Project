@@ -1,8 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.DataSource;
+using SmartHomeManager.DataSource.AccountDataSource;
 using SmartHomeManager.DataSource.NotificationDataSource;
+using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.NotificationDomain.Entities;
+using SmartHomeManager.Domain.NotificationDomain.Interfaces;
 
 namespace SmartHomeManager.API
 {
@@ -30,7 +33,9 @@ namespace SmartHomeManager.API
             });
 
             // Inject dependencies for Notification Repository, so all implementations of IGenericRepository<Notification> will use the NotificationRepository implementation...
-            builder.Services.AddScoped<IGenericRepository<Notification>, NotificationRepository>();
+            builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+
+            builder.Services.AddScoped<IGenericRepository<Account>, MockAccountRepository>();
 
             #endregion DEPENDENCY INJECTIONS
 
