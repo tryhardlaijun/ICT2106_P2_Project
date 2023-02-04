@@ -49,7 +49,7 @@ namespace SmartHomeManager.API.Controllers.ScenariosAPIs
         }
 
         // POST api/Scenarios
-        [HttpPost("CreateRule")]
+        [HttpPost("CreateScenario")]
         public async Task<ActionResult<Scenario>> CreateScenario([FromBody] Scenario scenario)
         {
             if (_context.Scenarios == null)

@@ -19,16 +19,14 @@ namespace SmartHomeManager.DataSource.RulesDataSource
         {
             try
             {
-                _applicationDbContext.Rules.Add(rule);
+                await _applicationDbContext.Rules.AddAsync(rule);
                 await _applicationDbContext.SaveChangesAsync();
-
                 return true;
             }
             catch
             {
                 return false;
             }
-            
         }
 
         public Task<bool> DeleteAsync(Rule entity)
@@ -57,9 +55,7 @@ namespace SmartHomeManager.DataSource.RulesDataSource
 
         public async Task<IEnumerable<Rule>> GetAllAsync()
         {
-            var result = await _applicationDbContext.Rules.ToListAsync();
-
-            return result;
+            return await _applicationDbContext.Rules.ToListAsync();
         }
 
         public async Task<Rule?> GetByIdAsync(Guid id)
