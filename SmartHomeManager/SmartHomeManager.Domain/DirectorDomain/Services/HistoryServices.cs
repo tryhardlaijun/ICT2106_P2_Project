@@ -14,8 +14,10 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
         public HistoryServices(IGenericRepository<History> historyRepository)
         {
             _historyRepository = historyRepository;
+        }
 
-/*
+        public async Task<IEnumerable<History>> GetAllRulesAsync()
+        {
             History newHist = new History();
             newHist.HistoryId = Guid.NewGuid();
             newHist.Message = "First History";
@@ -23,12 +25,8 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
             newHist.ProfileId = Guid.NewGuid();
             newHist.RuleHistoryId = Guid.NewGuid();
 
-            _historyRepository.AddAsync(newHist);
-*/
-        }
+            await _historyRepository.AddAsync(newHist);
 
-        public async Task<IEnumerable<History>> GetAllRulesAsync()
-        {
             return await _historyRepository.GetAllAsync();
         }
     }
