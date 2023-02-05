@@ -1,6 +1,11 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations;
 using SmartHomeManager.DataSource;
+using SmartHomeManager.DataSource.HistoryDataSource;
+using SmartHomeManager.DataSource.RuleHistoryDataSource;
 using SmartHomeManager.Domain.Common;
+using SmartHomeManager.Domain.DeviceDomain.Entities;
+using SmartHomeManager.Domain.DirectorDomain.Entities;
 
 namespace SmartHomeManager.API
 {
@@ -26,6 +31,8 @@ namespace SmartHomeManager.API
             {
                 options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+            builder.Services.AddScoped<IGenericRepository<RuleHistory>, RuleHistoryRepository>();
+            //builder.Services.AddScoped<IGenericRepository<History>, DataSource.HistoryDataSource.HistoryRepository>();
             #endregion DEPENDENCY INJECTIONS
 
             builder.Services.AddEndpointsApiExplorer();
