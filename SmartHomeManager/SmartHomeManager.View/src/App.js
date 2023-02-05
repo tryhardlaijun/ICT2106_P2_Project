@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import Devices from "./pages/Devices";
 import Profiles from "./pages/Profiles";
 import Director from "./pages/Director";
+import Backup from "./pages/Backup";
 
 export function App() {
   return (
@@ -17,6 +18,7 @@ export function App() {
           <Route path="/devices" element={<Devices />} />
           <Route path="/profiles" element={<Profiles />} />
           <Route path="/director" element={<Director />} />
+          <Route path="/backup" element={<Backup />} />
         </Routes>
       </Router>
     </>
