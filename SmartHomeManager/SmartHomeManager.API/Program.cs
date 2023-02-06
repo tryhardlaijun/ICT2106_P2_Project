@@ -50,6 +50,8 @@ namespace SmartHomeManager.API
 
                 // in order to use await in a method, the caller method must be async as well
                 // await context.Database.MigrateAsync();
+             
+
                 await DeviceLogSeedData.Seed(context);
             }
             catch (Exception e)

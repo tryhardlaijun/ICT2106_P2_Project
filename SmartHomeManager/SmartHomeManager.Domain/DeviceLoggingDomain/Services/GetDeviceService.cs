@@ -10,16 +10,16 @@ namespace SmartHomeManager.Domain.DeviceLoggingDomain.Services
 {
     public class GetDeviceService
     {
-        private readonly iDeviceLogRepository deviceLogRepository;
+        private readonly iDeviceLogRepository _deviceLogRepository;
 
         public GetDeviceService(iDeviceLogRepository deviceLogRepository)
         {
             _deviceLogRepository = deviceLogRepository;
         }
 
-        public async Task<IEnumerable<DeviceLog>> GetAll()
+        public IEnumerable<DeviceLog> GetAll()
         {
-            return await _deviceLogRepository.GetAll();
+            return _deviceLogRepository.GetAll();
         }
     }
 }
