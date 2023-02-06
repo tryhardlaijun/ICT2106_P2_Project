@@ -105,6 +105,7 @@ namespace SmartHomeManager.API.Controllers.AccountController
         [HttpPost]
         public async Task<ActionResult> PostAccount([FromBody]AccountWebRequest account)
         {
+            
             // controller will invoke a service function
             string response = await _accountService.CreateAccount(account);
 

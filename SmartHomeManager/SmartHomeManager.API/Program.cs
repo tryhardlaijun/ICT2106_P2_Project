@@ -15,7 +15,13 @@ namespace SmartHomeManager.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(policy =>
+                {
+                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");
+                });
+            });
 
             builder.Services.AddControllers();
             
@@ -55,7 +61,6 @@ namespace SmartHomeManager.API
 
             using var scope = app.Services.CreateScope();
             var services = scope.ServiceProvider;
-
             
 
             var logger = services.GetRequiredService<ILogger<Program>>();

@@ -58,7 +58,6 @@ export default function Register() {
         } else {
             var mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
             updateEmailValid(mailFormat.test(emailInput))
-            console.log(mailFormat.test(emailInput))
         }
     }
 
@@ -104,33 +103,33 @@ export default function Register() {
     //Submit form
     const submitRegisterForm = () => {
         if (passwordInput != confirmPasswordInput) {
-
-            console.log("not match password");
-        }
+            updateConfirmPasswordMessage("Password does not match or meet the required condition")
+            updateConfirmPasswordValid(false)
+        }else{
         const salt = bcrypt.genSaltSync(10)
         const hashPassword = bcrypt.hash(passwordInput, salt)
-        console.log({ salt })
-        console.log({ hashPassword })
-        const hashKey = "$2a$10$pCZv.vtcTbnRhG0zPLq95uhu8mP6vKrcprYYrWK6nkeS0fcaT/I5y"
-
+        /*
         bcrypt.compare(passwordInput, hashKey, function (err, result) {
             console.log({ passwordInput }, result)
         });
-
         console.log({ emailInput })
         console.log({ usernameInput })
         console.log({ timezoneInput })
         console.log({ passwordInput })
         console.log({ confirmPasswordInput })
         console.log({ addressInput })
-        /*
-        fetch('/localhost:7140/api/accounts/', {
+        */
+        
+        const obj = {
+            "email": emailInput, "username": usernameInput, "address": addressInput, "timezone": timezoneInput, "password": passwordInput
+        }
+        const message = JSON.stringify(obj)
+        //emailInput, usernameInput, addressInput, timezoneInput, passwordInput, hashKey
+        fetch('https://localhost:7140/api/Accounts', {
             method: 'POST',
-            body: JSON.stringify({
-                emailInput, usernameInput, addressInput, timezoneInput, passwordInput, hashKey
-            }),
+            body: message,
         headers: {
-                'Content-type': 'application/json; charset=UTF-8',
+                'Content-type': 'application/problem+json; charset=utf-8',
             },
         })
             .then((response) => response.json())
@@ -140,7 +139,8 @@ export default function Register() {
             .catch((err) => {
                 console.log(err.message);
             });
-            */
+        }
+            
     }
 
 
@@ -257,7 +257,7 @@ export default function Register() {
                         </Stack>
                         <Stack pt={6}>
                             <Text align={'center'}>
-                                Already a user? <Link color={'blue.400'}><a href="./login">Login</a></Link>
+                                Already a user? <Link color={'blue.400'} href="./login">Login</Link>
                             </Text>
                         </Stack>
                     </Stack>

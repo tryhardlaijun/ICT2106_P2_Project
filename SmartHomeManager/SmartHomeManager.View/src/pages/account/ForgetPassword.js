@@ -14,7 +14,7 @@ import {
     email: string;
   };
   
-  export default function ForgotPasswordForm(): JSX.Element {
+  export default function ForgotPassword(): JSX.Element {
     return (
       <Flex
         minH={'100vh'}
