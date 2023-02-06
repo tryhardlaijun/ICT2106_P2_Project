@@ -1,18 +1,45 @@
-import React, {useState} from "react";
-import { Box, Text } from "@chakra-ui/react";
+import React, { useState, useEffect } from "react";
+import { Box, Text, Spinner, Flex } from "@chakra-ui/react";
 import NotificationBorder from "./NotificationBorder";
 
-export default function NotificationPopup(){
+export default function NotificationPopup({ notifications }){
+
+    const SPINNER_TIMEOUT = 2000;
+    const [isDataLoaded, setIsDataLoaded] = useState(false);
+
+    // On Component Load
+    useEffect(() => {
+        // Let spinner load for 1000ms
+        setTimeout(() => setIsDataLoaded(true), SPINNER_TIMEOUT);
+    }, [])
+
+    function getMinutesNotificationTime(notificationSentTime) {
+        let sentTime = new Date(notificationSentTime);
+        let currentTime = new Date();
+        var difference = currentTime.getTime() - sentTime.getTime(); // This will give difference in milliseconds
+        return Math.round(difference / 60000);
+    }
 
 
-    
     return(
         <>
-            
-                <NotificationBorder text1="Notification 1" text2="21 minutes ago"/>
-                <NotificationBorder text1="Notification 2" text2="33 minutes ago"/>
-                <NotificationBorder text1="Notification 3" text2="55 minutes ago"/>
-            
+            <Flex flexDirection="column">
+            {
+                notifications && isDataLoaded ? 
+                notifications.map((noti, i) => {
+                    return (
+                        <NotificationBorder 
+                            key={i}
+                            message={noti.notificationMessage} 
+                            sentTime={
+                                getMinutesNotificationTime(noti.sentTime)
+                            }
+                        />   
+                    )
+                }) :
+                <Spinner alignSelf="center" my="4" />
+            }
+            </Flex>
         </>
     )
 }

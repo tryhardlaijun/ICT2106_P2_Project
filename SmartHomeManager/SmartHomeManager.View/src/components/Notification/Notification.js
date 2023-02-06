@@ -22,23 +22,20 @@ import {
     Box, 
     useDisclosure,
     Button,
-    useToast
+    useToast,
 } from '@chakra-ui/react'
 
+import NotificationService from "../../requests/services/NotificationService";
 
 export default function Notification() {
 
-    const SESSION_ACCOUNT_GUID = "823183EF-861F-43F5-AACF-FA3011C035CF";
-    const GET_NOTIFICATIONS_API_ROUTE = `https://localhost:7140/api/notification/${SESSION_ACCOUNT_GUID}`
-    const POST_NOTIFICATION_API_ROUTE = "https://localhost:7140/api/notification"
-
+    const SESSION_ACCOUNT_GUID = "DABDBE5E-F9E3-4474-AB23-454496FBEF25";
     const {isOpen, onClose, onToggle} = useDisclosure();
     const [notifications, setNotifications] = useState([]);
     const [errors, setErrors] = useState(null);
 
-    
     function getNotifications() {
-        axios.get(GET_NOTIFICATIONS_API_ROUTE)
+        NotificationService.getNotificationsByAccountId(SESSION_ACCOUNT_GUID)
             .then(response => {
                 console.log(response.data)
                 setNotifications(response.data.notificationObjects);
@@ -87,8 +84,14 @@ export default function Notification() {
                 
                 <PopoverHeader ml={2} fontWeight="bold" fontSize={25}>Welcome back xxxx</PopoverHeader>
                 <PopoverBody>
-                    <NotificationPopup/>
-                    <TestNotificationModal/>
+                    <Flex
+                        flexDirection="column"
+                    >
+                        <NotificationPopup
+                            notifications={notifications}
+                        />
+                        <TestNotificationModal/>
+                    </Flex>
                 </PopoverBody>
             </PopoverContent>
             </Popover>
