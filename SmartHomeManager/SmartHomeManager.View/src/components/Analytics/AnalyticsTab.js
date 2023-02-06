@@ -10,6 +10,7 @@ import {
     Container,
 } from '@chakra-ui/react';
 import CarbonChart from './CarbonChart';
+import UsageBar from './UsageBar';
 
 
 function AnalyticsTab() {
@@ -28,7 +29,9 @@ function AnalyticsTab() {
                     </Container>
                 </TabPanel>
                 <TabPanel>
-                    <p>Energy Usage</p>
+                    <Container maxWidth={1800} mt={2} centerContent>
+                        <UsageBar />
+                    </Container>
                 </TabPanel>
                 <TabPanel>
                     <p>Energy Efficiency</p>
