@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using SmartHomeManager.Domain.AccountDomain.DTOs;
 using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.AccountDomain.Interfaces;
 using SmartHomeManager.Domain.RoomDomain.Entities;
@@ -41,15 +42,18 @@ namespace SmartHomeManager.DataSource.AccountDataSource
         {
             // get all accounts
             return await _dbContext.Accounts.ToListAsync();
-
-            /*throw new NotImplementedException();*/
         }
 
-        public Task<Account?> GetByIdAsync(Guid id)
+        public async Task<Account?> GetByIdAsync(Guid id) 
         {
-            throw new NotImplementedException();
+            return await _dbContext.Accounts.FindAsync(id);
         }
-        
+
+        public async Task<Account?> GetAccountByEmailAsync(string email)
+        {
+            return await _dbContext.Accounts.Where(acc => acc.Email == email).FirstOrDefaultAsync();    
+        }
+
         public async Task<int> SaveAsync()
         {
             int result = await _dbContext.SaveChangesAsync();

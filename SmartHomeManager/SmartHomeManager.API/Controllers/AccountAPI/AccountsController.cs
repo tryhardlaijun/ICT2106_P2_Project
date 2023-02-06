@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.DataSource;
 using SmartHomeManager.DataSource.AccountDataSource;
+using SmartHomeManager.Domain.AccountDomain.DTOs;
 using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.AccountDomain.Interfaces;
 using SmartHomeManager.Domain.AccountDomain.Services;
@@ -46,22 +47,21 @@ namespace SmartHomeManager.API.Controllers.AccountController
         }*/
 
         // GET: api/Accounts/5
-        /*[HttpGet("{id}")]
-        public async Task<ActionResult<Account>> GetAccount(Guid id)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Account>> GetAccountByAccountId(Guid id)
         {
-            *//*if (_accountService.GetAllAsync() == null)
-            {
-                return NotFound();
-            }
-            var account = await _accountService.GetByIdAsync(id);
+            var account = await _accountService.GetAccountByAccountId(id);
 
             if (account == null)
             {
                 return NotFound();
-            }*//*
+            }
 
             return account;
-        }*/
+        }
+
+        
+
 
         // PUT: api/Accounts/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -102,15 +102,35 @@ namespace SmartHomeManager.API.Controllers.AccountController
         public async Task<ActionResult> PostAccount([FromBody]AccountWebRequest account)
         {
             // controller will invoke a service function
-            bool dbResponse = await _accountService.CreateAccount(account);
+            string response = await _accountService.CreateAccount(account);
 
-            if (dbResponse)
+            if (response == "account created")
             {
                 return Ok("Account created");
             }
 
-            return NotFound("Account could not be created");
+            else
+            {
+                return BadRequest(response);
+            }
         }
+
+        // POST: api/Accounts/login
+
+        [HttpPost("login")]
+        public async Task<ActionResult> VerifyLogin([FromBody]LoginWebRequest login)
+        {
+            bool response = await _accountService.VerifyLogin(login);
+
+            if (response)
+            {
+                return Ok("Login successful");
+            }
+
+            return Unauthorized("Incorrect email or password");
+        }
+
+
 
 
         // DELETE: api/Accounts/5

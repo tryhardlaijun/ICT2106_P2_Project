@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SmartHomeManager.Domain.AccountDomain.Entities
+namespace SmartHomeManager.Domain.AccountDomain.DTOs
 {
     public class AccountWebRequest
     {
