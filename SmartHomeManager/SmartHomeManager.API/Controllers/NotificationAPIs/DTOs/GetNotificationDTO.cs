@@ -1,13 +1,13 @@
 ﻿namespace SmartHomeManager.API.Controllers.NotificationAPIs.ViewModels
 {
-    public class GetNotificationViewModel
+    public class GetNotificationDTO
     {
-        public List<GetNotificationObjectViewModel> NotificationObjects { get; set; }
-        public ResponseObjectViewModel ResponseObject { get; set; }
+        public List<GetNotificationObjectDTO> NotificationObjects { get; set; }
+        public ResponseObjectDTO ResponseObject { get; set; }
     }
 
 
-    public class GetNotificationObjectViewModel
+    public class GetNotificationObjectDTO
     {
         public Guid NotificationId { get; set; }
         public Guid AccountId { get; set; }
