@@ -39,18 +39,26 @@ namespace SmartHomeManager.Domain.NotificationDomain.Services
             // Receive the top 5 most recent notifications by AccountId (filter the top 5 most recent)
 
             var accountToBeFound = await _mockAccountService.GetAccount(accountId);
+            IEnumerable<Notification> allNotification = null;
 
+            //Check if account exist
             if (accountToBeFound == null)
             {
                 System.Diagnostics.Debug.WriteLine("Account not found");
-                return Tuple.Create(
-                    NotificationResult.Error_AccountNotFound, 
-                    (IEnumerable<Notification>) null
-                );
+                return Tuple.Create(NotificationResult.Error_AccountNotFound, allNotification);
             }
 
+            //Check if DBReadFail
+            try
+            {
+                allNotification = await _notificationRepository.GetAllByIdAsync(accountId);
+            }
+            catch (Exception ex)
+            {
+                return Tuple.Create(NotificationResult.Error_DBReadFail, allNotification); ;
+            }
 
-            IEnumerable<Notification> allNotification = await _notificationRepository.GetAllByIdAsync(accountId);
+            //Sort and get the latest 5 notifications
             IEnumerable<Notification> latest5Notification = allNotification.OrderBy(noti => noti.SentTime).TakeLast(5);
 
             return Tuple.Create(NotificationResult.Success, latest5Notification);

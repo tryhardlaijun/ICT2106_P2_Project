@@ -66,18 +66,18 @@ namespace SmartHomeManager.API.Controllers.NotificationAPIs
             NotificationResult notificationResult;
              (notificationResult, notifications) = await _receiveNotificationService.GetNotificationsAsync(accountId);
 
-            return StatusCode(500, "Not yet implemented");
+            return StatusCode(((int)notificationResult), "Not yet implemented");
         }
 
 
         // TODO:    POST /api/notification
         [HttpPost]
         public async Task<IActionResult> AddNotification([FromBody]AddNotificationViewModel viewModel)
-        { 
-
-            Notification? notification = await _sendNotificationService
+        {
+            NotificationResult notificationResult;
+            (notificationResult, Notification? notification) = await _sendNotificationService
                 .SendNotification(
-                viewModel.Message, 
+                viewModel.Message,
                 viewModel.AccountId
             );
 

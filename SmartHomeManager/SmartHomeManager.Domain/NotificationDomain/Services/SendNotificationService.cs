@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -24,8 +25,9 @@ namespace SmartHomeManager.Domain.NotificationDomain.Services
             _mockAccountService = new MockAccountService(mockAccountRepository);
         }
 
-        public async Task<Notification?> SendNotification(string notificationMessage, Guid accountId)
+        public async Task<Tuple<NotificationResult, Notification?>> SendNotification(string notificationMessage, Guid accountId)
         {
+            System.Diagnostics.Debug.WriteLine("Notification message:" + notificationMessage);
             // ---------------------------------------------------------------
             // USE THIS FIRST SINCE ACCOUNT SERVICE IS NOT AVAILABLE YET....
             // Call Juleus method to get account...
@@ -63,8 +65,9 @@ namespace SmartHomeManager.Domain.NotificationDomain.Services
             if (accountToBeFound == null)
             {
                 System.Diagnostics.Debug.WriteLine("Account not found");
-                //return null
+                return Tuple.Create(NotificationResult.Error_AccountNotFound, new Notification());
             }
+
             //Remove symbol to prevent SQL injection
             notificationMessage = Regex.Replace(notificationMessage, "[^0-9A-Za-z _-]", "");
 
@@ -82,10 +85,10 @@ namespace SmartHomeManager.Domain.NotificationDomain.Services
             // If something went wrong...
             if (!result)
             {
-                return null;
+                return Tuple.Create(NotificationResult.Error_DBInsertFail, notificationToBeAdded);
             }
 
-            return notificationToBeAdded;
+            return Tuple.Create(NotificationResult.Success, notificationToBeAdded);
             
 
         }
