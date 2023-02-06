@@ -15,9 +15,8 @@ export function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/devices" element={<Devices />} />
-                  <Route path="/profiles" element={<Profiles />} />
-                  <Route path="/Scenario" element={<Scenario />} />
-                  <Route path="/profiles" element={<Profiles />} />
+          <Route path="/profiles" element={<Profiles />} />
+          <Route path="/rules" element={<Rule />} />
 
         </Routes>
       </Router>
