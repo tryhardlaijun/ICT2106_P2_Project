@@ -22,7 +22,7 @@ namespace SmartHomeManager.API.Controllers.NotificationAPIs
         public NotificationController(INotificationRepository notificationRepository, IGenericRepository<Account> mockAccountRepository)
         {
             _sendNotificationService = new(notificationRepository, mockAccountRepository);
-            _receiveNotificationService = new(notificationRepository);
+            _receiveNotificationService = new(notificationRepository, mockAccountRepository);
         }
 
         // API routes....
@@ -62,20 +62,22 @@ namespace SmartHomeManager.API.Controllers.NotificationAPIs
         public async Task<IActionResult> GetNotificationById(Guid accountId)
         {
             // Use the service here...
-            IEnumerable<Notification> notifications = await _receiveNotificationService.GetNotificationsAsync(accountId);
+            IEnumerable<Notification> notifications;
+            NotificationResult notificationResult;
+             (notificationResult, notifications) = await _receiveNotificationService.GetNotificationsAsync(accountId);
 
-            return StatusCode(500, "Not yet implemented");
+            return StatusCode(((int)notificationResult), "Not yet implemented");
         }
 
 
         // TODO:    POST /api/notification
         [HttpPost]
         public async Task<IActionResult> AddNotification([FromBody]AddNotificationViewModel viewModel)
-        { 
-
-            Notification? notification = await _sendNotificationService
+        {
+            NotificationResult notificationResult;
+            (notificationResult, Notification? notification) = await _sendNotificationService
                 .SendNotification(
-                viewModel.Message, 
+                viewModel.Message,
                 viewModel.AccountId
             );
 
