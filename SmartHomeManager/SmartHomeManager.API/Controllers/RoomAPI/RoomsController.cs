@@ -99,6 +99,7 @@ public class RoomsController : ControllerBase
 
         var resp = new GetRoomWebRequest
         {
+            RoomId = newRoom.RoomId,
             Name = newRoom.Name,
             AccountId = newRoom.AccountId
         };
