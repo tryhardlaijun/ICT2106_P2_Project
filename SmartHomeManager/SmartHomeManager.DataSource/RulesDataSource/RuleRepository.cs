@@ -13,15 +13,17 @@ namespace SmartHomeManager.DataSource.RulesDataSource
         public RuleRepository(ApplicationDbContext applicationDbContext)
         {
             _applicationDbContext = applicationDbContext;
+            
         }
 
+        // Add rule
         public async Task<bool> AddAsync(Rule rule)
         {
             try
             {
+                
                 await _applicationDbContext.Rules.AddAsync(rule);
-                await _applicationDbContext.SaveChangesAsync();
-                return true;
+                return await SaveAsync();
             }
             catch
             {
@@ -34,16 +36,16 @@ namespace SmartHomeManager.DataSource.RulesDataSource
             throw new NotImplementedException();
         }
 
+        // Delete by Id
         public async Task<bool> DeleteByIdAsync(Guid id)
         {
             try
             {
-                var rule = await _applicationDbContext.Rules.FindAsync(id);
+                Rule? rule = await _applicationDbContext.Rules.FindAsync(id);
                 if(rule != null)
                 {
                     _applicationDbContext.Rules.Remove(rule);
-                    await _applicationDbContext.SaveChangesAsync();
-                    return true;
+                    return await SaveAsync();
                 }
                 return false;
             }
@@ -53,11 +55,15 @@ namespace SmartHomeManager.DataSource.RulesDataSource
             }           
         }
 
+        // Get all
         public async Task<IEnumerable<Rule>> GetAllAsync()
         {
+            await RuleSeedData.Seed(_applicationDbContext);
             return await _applicationDbContext.Rules.ToListAsync();
         }
 
+
+        //Get by Id
         public async Task<Rule?> GetByIdAsync(Guid id)
         {
             try
@@ -71,14 +77,32 @@ namespace SmartHomeManager.DataSource.RulesDataSource
             }
         }
 
-        public Task<bool> SaveAsync()
+        //Save
+        public async Task<bool> SaveAsync()
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _applicationDbContext.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false; 
+            }
         }
 
-        public Task<bool> UpdateAsync(Rule entity)
+        //Update
+        public async Task<bool> UpdateAsync(Rule rule)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _applicationDbContext.Update(rule);
+                return await SaveAsync();
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }
