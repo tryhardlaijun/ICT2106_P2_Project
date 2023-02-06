@@ -26,7 +26,7 @@ export default function NotificationPopup({ notifications }){
             <Flex flexDirection="column">
             {
                 notifications && isDataLoaded ? 
-                notifications.map((noti, i) => {
+                notifications.reverse().map((noti, i) => {
                     return (
                         <NotificationBorder 
                             key={i}
