@@ -11,7 +11,7 @@ namespace SmartHomeManager.API
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -34,7 +34,6 @@ namespace SmartHomeManager.API
 
             // Inject dependencies for Notification Repository, so all implementations of IGenericRepository<Notification> will use the NotificationRepository implementation...
             builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
-
             builder.Services.AddScoped<IGenericRepository<Account>, MockAccountRepository>();
 
             #endregion DEPENDENCY INJECTIONS
@@ -60,6 +59,29 @@ namespace SmartHomeManager.API
             app.UseAuthorization();
 
             app.MapControllers();
+
+            // the `using` statement will automatically dispose of the object
+            // when the method call ends
+            using var scope = app.Services.CreateScope();
+            var services = scope.ServiceProvider;
+
+            // try create database and table, if fails, catch and do something
+            // it will actually create a database if it does not exist in SQL server
+            try
+            {
+                var context = services.GetRequiredService<ApplicationDbContext>();
+
+                // in order to use await in a method, the caller method must be async as well
+                // await context.Database.MigrateAsync();
+                await NotificationRepositorySeeder.Seed(context);
+            }
+            catch (Exception e)
+            {
+                // Tells the logger to log against the Program class
+                var logger = services.GetRequiredService<ILogger<Program>>();
+
+                logger.LogError(e, "An error occurred during migration.");
+            }
 
             app.Run();
         }

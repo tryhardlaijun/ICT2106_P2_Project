@@ -77,7 +77,7 @@ namespace SmartHomeManager.API.Controllers.NotificationAPIs
                 .SendNotification(
                 viewModel.Message, 
                 viewModel.AccountId
-                );
+            );
 
             // If notification request did not work
             if (notification == null)
