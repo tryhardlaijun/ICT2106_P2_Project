@@ -163,6 +163,8 @@ public class RuleSeedData
 
         await context.Rules.AddRangeAsync(rule);
         await context.SaveChangesAsync();
+
+        //test
     }
 }
 
