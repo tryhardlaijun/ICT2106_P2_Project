@@ -23,10 +23,19 @@ namespace SmartHomeManager.Domain.NotificationDomain.Services
             _mockAccountService = new MockAccountService(mockAccountRepository);
         }
 
-        public async Task<IEnumerable<Notification>> GetAllNotificationsAsync()
+        public async Task<Tuple<NotificationResult, IEnumerable<Notification>>> GetAllNotificationsAsync()
         {
             // TODO: Pass in accountId
-            return await _notificationRepository.GetAllAsync();
+            IEnumerable<Notification?> allNotification = null;
+            try
+            {
+                allNotification = await _notificationRepository.GetAllAsync();
+                return Tuple.Create(NotificationResult.Success, allNotification);
+            }
+            catch (Exception ex)
+            {
+                return Tuple.Create(NotificationResult.Error_DBReadFail, allNotification);
+            }
         }
 
         // List, ArrayList, Array...
@@ -55,7 +64,7 @@ namespace SmartHomeManager.Domain.NotificationDomain.Services
             }
             catch (Exception ex)
             {
-                return Tuple.Create(NotificationResult.Error_DBReadFail, allNotification); ;
+                return Tuple.Create(NotificationResult.Error_DBReadFail, allNotification);
             }
 
             //Sort and get the latest 5 notifications

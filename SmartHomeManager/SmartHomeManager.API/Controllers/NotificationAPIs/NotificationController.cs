@@ -31,30 +31,50 @@ namespace SmartHomeManager.API.Controllers.NotificationAPIs
         [HttpGet("all")]
         public async Task<IActionResult> GetAllNotifications()
         {
-            try
+            IEnumerable<Notification> notifications;
+            NotificationResult notificationResult;
+            int statusCode;
+            string statusMessage;
+
+
+            (notificationResult, notifications) = (await _receiveNotificationService.GetAllNotificationsAsync());
+
+            // Get the status code and coressponding message...
+            (statusCode, statusMessage) = MapNotificationResult(notificationResult);
+
+            // Account not found or DB Error....
+            if (notificationResult == NotificationResult.Error_AccountNotFound ||
+                notificationResult == NotificationResult.Error_DBReadFail)
             {
-                IEnumerable<Notification> notifications = (await _receiveNotificationService.GetAllNotificationsAsync()).ToList();
-
-                // Map notfications to view model....
-                List<GetNotificationViewModel> getNotifications = new List<GetNotificationViewModel>();
-
-                foreach (var notification in notifications)
-                {
-                    getNotifications.Add(new GetNotificationViewModel
-                    {
-                        NotificationId = notification.NotificationId,
-                        AccountId = notification.AccountId,
-                        NotificationMessage = notification.NotificationMessage,
-                        SentTime = notification.SentTime,
-                    });
-                }
-
-                return StatusCode(200, getNotifications);
-            } 
-            catch(Exception ex)
-            {
-                return StatusCode(500, "Internal Server error!");
+                return StatusCode(statusCode, statusMessage);
             }
+
+            // Map notfications to view model....
+            List<GetNotificationObjectViewModel> getNotifications = new List<GetNotificationObjectViewModel>();
+
+            foreach (var notification in notifications)
+            {
+                getNotifications.Add(new GetNotificationObjectViewModel
+                {
+                    NotificationId = notification.NotificationId,
+                    AccountId = notification.AccountId,
+                    NotificationMessage = notification.NotificationMessage,
+                    SentTime = notification.SentTime,
+                });
+            }
+
+            // Create final ViewModel object to send to the client..
+            GetNotificationViewModel viewModel = new GetNotificationViewModel {
+                NotificationObjects = getNotifications,
+                ResponseObject = new ResponseObjectViewModel {
+                    StatusCode = statusCode,
+                    ServerMessage = statusMessage
+                }
+            };
+
+
+            // Success path...
+            return StatusCode(statusCode, viewModel);
         }
 
         // TODO:    GET /api/notification/{accountId}
@@ -64,15 +84,16 @@ namespace SmartHomeManager.API.Controllers.NotificationAPIs
             // Use the service here...
             IEnumerable<Notification> notifications;
             NotificationResult notificationResult;
+
              (notificationResult, notifications) = await _receiveNotificationService.GetNotificationsAsync(accountId);
 
-            return StatusCode(500, "Not yet implemented");
+            return StatusCode((int) notificationResult, notifications);
         }
 
 
         // TODO:    POST /api/notification
         [HttpPost]
-        public async Task<IActionResult> AddNotification([FromBody]AddNotificationViewModel viewModel)
+        public async Task<IActionResult> AddNotification([FromBody] AddNotificationViewModel viewModel)
         {
             NotificationResult notificationResult;
             (notificationResult, Notification? notification) = await _sendNotificationService
@@ -84,10 +105,33 @@ namespace SmartHomeManager.API.Controllers.NotificationAPIs
             // If notification request did not work
             if (notification == null)
             {
-                return StatusCode(500, "Something went wrong!");
+                return StatusCode((int) notificationResult, "Something went wrong!");
             }
 
-            return StatusCode(200, notification);  
+            return StatusCode((int) notificationResult, notification);
+        }
+
+        private Tuple<int, string> MapNotificationResult(NotificationResult notificationResult)
+        {
+            const string Success = "SUCC: ";
+            const string ClientError = "CLIENT_ERR: ";
+            const string ServerError = "SERVER_ERR: ";
+
+            switch (notificationResult)
+            {
+                case NotificationResult.Success:
+                    return Tuple.Create(200, Success + "Success!");
+                case NotificationResult.Error_AccountNotFound:
+                    return Tuple.Create(400, ClientError + "AccountId Not Found.");
+                case NotificationResult.Error_DBInsertFail:
+                    return Tuple.Create(500, ServerError + "DB Insert Fail.");
+                case NotificationResult.Error_DBReadFail:
+                    return Tuple.Create(500, ServerError + "DB Read Fail.");
+                case NotificationResult.Error_Other:
+                    return Tuple.Create(500, ServerError + "Internal Server Error.");
+                default:
+                    return Tuple.Create(500, ServerError + "Internal Server Error.");
+            }
         }
     }
 }
