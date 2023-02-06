@@ -56,7 +56,7 @@ namespace SmartHomeManager.Domain.NotificationDomain.Services
             // If something went wrong...
             if (!result)
             {
-                return Tuple.Create(NotificationResult.Error_DBInsertFail, notificationToBeAdded);
+                return Tuple.Create(NotificationResult.Error_DBInsertFail, (Notification?) null);
             }
 
             return Tuple.Create(NotificationResult.Success, notificationToBeAdded);

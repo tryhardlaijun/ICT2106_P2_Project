@@ -56,16 +56,16 @@ namespace SmartHomeManager.Domain.NotificationDomain.Services
                 System.Diagnostics.Debug.WriteLine("Account not found");
                 return Tuple.Create(NotificationResult.Error_AccountNotFound, allNotification);
             }
-
-            //Check if DBReadFail
+            allNotification = await _notificationRepository.GetAllByIdAsync(accountId);
+            /*//Check if DBReadFail
             try
             {
-                allNotification = await _notificationRepository.GetAllByIdAsync(accountId);
+                
             }
             catch (Exception ex)
             {
                 return Tuple.Create(NotificationResult.Error_DBReadFail, allNotification);
-            }
+            }*/
 
             //Sort and get the latest 5 notifications
             IEnumerable<Notification> latest5Notification = allNotification.OrderBy(noti => noti.SentTime).TakeLast(5);

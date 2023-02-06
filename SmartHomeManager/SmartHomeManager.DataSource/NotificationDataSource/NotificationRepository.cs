@@ -63,9 +63,11 @@ namespace SmartHomeManager.DataSource.NotificationDataSource
             }
         }
 
-        public Task<IEnumerable<Notification>> GetAllByIdAsync(Guid id)
+        public async Task<IEnumerable<Notification>> GetAllByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            IEnumerable<Notification> query = await _applicationDbContext.Notifications.ToListAsync();
+            IEnumerable<Notification> result = query.Where(x => x.AccountId == id);
+            return result;
         }
 
         public async Task<bool> AddAsync(Notification entity)
@@ -125,15 +127,6 @@ namespace SmartHomeManager.DataSource.NotificationDataSource
             return await _applicationDbContext.Notifications.FindAsync(id);
         }
 
-        public IEnumerable<Notification> GetAllById(Guid id)
-        {
-            IQueryable<Notification> query = _applicationDbContext.Notifications;
-            IQueryable<Notification> result = query.Where(x => x.AccountId == id);
-            return result;
-
-            //(V => Notification.Accountid == id);
-
-        }
 
         public async Task<bool> SaveAsync() 
         {

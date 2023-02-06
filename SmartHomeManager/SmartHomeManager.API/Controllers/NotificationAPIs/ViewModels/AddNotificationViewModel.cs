@@ -3,7 +3,6 @@
     public class AddNotificationViewModel
     {
         public AddNotificationObjectViewModel NotificationObject { get; set; }
-        public ResponseObjectViewModel ResponseObject { get; set; }
     }
 
     public class AddNotificationObjectViewModel

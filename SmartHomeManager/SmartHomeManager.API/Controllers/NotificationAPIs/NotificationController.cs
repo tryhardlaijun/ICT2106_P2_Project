@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.API.Controllers.NotificationAPIs.ViewModels;
 using SmartHomeManager.Domain.AccountDomain.Entities;
@@ -31,6 +32,9 @@ namespace SmartHomeManager.API.Controllers.NotificationAPIs
         [HttpGet("all")]
         public async Task<IActionResult> GetAllNotifications()
         {
+            // Map notfications to view model....
+            List<GetNotificationObjectViewModel> getNotifications = new List<GetNotificationObjectViewModel>();
+
             IEnumerable<Notification> notifications;
             NotificationResult notificationResult;
             int statusCode;
@@ -44,13 +48,12 @@ namespace SmartHomeManager.API.Controllers.NotificationAPIs
 
             // Account not found or DB Error....
             if (notificationResult == NotificationResult.Error_AccountNotFound ||
-                notificationResult == NotificationResult.Error_DBReadFail)
+                notificationResult == NotificationResult.Error_DBReadFail ||
+                notificationResult == NotificationResult.Error_Other)
             {
-                return StatusCode(statusCode, statusMessage);
+                return StatusCode(statusCode, CreateResponseViewModel(getNotifications, statusCode, statusMessage));
             }
 
-            // Map notfications to view model....
-            List<GetNotificationObjectViewModel> getNotifications = new List<GetNotificationObjectViewModel>();
 
             foreach (var notification in notifications)
             {
@@ -63,52 +66,104 @@ namespace SmartHomeManager.API.Controllers.NotificationAPIs
                 });
             }
 
-            // Create final ViewModel object to send to the client..
-            GetNotificationViewModel viewModel = new GetNotificationViewModel {
-                NotificationObjects = getNotifications,
-                ResponseObject = new ResponseObjectViewModel {
-                    StatusCode = statusCode,
-                    ServerMessage = statusMessage
-                }
-            };
-
-
             // Success path...
-            return StatusCode(statusCode, viewModel);
+            return StatusCode(statusCode, CreateResponseViewModel(getNotifications, statusCode, statusMessage));
         }
 
         // TODO:    GET /api/notification/{accountId}
         [HttpGet("{accountId}")]
         public async Task<IActionResult> GetNotificationById(Guid accountId)
         {
+
+            // Map notfications to view model....
+            List<GetNotificationObjectViewModel> getNotifications = new List<GetNotificationObjectViewModel>();
+
             // Use the service here...
             IEnumerable<Notification> notifications;
             NotificationResult notificationResult;
+            int statusCode;
+            string statusMessage;
 
-             (notificationResult, notifications) = await _receiveNotificationService.GetNotificationsAsync(accountId);
+            (notificationResult, notifications) = await _receiveNotificationService.GetNotificationsAsync(accountId);
 
-            return StatusCode((int) notificationResult, notifications);
+            // Get the status code and coressponding message...
+            (statusCode, statusMessage) = MapNotificationResult(notificationResult);
+
+
+            // Account not found or DB Error....
+            if (notificationResult == NotificationResult.Error_AccountNotFound ||
+                notificationResult == NotificationResult.Error_DBReadFail ||
+                notificationResult == NotificationResult.Error_Other)
+            {
+                return StatusCode(statusCode, CreateResponseViewModel(getNotifications, statusCode, statusMessage));
+            }
+
+            foreach (var notification in notifications)
+            {
+                getNotifications.Add(new GetNotificationObjectViewModel
+                {
+                    NotificationId = notification.NotificationId,
+                    AccountId = notification.AccountId,
+                    NotificationMessage = notification.NotificationMessage,
+                    SentTime = notification.SentTime,
+                });
+            }
+
+            return StatusCode(statusCode, CreateResponseViewModel(getNotifications, statusCode, statusMessage));
         }
-
 
         // TODO:    POST /api/notification
         [HttpPost]
         public async Task<IActionResult> AddNotification([FromBody] AddNotificationViewModel viewModel)
         {
+
+            // Map notfications to view model....
+            List<GetNotificationObjectViewModel> getNotifications = new List<GetNotificationObjectViewModel>();
+            int statusCode;
+            string statusMessage;
             NotificationResult notificationResult;
+
             (notificationResult, Notification? notification) = await _sendNotificationService
                 .SendNotification(
-                viewModel.Message,
-                viewModel.AccountId
+                viewModel.NotificationObject.Message,
+                viewModel.NotificationObject.AccountId
             );
 
-            // If notification request did not work
-            if (notification == null)
-            {
-                return StatusCode((int) notificationResult, "Something went wrong!");
-            }
+            // Get the status code and coressponding message...
+            (statusCode, statusMessage) = MapNotificationResult(notificationResult);
 
-            return StatusCode((int) notificationResult, notification);
+            // Account not found or DB Error....
+            if (notificationResult == NotificationResult.Error_AccountNotFound ||
+                notificationResult == NotificationResult.Error_DBInsertFail ||
+                notificationResult == NotificationResult.Error_Other)
+            {
+
+                return StatusCode(statusCode, CreateResponseViewModel(getNotifications, statusCode, statusMessage));
+
+            }
+            
+            getNotifications.Add(new GetNotificationObjectViewModel
+            {
+                NotificationId = notification.NotificationId,
+                AccountId = notification.AccountId,
+                NotificationMessage = notification.NotificationMessage,
+                SentTime = notification.SentTime,
+            });
+
+            return StatusCode(statusCode, CreateResponseViewModel(getNotifications, statusCode, statusMessage));
+        }
+
+        private GetNotificationViewModel CreateResponseViewModel(List<GetNotificationObjectViewModel> notificationList, int statusCode, string statusMessage)
+        {
+            return new GetNotificationViewModel
+            {
+                NotificationObjects = notificationList,
+                ResponseObject = new ResponseObjectViewModel
+                {
+                    StatusCode = statusCode,
+                    ServerMessage = statusMessage
+                }
+            };
         }
 
         private Tuple<int, string> MapNotificationResult(NotificationResult notificationResult)
