@@ -5,6 +5,7 @@ import { NavBar } from "./components/NavBar";
 import Home from "./pages/Home";
 import Devices from "./pages/Devices";
 import Profiles from "./pages/Profiles";
+import Scenario from "./pages/Scenario";
 
 export function App() {
   return (
@@ -14,7 +15,10 @@ export function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/devices" element={<Devices />} />
-          <Route path="/profiles" element={<Profiles />} />
+                  <Route path="/profiles" element={<Profiles />} />
+                  <Route path="/Scenario" element={<Scenario />} />
+                  <Route path="/profiles" element={<Profiles />} />
+
         </Routes>
       </Router>
     </>
