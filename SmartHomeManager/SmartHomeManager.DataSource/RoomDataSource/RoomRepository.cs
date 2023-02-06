@@ -56,6 +56,7 @@ public class RoomRepository : IRoomRepository
 
     public IEnumerable<Room> Find(Expression<Func<Room, bool>> predicate)
     {
+        // this might be a dangerous method because the function assumes that the data is loaded already
         IQueryable<Room> query = _dbSet;
         var result = query.Where(predicate);
         return result.ToList();
@@ -68,11 +69,13 @@ public class RoomRepository : IRoomRepository
 
     public IEnumerable<Room> GetRoomsRelatedToAccount(Guid accountId)
     {
-        // retrieving all rooms that has an account ID of the user input
-        // IEnumerable<Room> result = _db.Rooms.Include(room => room.AccountId == accountId);
+        //load the data
+        var allRooms = _db.Rooms.ToList();
+        
+        //filter the data
+        IEnumerable<Room> result = _db.Rooms.ToList().Where(room => room.AccountId == accountId);
 
-        IEnumerable<Room> result = _db.Rooms.Where(room => room.AccountId == accountId);
-
-        return result.ToList();
+        return result;
     }
+    
 }

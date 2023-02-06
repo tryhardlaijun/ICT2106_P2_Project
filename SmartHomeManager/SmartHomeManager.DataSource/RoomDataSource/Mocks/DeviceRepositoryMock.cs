@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.DataSource;
 using SmartHomeManager.Domain.DeviceDomain.Entities;
+using SmartHomeManager.Domain.RoomDomain.Mocks;
 
-namespace SmartHomeManager.Domain.RoomDomain.Mocks;
+namespace SmartHomeManager.DataSource.RoomDataSource.Mocks;
 
 public class DeviceRepositoryMock : IDeviceInformationServiceMock
 {
@@ -26,12 +27,12 @@ public class DeviceRepositoryMock : IDeviceInformationServiceMock
 
     public IEnumerable<Device> GetDevicesInRoom(Guid roomId)
     {
-        // IEnumerable<Device> result = _db.Devices.Include(device => device.RoomId == roomId);
+        //load the data
+        var allDevices = _db.Devices.ToList();
+        
+        //filter the data
+        var result = allDevices.Where(device => device.RoomId == roomId);
 
-        var test = _db.Devices.ToList();
-
-        IEnumerable<Device> result = _db.Devices.Where(device => device.RoomId == roomId);
-
-        return result.ToList();
+        return result;
     }
 }
