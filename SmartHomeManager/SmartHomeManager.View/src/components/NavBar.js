@@ -183,5 +183,9 @@ const NAV_ITEMS = [
     label: "Profiles",
     href: "/profiles",
   },
+  {
+    label: "Report",
+    href: "/report",
+  },
     
 ];
