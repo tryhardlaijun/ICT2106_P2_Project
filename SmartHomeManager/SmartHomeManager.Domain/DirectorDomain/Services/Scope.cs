@@ -39,7 +39,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
                 foreach (var rule in rules)
                 {
                     Console.WriteLine((DateTime.Now - Convert.ToDateTime(rule.StartTime)).TotalMinutes);
-                    if (true || Math.Floor((DateTime.Now - Convert.ToDateTime(rule.StartTime)).TotalMinutes) == 0)
+                    if (Math.Floor((DateTime.Now - Convert.ToDateTime(rule.StartTime)).TotalMinutes) == 0)
                     {
                         Console.WriteLine("Ding! " + rule.ScheduleName);
                         Guid guid = Guid.NewGuid();
@@ -61,8 +61,8 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
                         History h = new History();
                         h.Message = "Light got triggered";
                         h.Timestamp = DateTime.Now.AddHours(-8); 
-                        h.ProfileId = Guid.Parse("0E76DA10-1261-42CE-89C8-7E2A7C14F2BD");
-                        h.RuleHistoryId = Guid.Parse("6D351B71-2187-4A68-B266-939B21331F64");
+                        h.ProfileId = Guid.Parse("1A0BA984-B580-41FF-B73E-096E12493441");
+                        h.RuleHistoryId = guid;
 
                         await _historyRepository.AddAsync(h);
                     }

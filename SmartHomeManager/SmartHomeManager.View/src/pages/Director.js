@@ -31,14 +31,15 @@ export default function Director() {
             <Heading>
                 Console History
             </Heading>
+
             <Accordion mt="10%" allowMultiple>
-                {historyList ? historyList.forEach((history, i) => {
+                {historyList ? historyList.map((history, i) => {
                     return (
                         <AccordionItem>
                             <Heading as='h2' >
                                 <AccordionButton>
                                     <Box as="span" flex='1' textAlign='left'>
-                                        { history.Message }
+                                        {history.message}
                                     </Box>
                                     <AccordionIcon />
                                 </AccordionButton>
@@ -47,12 +48,10 @@ export default function Director() {
                                 text
                             </AccordionPanel>
                         </AccordionItem>
+
                     );
                 })
-                : null}
-
-
-                
+                : null}                
             </Accordion>
         </Container>
     )
