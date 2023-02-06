@@ -66,7 +66,7 @@ namespace SmartHomeManager.API.Controllers.NotificationAPIs
             NotificationResult notificationResult;
              (notificationResult, notifications) = await _receiveNotificationService.GetNotificationsAsync(accountId);
 
-            return StatusCode(((int)notificationResult), "Not yet implemented");
+            return StatusCode(500, "Not yet implemented");
         }
 
 

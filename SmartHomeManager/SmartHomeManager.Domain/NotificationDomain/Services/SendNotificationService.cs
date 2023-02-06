@@ -60,8 +60,6 @@ namespace SmartHomeManager.Domain.NotificationDomain.Services
             }
 
             return Tuple.Create(NotificationResult.Success, notificationToBeAdded);
-            
-
         }
     }
 }

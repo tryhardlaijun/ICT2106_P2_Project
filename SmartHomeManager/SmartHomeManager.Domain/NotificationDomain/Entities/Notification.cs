@@ -21,6 +21,5 @@ namespace SmartHomeManager.Domain.NotificationDomain.Entities
 
         [ForeignKey("AccountId")]
         public Account Account { get; set; }
-        public Guid Id { get; set; }
     }
 }
