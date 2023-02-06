@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.AccountDomain.Services;
@@ -57,6 +58,15 @@ namespace SmartHomeManager.Domain.NotificationDomain.Services
             // TODO: Use Juleus Account Service to get an account, then use that account to create a notification, pass it as a FK.
             // TODO: Use Juleus Account Service to check if account exists. if does not exist invalid...
             // TODO: check NotificationMessage for any SQL injection...
+
+            //Check if account exist
+            if (accountToBeFound == null)
+            {
+                System.Diagnostics.Debug.WriteLine("Account not found");
+                //return null
+            }
+            //Remove symbol to prevent SQL injection
+            notificationMessage = Regex.Replace(notificationMessage, "[^0-9A-Za-z _-]", "");
 
             // Generate notification object..
             Notification notificationToBeAdded = new Notification

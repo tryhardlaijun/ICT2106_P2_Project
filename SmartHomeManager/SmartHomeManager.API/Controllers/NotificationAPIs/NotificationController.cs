@@ -62,7 +62,9 @@ namespace SmartHomeManager.API.Controllers.NotificationAPIs
         public async Task<IActionResult> GetNotificationById(Guid accountId)
         {
             // Use the service here...
-            IEnumerable<Notification> notifications = await _receiveNotificationService.GetNotificationsAsync(accountId);
+            IEnumerable<Notification> notifications;
+            NotificationResult notificationResult;
+             (notificationResult, notifications) = await _receiveNotificationService.GetNotificationsAsync(accountId);
 
             return StatusCode(500, "Not yet implemented");
         }

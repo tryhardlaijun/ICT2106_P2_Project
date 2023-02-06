@@ -26,13 +26,25 @@ namespace SmartHomeManager.Domain.NotificationDomain.Services
         }
 
         // List, ArrayList, Array...
-        public async Task<IEnumerable<Notification>> GetNotificationsAsync(Guid accountId)
+        public async Task<Tuple<NotificationResult, IEnumerable<Notification>>> GetNotificationsAsync(Guid accountId)
         {
+
             // TODO: Create logic for Get Notifications by AccountId
             // Use GetAllByIdAsync
             // Check if account exists
             // Receive the top 5 most recent notifications by AccountId (filter the top 5 most recent)
-            return await _notificationRepository.GetAllByIdAsync(accountId);
+
+            /*if (accountToBeFound == null)
+            {
+                System.Diagnostics.Debug.WriteLine("Account not found");
+                return Tuple.Create(NotificationResult.Error_AccountNotFound, null);
+            }*/
+
+
+            IEnumerable<Notification> allNotification = await _notificationRepository.GetAllByIdAsync(accountId);
+            IEnumerable<Notification> latest5Notification = allNotification.OrderBy(noti => noti.SentTime).TakeLast(5);
+
+            return Tuple.Create(NotificationResult.Success, latest5Notification);
         }
     }
 }
