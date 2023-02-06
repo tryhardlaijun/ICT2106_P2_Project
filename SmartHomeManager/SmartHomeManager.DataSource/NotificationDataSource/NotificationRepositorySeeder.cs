@@ -11,18 +11,23 @@ namespace SmartHomeManager.DataSource.NotificationDataSource
 {
     public class NotificationRepositorySeeder
     {
+
+        private const int AmountOfNotificationsToBeSeeded = 20;
+
         public static async Task Seed(ApplicationDbContext context)
         {
-            if (context.Notifications.Any()) return;
-            if (context.Accounts.Any()) return;
 
+            System.Diagnostics.Debug.WriteLine("Ran the seeder...!\n\n\n");
+
+            //if (context.Notifications.Any()) return;
+            //if (context.Accounts.Any()) return;
+
+            // Only works for <1000 rows...
             context.Accounts.RemoveRange(context.Accounts);
             await context.SaveChangesAsync();
 
             context.Notifications.RemoveRange(context.Notifications);
             await context.SaveChangesAsync();
-
-
 
             Account addAccount = new Account
             {
@@ -34,19 +39,26 @@ namespace SmartHomeManager.DataSource.NotificationDataSource
                 Password = "test123password"
             };
 
-           
-            Notification notificationToBeAdded = new Notification
+
+            // Add Account...
+            await context.Accounts.AddRangeAsync(addAccount);
+            await context.SaveChangesAsync();
+
+            for (int i = 0; i < AmountOfNotificationsToBeSeeded; i++)
             {
-                AccountId = addAccount.AccountId,
-                NotificationMessage = "test",
-                SentTime = DateTime.Now,
-                Account = addAccount
-            };
+                Notification notification = new Notification
+                {
+                    AccountId = addAccount.AccountId,
+                    NotificationMessage = i + " - test notification",
+                    SentTime = DateTime.Now,
+                    Account = addAccount
+                };
 
+                // Add to database...
+                await context.Notifications.AddRangeAsync(notification);
+            }
 
-
-
-
+            await context.SaveChangesAsync();
         }
     }
 }
