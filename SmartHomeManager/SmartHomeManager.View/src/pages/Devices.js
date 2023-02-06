@@ -27,7 +27,19 @@ const options = {
         },
         title: {
             display: true,
-            text: "Device Logging",
+            text: "Device Energy Usage Graph",
+        },
+    },
+};
+const options2 = {
+    responsive: true,
+    plugins: {
+        legend: {
+            position: "top",
+        },
+        title: {
+            display: true,
+            text: "Device Activity Graph",
         },
     },
 };
@@ -64,12 +76,12 @@ const weeklyData = {
     labels: weeklyLabel,
     datasets: [
         {
-            label: "Dataset 1",
+            label: "Device 1",
             data: [10, 20, 30, 40, 50, 60, 70],
             backgroundColor: "rgba(255, 99, 132, 0.5)",
         },
         {
-            label: "Dataset 2",
+            label: "Device 2",
             data: [30, 40, 50, 60, 70, 80, 92],
             backgroundColor: "rgba(53, 162, 235, 0.5)",
         },
@@ -80,7 +92,7 @@ const hourlyData = {
     labels: hourlyLabel,
     datasets: [
         {
-            label: "Dataset 1",
+            label: "Device 1",
             data: [
                 15, 35, 39, 92, 77, 36, 2, 25, 45, 49, 102, 87, 46, 12, 65, 85, 89, 52,
                 67, 26, 21, 22, 65, 24,
@@ -88,7 +100,7 @@ const hourlyData = {
             backgroundColor: "rgba(255, 99, 132, 0.5)",
         },
         {
-            label: "Dataset 2",
+            label: "Device 2",
             data: [
                 24, 65, 22, 21, 26, 67, 52, 89, 85, 65, 12, 46, 87, 102, 49, 45, 25, 2,
                 36, 77, 92, 39, 35, 15,
@@ -98,9 +110,50 @@ const hourlyData = {
     ],
 };
 
+const weeklyActivityData = {
+    labels: weeklyLabel,
+    datasets: [
+        {
+            label: "Device 1",
+            data: [50, 20, 30, 10, 50, 20, 60],
+            backgroundColor: "rgba(255, 99, 132, 0.5)",
+        },
+        {
+            label: "Device 2",
+            data: [30, 40, 50, 60, 70, 80, 52],
+            backgroundColor: "rgba(53, 162, 235, 0.5)",
+        },
+    ],
+};
+
+const hourlyActivityData = {
+    labels: hourlyLabel,
+    datasets: [
+        {
+            label: "Device 1",
+            data: [
+                15, 35, 39, 92, 77, 36, 2, 25, 45, 49, 102, 87, 46, 12, 65, 85, 89, 52,
+                67, 26, 21, 22, 65, 24,
+            ],
+            backgroundColor: "rgba(255, 99, 132, 0.5)",
+        },
+        {
+            label: "Device 2",
+            data: [
+                80, 65, 22, 21, 26, 67, 52, 19, 25, 65, 12, 46, 87, 70, 49, 45, 25, 2,
+                36, 77, 92, 39, 35, 15,
+            ],
+            backgroundColor: "rgba(53, 162, 235, 0.5)",
+        },
+    ],
+};
+
+
 export default function Devices() {
     const [DropDownValue, setDropDownValue] = useState(null);
+    const [DropDownValue2, setDropDownValue2] = useState(null);
     const [chartData, setChartData] = useState(weeklyData);
+    const [chartTwoData, setChartTwoData] = useState(weeklyActivityData);
 
     const dropDownHandler = (e) => {
         let value = e.target.value;
@@ -112,11 +165,21 @@ export default function Devices() {
         }
     };
 
+    const dropDownHandler2 = (e) => {
+        let value = e.target.value;
+        setDropDownValue2(value);
+        if (value === "weekly") {
+            setChartTwoData(weeklyActivityData);
+        } else if (value === "hourly") {
+            setChartTwoData(hourlyActivityData);
+        }
+    };
+
     return (
         <div>
-            Device Logging<br></br>
+            Device Logging<br></br><br></br>
             <Select
-                placeholder="Select View"
+                placeholder="Select Device Energy Usage View"
                 onChange={(e) => dropDownHandler(e)}
                 width={"200px"}
             >
@@ -126,6 +189,25 @@ export default function Devices() {
             {DropDownValue ? (
                 <div style={{ width: "1300px" }}>
                     <Bar options={options} data={chartData} />
+                </div>
+            ) : (
+                <div>
+                    <strong>Please select any value from dropdown</strong>
+                </div>
+            )}
+            <br></br>
+            <br></br>
+            <Select
+                placeholder="Select Device Activity View"
+                onChange={(e) => dropDownHandler2(e)}
+                width={"200px"}
+            >
+                <option value="weekly">Weekly</option>
+                <option value="hourly">Hourly</option>
+            </Select>
+            {DropDownValue2 ? (
+                <div style={{ width: "1300px" }}>
+                    <Bar options={options2} data={chartTwoData} />
                 </div>
             ) : (
                 <div>
