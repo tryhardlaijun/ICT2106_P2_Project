@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {BellIcon} from '@chakra-ui/icons'
 import NotificationPopup from "./NotificationPopup";
 import TestNotification from "./TestNotification";
+import TestNotificationModal from "./TestNotificationModal";
 import {
     Popover,
     PopoverTrigger,
@@ -25,22 +26,6 @@ export default function Notification({open}) {
 
     return (
         <>
-
-            {/* Test notification modal */}
-            <Popover>
-                <PopoverTrigger>
-                    <Button mr="25px">
-                        Test Notification
-                    </Button>
-                </PopoverTrigger>
-
-                <PopoverContent mt={5}>
-                    <PopoverHeader ml={2} fontWeight="bold" fontSize={25}>Notification Testing</PopoverHeader>
-                    <PopoverBody>
-                        <TestNotification/>
-                    </PopoverBody>
-                </PopoverContent>
-            </Popover>
             
             {/* Notification bell modal */}
             <Popover>
@@ -55,6 +40,7 @@ export default function Notification({open}) {
                 <PopoverHeader ml={2} fontWeight="bold" fontSize={25}>Welcome back xxxx</PopoverHeader>
                 <PopoverBody>
                     <NotificationPopup/>
+                    <TestNotificationModal/>
                 </PopoverBody>
             </PopoverContent>
             </Popover>
