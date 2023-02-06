@@ -12,6 +12,6 @@
         public Task<bool> UpdateAsync(T entity);
         public Task<bool> DeleteAsync(T entity);
         public Task<bool> DeleteByIdAsync(Guid id);
-        public Task<int> SaveAsync();
+        public Task<bool> SaveAsync();
      }
 }
