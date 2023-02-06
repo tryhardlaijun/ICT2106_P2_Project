@@ -49,7 +49,6 @@ namespace SmartHomeManager.API.Controllers.NotificationAPIs
                     });
                 }
 
-
                 return StatusCode(200, getNotifications);
             } 
             catch(Exception ex)
@@ -59,6 +58,16 @@ namespace SmartHomeManager.API.Controllers.NotificationAPIs
         }
 
         // TODO:    GET /api/notification/{accountId}
+        [HttpGet("{accountId}")]
+        public async Task<IActionResult> GetNotificationById(Guid accountId)
+        {
+            // Use the service here...
+            IEnumerable<Notification> notifications = await _receiveNotificationService.GetNotificationsAsync(accountId);
+
+            return StatusCode(500, "Not yet implemented");
+        }
+
+
         // TODO:    POST /api/notification
         [HttpPost]
         public async Task<IActionResult> AddNotification([FromBody]AddNotificationViewModel viewModel)
