@@ -6,6 +6,7 @@ using SmartHomeManager.DataSource.RuleHistoryDataSource;
 using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.DeviceDomain.Entities;
 using SmartHomeManager.Domain.DirectorDomain.Entities;
+using SmartHomeManager.Domain.DirectorDomain.Services;
 
 namespace SmartHomeManager.API
 {
@@ -37,6 +38,8 @@ namespace SmartHomeManager.API
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddHostedService<Director>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -56,5 +59,18 @@ namespace SmartHomeManager.API
 
             app.Run();
         }
+
+        public Program()
+        {
+            var loop1Task = Task.Run(async () => {
+                while (true)
+                {
+                    Console.WriteLine("action");
+                    await Task.Delay(1000);
+                }
+            });
+        }
     }
+
+    
 }

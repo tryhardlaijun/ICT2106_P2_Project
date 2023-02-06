@@ -18,14 +18,14 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
 
         public async Task<IEnumerable<History>> GetAllRulesAsync()
         {
-            History newHist = new History();
+            /*History newHist = new History();
             newHist.HistoryId = Guid.NewGuid();
             newHist.Message = "First History";
             newHist.Timestamp = DateTime.Now;
             newHist.ProfileId = Guid.NewGuid();
             newHist.RuleHistoryId = Guid.NewGuid();
 
-            await _historyRepository.AddAsync(newHist);
+            await _historyRepository.AddAsync(newHist);*/
 
             return await _historyRepository.GetAllAsync();
         }
