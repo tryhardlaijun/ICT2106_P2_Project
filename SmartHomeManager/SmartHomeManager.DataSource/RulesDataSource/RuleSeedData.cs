@@ -60,7 +60,7 @@ public class RuleSeedData
         {
             new Scenario
             {
-                ScenarioId = Guid.NewGuid(),
+                ScenarioId = new("AC38AF14-9A57-4DF3-89F3-78F9CE9F4983"),
                 ScenarioName = "string",
                 RuleList = "string",
                 ProfileId = profiles[0].ProfileId
@@ -79,7 +79,7 @@ public class RuleSeedData
         {
             new Device
             {
-                DeviceId = Guid.NewGuid(),
+                DeviceId = new("5CDDF6A7-C3B8-47A7-9DA1-19E1795EBF69"),
                 DeviceName = "Light",
                 DeviceBrand = "Philips",
                 DeviceModel = "Hue",
@@ -161,8 +161,8 @@ public class RuleSeedData
         await context.DeviceCoordinates.AddRangeAsync(deviceCoordinates);
         await context.SaveChangesAsync();
 
-        await context.Rules.AddRangeAsync(rule);
-        await context.SaveChangesAsync();
+        //await context.Rules.AddRangeAsync(rule);
+        //await context.SaveChangesAsync();
 
         //test
     }

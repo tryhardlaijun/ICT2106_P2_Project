@@ -5,8 +5,6 @@ using SmartHomeManager.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.DataSource;
 
-
-
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace SmartHomeManager.API.Controllers.RulesAPIs;
@@ -24,11 +22,22 @@ public class RulesController : ControllerBase
 
     // GET: api/Rules/GetAllRules
     [HttpGet("GetAllRules")]
-    public async Task<IEnumerable<Rule>> GetAllRules()
+    public async Task<IEnumerable<RuleRequest>> GetAllRules()
     {
-        //IEnumerable<Rule> rules = await _registerRuleService.GetAllRulesAsync();
-        //return rules.Select(rule => rule.DeviceId);
-        return await _registerRuleService.GetAllRulesAsync();
+        var rules = await _registerRuleService.GetAllRulesAsync();
+        var resp = rules.Select(rule => new RuleRequest
+        {
+            RuleId = rule.RuleId,
+            ScenarioId = rule.ScenarioId,
+            ConfigurationValue = rule.ConfigurationValue,
+            ActionTrigger = rule.ActionTrigger,
+            ScheduleName = rule.ScheduleName,
+            StartTime = Convert.ToDateTime(rule.StartTime),
+            EndTime = Convert.ToDateTime(rule.EndTime),
+            DeviceId = rule.DeviceId
+        }).ToList();
+        return resp;
+        //return await _registerRuleService.GetAllRulesAsync();
     }
 
     // GET api/Rules/1
@@ -45,8 +54,9 @@ public class RulesController : ControllerBase
 
     // POST api/Rules
     [HttpPost("CreateRule")]
-    public async Task<ActionResult> CreateRule(Rule rule)
+    public async Task<ActionResult> CreateRule([FromBody] RuleRequest rule)
     {
+        //pass parameter instead
         await _registerRuleService.CreateRuleAsync(rule);
         return StatusCode(200, rule);
     }
