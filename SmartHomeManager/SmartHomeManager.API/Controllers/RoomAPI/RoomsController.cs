@@ -24,21 +24,36 @@ public class RoomsController : ControllerBase
 
     // GET: api/Rooms
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Room>>> GetRooms()
+    public async Task<ActionResult<IEnumerable<GetRoomWebRequest>>> GetRooms()
     {
         var result = await _roomReadService.GetAllRooms();
-        if (!result.Any()) return NotFound();
+        // if (!result.Any()) return NotFound();
 
-        return Ok(result);
+        var resp = result.Select(room => new GetRoomWebRequest
+        {
+            RoomId = room.RoomId,
+            Name = room.Name,
+            AccountId = room.AccountId
+        }).ToList();
+
+        return Ok(resp);
     }
 
     // GET: api/Rooms/5
     [HttpGet("{roomId}")]
-    public async Task<ActionResult<Room>> GetRoom(Guid roomId)
+    public async Task<ActionResult<GetRoomWebRequest>> GetRoom(Guid roomId)
     {
         var result = await _roomReadService.GetRoomById(roomId);
         if (result == null) return NotFound();
-        return result;
+
+        var resp = new GetRoomWebRequest
+        {
+            RoomId = result.RoomId,
+            Name = result.Name,
+            AccountId = result.AccountId
+        };
+
+        return resp;
     }
 
     // PUT: api/Rooms/5
@@ -71,7 +86,7 @@ public class RoomsController : ControllerBase
     // POST: api/Rooms
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
-    public async Task<ActionResult<Room>> PostRoom(CreateRoomWebRequest roomWebRequest)
+    public async Task<ActionResult<GetRoomWebRequest>> PostRoom(CreateRoomWebRequest roomWebRequest)
     {
         var newRoom = new Room
         {
@@ -82,7 +97,16 @@ public class RoomsController : ControllerBase
         _roomWriteService.AddRoom(newRoom);
         await _roomWriteService.SaveChangesAsync();
 
-        return CreatedAtAction("GetRoom", new { id = newRoom.RoomId }, newRoom);
+        var resp = new GetRoomWebRequest
+        {
+            Name = newRoom.Name,
+            AccountId = newRoom.AccountId
+        };
+
+        // the route values specifies the action to be called and the route values to be used for that action
+        // for example new { roomId = xxx } must match [HttpGet("{roomId}")]
+        // as in the parameter names must match, roomId with roomId
+        return CreatedAtAction("GetRoom", new { roomId = newRoom.RoomId }, resp);
     }
 
     // DELETE: api/Rooms/5
@@ -100,12 +124,18 @@ public class RoomsController : ControllerBase
 
     // GET: api/Rooms/GetRoomsRelatedToAccount/accountId
     [HttpGet("GetRoomsRelatedToAccount/{accountId}")]
-    public ActionResult<IEnumerable<Room>> GetRoomsRelatedToAccount(Guid accountId)
+    public ActionResult<IEnumerable<GetRoomWebRequest>> GetRoomsRelatedToAccount(Guid accountId)
     {
         var result = _roomReadService.GetRoomsRelatedToAccount(accountId);
-        if (!result.Any()) return NotFound();
 
-        return Ok(result);
+        var resp = result.Select(room => new GetRoomWebRequest
+        {
+            RoomId = room.RoomId,
+            Name = room.Name,
+            AccountId = room.AccountId
+        }).ToList();
+
+        return Ok(resp);
     }
 
     // GET: api/Rooms/GetRoomsRelatedToAccount/roomId
