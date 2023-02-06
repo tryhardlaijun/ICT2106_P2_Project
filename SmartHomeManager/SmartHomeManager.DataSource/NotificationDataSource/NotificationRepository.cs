@@ -24,6 +24,7 @@ namespace SmartHomeManager.DataSource.NotificationDataSource
         private readonly Account _tempAccount;
         private readonly int _tempDataCount = 5;
         private readonly Guid _tempAccountGuid = Guid.Parse("e19a7e8f-c286-4d17-b567-327a219a4f1e");
+        
 
 
         public NotificationRepository(ApplicationDbContext applicationDbContext)
@@ -124,7 +125,17 @@ namespace SmartHomeManager.DataSource.NotificationDataSource
             return await _applicationDbContext.Notifications.FindAsync(id);
         }
 
-        public async Task<bool> SaveAsync()
+        public IEnumerable<Notification> GetAllById(Guid id)
+        {
+            IQueryable<Notification> query = _applicationDbContext.Notifications;
+            IQueryable<Notification> result = query.Where(x => x.AccountId == id);
+            return result;
+
+            //(V => Notification.Accountid == id);
+
+        }
+
+        public async Task<bool> SaveAsync() 
         {
             try
             {
@@ -142,10 +153,7 @@ namespace SmartHomeManager.DataSource.NotificationDataSource
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Notification>> GetAllById(Guid id)
-        {
-            throw new NotImplementedException();
-        }
+        
 
        
     }
