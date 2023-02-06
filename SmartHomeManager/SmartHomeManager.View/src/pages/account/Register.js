@@ -37,10 +37,14 @@ export default function Register() {
 
     //Boolean declaration for validation
     const [emailValid, updateEmailValid] = useState(true)
-    const [passwordMessage, updatePasswordMessage] = useState("")
     const [passwordValid, updatePasswordValid] = useState(true)
-    const [confirmPasswordMessage, updateConfirmPasswordMessage] = useState("")
     const [confirmPasswordValid, updateConfirmPasswordValid] = useState(true)
+    const [accountCreateFailStatus, updateAccountCreateFailStatus] = useState(false)
+
+    //Declaration for message
+    const [passwordMessage, updatePasswordMessage] = useState("")
+    const [confirmPasswordMessage, updateConfirmPasswordMessage] = useState("")
+    const [accountCreationMessage, updateAccountCreationMessage] = useState("")
 
     //Show password
     const [showPassword, setShowPassword] = useState(false);
@@ -63,7 +67,7 @@ export default function Register() {
 
     //Function to verify password
     const verifyPasswordInput = () => {
-        
+
         if (passwordInput.length == 0) {
             updatePasswordValid(true)
         }
@@ -72,7 +76,7 @@ export default function Register() {
         }
         //Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character
         var passwordFormat = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-        if (passwordInput.length!=0){
+        if (passwordInput.length != 0) {
             if (passwordInput.length < 8) {
                 updatePasswordMessage("Password should have a minimum of 8 characters")
                 updatePasswordValid(false)
@@ -86,7 +90,7 @@ export default function Register() {
         }
 
         //Check if password match
-        if (confirmPasswordInput.length!=0){
+        if (confirmPasswordInput.length != 0) {
             if (confirmPasswordInput.length < 8) {
                 updateConfirmPasswordMessage("Password should have a minimum of 8 characters")
                 updateConfirmPasswordValid(false)
@@ -102,45 +106,56 @@ export default function Register() {
 
     //Submit form
     const submitRegisterForm = () => {
-        if (passwordInput != confirmPasswordInput) {
-            updateConfirmPasswordMessage("Password does not match or meet the required condition")
-            updateConfirmPasswordValid(false)
-        }else{
-        const salt = bcrypt.genSaltSync(10)
-        const hashPassword = bcrypt.hash(passwordInput, salt)
-        /*
-        bcrypt.compare(passwordInput, hashKey, function (err, result) {
-            console.log({ passwordInput }, result)
-        });
-        console.log({ emailInput })
-        console.log({ usernameInput })
-        console.log({ timezoneInput })
-        console.log({ passwordInput })
-        console.log({ confirmPasswordInput })
-        console.log({ addressInput })
-        */
-        
-        const obj = {
-            "email": emailInput, "username": usernameInput, "address": addressInput, "timezone": timezoneInput, "password": passwordInput
-        }
-        const message = JSON.stringify(obj)
-        //emailInput, usernameInput, addressInput, timezoneInput, passwordInput, hashKey
-        fetch('https://localhost:7140/api/Accounts', {
-            method: 'POST',
-            body: message,
-        headers: {
-                'Content-type': 'application/problem+json; charset=utf-8',
-            },
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log(data);
-            })
-            .catch((err) => {
-                console.log(err.message);
+        if (emailValid && passwordValid && confirmPasswordValid && emailInput.length!=0 && passwordInput.length>=8 && confirmPasswordInput.length>=8) {
+            const salt = bcrypt.genSaltSync(10)
+            const hashPassword = bcrypt.hash(passwordInput, salt)
+            /*
+            bcrypt.compare(passwordInput, hashKey, function (err, result) {
+                console.log({ passwordInput }, result)
             });
+            console.log({ emailInput })
+            console.log({ usernameInput })
+            console.log({ timezoneInput })
+            console.log({ passwordInput })
+            console.log({ confirmPasswordInput })
+            console.log({ addressInput })
+            */
+
+            //JSO stringify to send to api controller
+            const obj = {
+                "email": emailInput, "username": usernameInput, "address": addressInput, "timezone": timezoneInput, "password": passwordInput
+            }
+            const message = JSON.stringify(obj)
+            fetch('https://localhost:7140/api/Accounts/', {
+                method: 'POST',
+                body: message,
+                headers: {
+                    'Content-type': 'application/problem+json; charset=utf-8',
+                },
+            })
+                .then(async response => {
+                    const msg = await response.text();
+                    if (response.ok) {
+                        updateAccountCreateFailStatus(false);
+                        window.location.href = "/account-created";
+                    } else {
+                        throw new Error(msg)
+                    }
+                })
+                .then(data => {
+                    console.log("d");
+                    console.log({data});
+                })
+                .catch((err) => {
+                    console.log("e");
+                    console.log(err.message);
+                    updateAccountCreationMessage("Your account fail to create: " + err.message +". Please try again.")
+                    updateAccountCreateFailStatus(true);
+                });
+        }else{
+            updateAccountCreateFailStatus(true);
+            updateAccountCreationMessage("Please key in all your information to create an account with us");
         }
-            
     }
 
 
@@ -165,6 +180,9 @@ export default function Register() {
                     boxShadow={'lg'}
                     p={8}>
                     <Stack spacing={4}>
+                        {
+                            accountCreateFailStatus ? <Heading color={'red'} textAlign={'center'} fontSize={'1xl'}>{accountCreationMessage}</Heading>:""
+                        }
                         <FormControl id="email" isInvalid={!emailValid} isRequired>
                             <FormLabel>Email address</FormLabel>
                             <Input type="email" onChange={(e) => { updateEmailInput(e.target.value); checkEmailInput(e.target.value) }} />
@@ -191,14 +209,14 @@ export default function Register() {
                                 </InputRightElement>
                             </InputGroup>
                             {
-                                    passwordValid ? (<FormHelperText>{passwordMessage}</FormHelperText>) : (<FormErrorMessage>{passwordMessage}</FormErrorMessage>)
-                                }
+                                passwordValid ? (<FormHelperText>{passwordMessage}</FormHelperText>) : (<FormErrorMessage>{passwordMessage}</FormErrorMessage>)
+                            }
                         </FormControl>
                         <FormControl id="cfmpassword" isRequired isInvalid={!confirmPasswordValid}>
                             <FormLabel>Confirm password</FormLabel>
                             <InputGroup>
                                 <Input type={showCfmPassword ? 'text' : 'password'} minLength="8" value={confirmPasswordInput} onChange={(e) => updateConfirmPasswordInput(e.target.value)} onBlur={(e) => verifyPasswordInput()} />
-                                
+
                                 <InputRightElement h={'full'}>
                                     <Button
                                         variant={'ghost'}
@@ -210,8 +228,8 @@ export default function Register() {
                                 </InputRightElement>
                             </InputGroup>
                             {
-                                    confirmPasswordValid ? (<FormHelperText>{confirmPasswordMessage}</FormHelperText>) : (<FormErrorMessage>{confirmPasswordMessage}</FormErrorMessage>)
-                                }
+                                confirmPasswordValid ? (<FormHelperText>{confirmPasswordMessage}</FormHelperText>) : (<FormErrorMessage>{confirmPasswordMessage}</FormErrorMessage>)
+                            }
                         </FormControl>
                         <FormControl id="address" isRequired>
                             <FormLabel>Address</FormLabel>

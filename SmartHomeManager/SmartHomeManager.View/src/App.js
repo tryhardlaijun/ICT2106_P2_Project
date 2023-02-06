@@ -8,6 +8,7 @@ import Profiles from "./pages/Profiles";
 import Register from "./pages/account/Register";
 import ForgetPassword from "./pages/account/ForgetPassword";
 import Login from "./pages/account/Login";
+import RegisterOK from "./pages/account/RegisterOK";
 
 export function App() {
   return (
@@ -21,6 +22,7 @@ export function App() {
                   <Route path="/register" element={<Register />} />
                   <Route path="/forgetpw" element={<ForgetPassword />} />
                   <Route path="/login" element={<Login />} />
+                  <Route path="/account-created" element={<RegisterOK />} />
         </Routes>
       </Router>
     </>

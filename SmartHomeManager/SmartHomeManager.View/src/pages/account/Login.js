@@ -22,6 +22,8 @@ export default function Login() {
     const [emailInput, updateEmailInput] = useState("")
     const [emailValid, updateEmailValid] = useState(true)
     const [passwordInput, updatePasswordInput] = useState("")
+    const [errorMsg, updateErrorMsg] = useState("")
+    const [errorStatus, updateErrorStatus] = useState(false)
 
     //Function to verify email
     const checkEmailInput = (emailInput) => {
@@ -33,6 +35,7 @@ export default function Login() {
         }
     }
     const submitLoginForm = () => {
+        if(emailValid && passwordInput.length>=8){
         const obj = {
             "email": emailInput, "password": passwordInput
         }
@@ -44,16 +47,30 @@ export default function Login() {
                 'Content-type': 'application/problem+json; charset=utf-8',
             },
         })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log(data);
+            .then(async response => {
+                const msg = await response.text();
+                if (response.ok) {
+                    updateErrorStatus(false);
+                    window.location.href = "/";
+                } else {
+                    updateErrorStatus(true);
+                    throw new Error(msg);
+                }
+            })
+            .then(data => {
+                console.log("d");
+                console.log({ data });
             })
             .catch((err) => {
+                console.log("e");
                 console.log(err.message);
+                updateErrorMsg(err.message);
             });
+        }else{
+            updateErrorStatus(true);
+            updateErrorMsg("Incorrect email or password");
+        }
     }
-
-
 
 
     return (
@@ -72,6 +89,10 @@ export default function Login() {
                     boxShadow={'lg'}
                     p={8}>
                     <Stack spacing={4}>
+                    
+                        {
+                            errorStatus ? <Heading color={'red'} textAlign={'center'} fontSize={'1xl'}>{errorMsg}</Heading>:""
+                        }
                         <FormControl id="email" isInvalid={!emailValid}>
                             <FormLabel>Email address</FormLabel>
                             <Input type="email" onChange={(e) => { updateEmailInput(e.target.value); checkEmailInput(e.target.value) }} />

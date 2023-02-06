@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Http;
@@ -105,7 +106,7 @@ namespace SmartHomeManager.API.Controllers.AccountController
         [HttpPost]
         public async Task<ActionResult> PostAccount([FromBody]AccountWebRequest account)
         {
-            
+
             // controller will invoke a service function
             string response = await _accountService.CreateAccount(account);
 
@@ -113,10 +114,10 @@ namespace SmartHomeManager.API.Controllers.AccountController
             {
                 // email service
                 bool emailResponse = _emailService.SendRegistrationEmail(account.Username, account.Email);
-
+                
                 if (emailResponse)
                 {
-                    return Ok("Account created");
+                    return Ok();
                 }
 
                 return BadRequest("Account created but email not sent");
@@ -127,6 +128,7 @@ namespace SmartHomeManager.API.Controllers.AccountController
             {
                 return BadRequest(response);
             }
+            
         }
 
         // POST: api/Accounts/login
