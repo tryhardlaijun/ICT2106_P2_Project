@@ -14,10 +14,4 @@
         public string NotificationMessage { get; set; }
         public DateTime SentTime { get; set; }
     }
-
-    public class ResponseObjectViewModel
-    {
-        public int StatusCode { get; set; }
-        public string ServerMessage { get; set; } 
-    }
 }
