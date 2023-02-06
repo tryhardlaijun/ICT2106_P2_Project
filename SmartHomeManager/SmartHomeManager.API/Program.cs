@@ -35,6 +35,7 @@ namespace SmartHomeManager.API
                 options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
             builder.Services.AddScoped<IGenericRepository<History>, DataSource.HistoryDataSource.HistoryRepository>();
+            builder.Services.AddScoped<IGenericRepository<RuleHistory>, RuleHistoryRepository>();
             builder.Services.AddScoped<IGenericRepository<Rule>, RuleRepository>();
             #endregion DEPENDENCY INJECTIONS
 
@@ -42,6 +43,7 @@ namespace SmartHomeManager.API
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddHostedService<Director>();
+            builder.Services.AddScoped<IScope, Scope>();
 
             var app = builder.Build();
 

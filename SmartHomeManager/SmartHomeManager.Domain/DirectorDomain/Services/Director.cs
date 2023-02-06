@@ -1,48 +1,40 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using SmartHomeManager.Domain.Common;
-using SmartHomeManager.Domain.DirectorDomain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SmartHomeManager.Domain.SceneDomain.Entities;
 
 namespace SmartHomeManager.Domain.DirectorDomain.Services
 {
-    public class Director : IHostedService, IDisposable
+    public class Director : BackgroundService
     {
-        //private readonly IGenericRepository<RuleHistory> _ruleHistoryRepository;
-        private Timer? _timer = null;
-
-        /*public Director(IGenericRepository<RuleHistory> ruleHistoryRepository)
+        
+        public Director(IServiceProvider services)
         {
-            _ruleHistoryRepository = ruleHistoryRepository;
-        }*/
+            Services = services;
+        }
+        public IServiceProvider Services { get; }
 
-        private void DoWork(object? state)
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            Console.WriteLine("Ping!");
+            
+            await DoWork(stoppingToken);
         }
 
-        public Task StartAsync(CancellationToken cancellationToken)
+        private async Task DoWork(CancellationToken stoppingToken)
         {
-            Console.WriteLine("On!");
-            _timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromSeconds(5));
+            using (var scope = Services.CreateScope())
+            {
+                var scopedProcessingService =
+                    scope.ServiceProvider
+                        .GetRequiredService<IScope>();
 
-            return Task.CompletedTask;
+                await scopedProcessingService.DoWork(stoppingToken);
+            }
         }
 
-        public Task StopAsync(CancellationToken cancellationToken)
+        public override async Task StopAsync(CancellationToken stoppingToken)
         {
-            Console.WriteLine("Off!");
-            _timer?.Change(Timeout.Infinite, 0);
-
-            return Task.CompletedTask;
-        }
-
-        public void Dispose()
-        {
-            _timer?.Dispose();
+            await base.StopAsync(stoppingToken);
         }
     }
 }

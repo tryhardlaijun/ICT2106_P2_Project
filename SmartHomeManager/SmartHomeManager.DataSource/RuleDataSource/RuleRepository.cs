@@ -53,5 +53,6 @@ namespace SmartHomeManager.DataSource.RuleDataSource
         {
             throw new NotImplementedException();
         }
+
     }
 }
