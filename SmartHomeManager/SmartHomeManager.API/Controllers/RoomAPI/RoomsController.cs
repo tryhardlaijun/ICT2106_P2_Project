@@ -1,122 +1,126 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SmartHomeManager.DataSource;
+using SmartHomeManager.Domain.DeviceDomain.Entities;
 using SmartHomeManager.Domain.RoomDomain.Entities;
+using SmartHomeManager.Domain.RoomDomain.Entities.DTOs;
+using SmartHomeManager.Domain.RoomDomain.Interfaces;
+using SmartHomeManager.Domain.RoomDomain.Mocks;
+using SmartHomeManager.Domain.RoomDomain.Services;
 
-namespace SmartHomeManager.API.Controllers.RoomAPI
+namespace SmartHomeManager.API.Controllers.RoomAPI;
+
+[Route("api/[controller]")]
+[ApiController]
+public class RoomsController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class RoomsController : ControllerBase
+    private readonly RoomReadService _roomReadService;
+    private readonly RoomWriteService _roomWriteService;
+
+    public RoomsController(IRoomRepository roomRepository, IDeviceInformationServiceMock deviceInformationService)
     {
-        private readonly ApplicationDbContext _context;
+        _roomReadService = new RoomReadService(roomRepository, deviceInformationService);
+        _roomWriteService = new RoomWriteService(roomRepository);
+    }
 
-        public RoomsController(ApplicationDbContext context)
+    // GET: api/Rooms
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<Room>>> GetRooms()
+    {
+        var result = await _roomReadService.GetAllRooms();
+        if (!result.Any()) return NotFound();
+
+        return Ok(result);
+    }
+
+    // GET: api/Rooms/5
+    [HttpGet("{roomId}")]
+    public async Task<ActionResult<Room>> GetRoom(Guid roomId)
+    {
+        var result = await _roomReadService.GetRoomById(roomId);
+        if (result == null) return NotFound();
+        return result;
+    }
+
+    // PUT: api/Rooms/5
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPut("{roomId}")]
+    public async Task<IActionResult> PutRoom(Guid roomId, EditRoomWebRequest roomWebRequest)
+    {
+        try
         {
-            _context = context;
+            var res = await _roomReadService.GetRoomById(roomId);
+
+            if (res == null) return BadRequest();
+
+            res.Name = roomWebRequest.Name ?? res.Name;
+
+            _roomWriteService.UpdateRoom(res);
+            await _roomWriteService.SaveChangesAsync();
         }
-
-        // GET: api/Rooms
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Room>>> GetRooms()
+        catch (DbUpdateConcurrencyException)
         {
-            if (_context.Rooms == null)
-            {
+            var isExist = RoomExists(roomId);
+            if (!isExist.Result)
                 return NotFound();
-            }
-
-            var result = await _context.Rooms.ToListAsync();
-
-            return Ok(result);
+            throw;
         }
 
-        // GET: api/Rooms/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Room>> GetRoom(Guid id)
+        return NoContent();
+    }
+
+    // POST: api/Rooms
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPost]
+    public async Task<ActionResult<Room>> PostRoom(CreateRoomWebRequest roomWebRequest)
+    {
+        var newRoom = new Room
         {
-            if (_context.Rooms == null)
-            {
-                return NotFound();
-            }
-            var room = await _context.Rooms.FindAsync(id);
+            Name = roomWebRequest.Name,
+            AccountId = roomWebRequest.AccountId
+        };
 
-            if (room == null)
-            {
-                return NotFound();
-            }
+        _roomWriteService.AddRoom(newRoom);
+        await _roomWriteService.SaveChangesAsync();
 
-            return room;
-        }
+        return CreatedAtAction("GetRoom", new { id = newRoom.RoomId }, newRoom);
+    }
 
-        // PUT: api/Rooms/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutRoom(Guid id, Room room)
-        {
-            if (id != room.RoomId)
-            {
-                return BadRequest();
-            }
+    // DELETE: api/Rooms/5
+    [HttpDelete("{roomId}")]
+    public async Task<IActionResult> DeleteRoom(Guid roomId)
+    {
+        var room = await _roomReadService.GetRoomById(roomId);
+        if (room == null) return NotFound();
 
-            _context.Entry(room).State = EntityState.Modified;
+        _roomWriteService.RemoveRoom(room);
+        await _roomWriteService.SaveChangesAsync();
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!RoomExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+        return NoContent();
+    }
 
-            return NoContent();
-        }
+    // GET: api/Rooms/GetRoomsRelatedToAccount/accountId
+    [HttpGet("GetRoomsRelatedToAccount/{accountId}")]
+    public ActionResult<IEnumerable<Room>> GetRoomsRelatedToAccount(Guid accountId)
+    {
+        var result = _roomReadService.GetRoomsRelatedToAccount(accountId);
+        if (!result.Any()) return NotFound();
 
-        // POST: api/Rooms
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Room>> PostRoom(Room room)
-        {
-            if (_context.Rooms == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.Rooms'  is null.");
-            }
-            _context.Rooms.Add(room);
-            await _context.SaveChangesAsync();
+        return Ok(result);
+    }
 
-            return CreatedAtAction("GetRoom", new { id = room.RoomId }, room);
-        }
+    // GET: api/Rooms/GetRoomsRelatedToAccount/roomId
+    [HttpGet("GetDevicesInRoom/{roomId}")]
+    public ActionResult<IEnumerable<Device>> GetDevicesInRoom(Guid roomId)
+    {
+        var result = _roomReadService.GetDevicesInRoom(roomId);
+        if (!result.Any()) return NotFound();
 
-        // DELETE: api/Rooms/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteRoom(Guid id)
-        {
-            if (_context.Rooms == null)
-            {
-                return NotFound();
-            }
-            var room = await _context.Rooms.FindAsync(id);
-            if (room == null)
-            {
-                return NotFound();
-            }
+        return Ok(result);
+    }
 
-            _context.Rooms.Remove(room);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool RoomExists(Guid id)
-        {
-            return (_context.Rooms?.Any(e => e.RoomId == id)).GetValueOrDefault();
-        }
+    private async Task<bool> RoomExists(Guid id)
+    {
+        var result = await _roomReadService.GetRoomById(id);
+        return result == null;
     }
 }
