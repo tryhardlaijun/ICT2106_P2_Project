@@ -1,6 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.DataSource;
+using SmartHomeManager.DataSource.AccountDataSource;
+using SmartHomeManager.DataSource.NotificationDataSource;
+using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.Common;
+using SmartHomeManager.Domain.NotificationDomain.Entities;
+using SmartHomeManager.Domain.NotificationDomain.Interfaces;
 
 namespace SmartHomeManager.API
 {
@@ -10,6 +15,15 @@ namespace SmartHomeManager.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // For allowing React to communicate with API
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(policy =>
+                {
+                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");
+                });
+            });
+
             builder.Services.AddControllers();
 
             #region DEPENDENCY INJECTIONS
@@ -17,7 +31,15 @@ namespace SmartHomeManager.API
             {
                 options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            // Inject dependencies for Notification Repository, so all implementations of IGenericRepository<Notification> will use the NotificationRepository implementation...
+            builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+
+            builder.Services.AddScoped<IGenericRepository<Account>, MockAccountRepository>();
+
             #endregion DEPENDENCY INJECTIONS
+
+
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -32,6 +54,8 @@ namespace SmartHomeManager.API
             }
 
             app.UseHttpsRedirection();
+
+            app.UseCors();
 
             app.UseAuthorization();
 

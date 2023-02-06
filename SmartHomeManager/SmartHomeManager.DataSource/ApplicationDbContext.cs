@@ -60,6 +60,10 @@ namespace SmartHomeManager.DataSource
                 .OnDelete(DeleteBehavior.SetNull);
         }
 
+        internal Notification? Find(Guid? id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
 

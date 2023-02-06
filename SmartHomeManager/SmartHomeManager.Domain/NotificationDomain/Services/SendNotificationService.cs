@@ -3,24 +3,81 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SmartHomeManager.Domain.AccountDomain.Entities;
+using SmartHomeManager.Domain.AccountDomain.Services;
 using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.NotificationDomain.Entities;
 using SmartHomeManager.Domain.NotificationDomain.Interfaces;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SmartHomeManager.Domain.NotificationDomain.Services
 {
     public class SendNotificationService : ISendNotification
     {
-        private readonly IGenericRepository<Notification> _notificationRepository;
+        private readonly INotificationRepository _notificationRepository;
+        private readonly MockAccountService _mockAccountService;
 
-        public SendNotificationService(IGenericRepository<Notification> notificationRepository)
+        public SendNotificationService(INotificationRepository notificationRepository, IGenericRepository<Account> mockAccountRepository)
         {
             _notificationRepository = notificationRepository;
+            _mockAccountService = new MockAccountService(mockAccountRepository);
         }
 
-        public bool SendNotification(string notificationMessage, Guid accountId)
+        public async Task<Notification?> SendNotification(string notificationMessage, Guid accountId)
         {
-            throw new NotImplementedException();
+            // ---------------------------------------------------------------
+            // USE THIS FIRST SINCE ACCOUNT SERVICE IS NOT AVAILABLE YET....
+            // Call Juleus method to get account...
+            //Account? account = await _mockAccountService.GetAccount(accountId
+
+            // Add an account first ...
+            Account addAccount = new Account
+            {
+                AccountId = Guid.NewGuid(),
+                Email = "test@email.com",
+                Username = "test123",
+                Address = "Singapore 000000",
+                Timezone = 8,
+                Password = "test123password"
+            };
+
+            await _mockAccountService.AddAccount(addAccount);
+
+            var accounts = await _mockAccountService.GetAllAccounts();
+
+            foreach (Account iterableAccount in accounts)
+            {
+                System.Diagnostics.Debug.WriteLine(iterableAccount.AccountId);
+            }
+
+            var accountToBeFound = await _mockAccountService.GetAccount(addAccount.AccountId);
+            // ---------------------------------------------------------------
+
+
+            // TODO: Use Juleus Account Service to get an account, then use that account to create a notification, pass it as a FK.
+            // TODO: Use Juleus Account Service to check if account exists. if does not exist invalid...
+            // TODO: check NotificationMessage for any SQL injection...
+
+            // Generate notification object..
+            Notification notificationToBeAdded = new Notification
+            {
+                AccountId = addAccount.AccountId,
+                NotificationMessage = notificationMessage,
+                SentTime = DateTime.Now,
+                Account = addAccount
+            };
+
+            bool result = await _notificationRepository.AddAsync(notificationToBeAdded);
+
+            // If something went wrong...
+            if (!result)
+            {
+                return null;
+            }
+
+            return notificationToBeAdded;
+            
+
         }
     }
 }
