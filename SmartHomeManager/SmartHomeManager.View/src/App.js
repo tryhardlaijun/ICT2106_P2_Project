@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import Devices from "./pages/Devices";
 import Profiles from "./pages/Profiles";
 import Scenario from "./pages/Scenario";
+import Rule from "./pages/Rule";
 
 export function App() {
   return (
@@ -16,8 +17,8 @@ export function App() {
           <Route path="/" element={<Home />} />
           <Route path="/devices" element={<Devices />} />
           <Route path="/profiles" element={<Profiles />} />
-          <Route path="/rules" element={<Rule />} />
-
+         <Route path="/rules" element={<Rule />} />
+        <Route path="/Scenario" element={<Scenario />} />
         </Routes>
       </Router>
     </>

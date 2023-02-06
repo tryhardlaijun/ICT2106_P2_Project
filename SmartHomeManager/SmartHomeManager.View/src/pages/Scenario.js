@@ -13,7 +13,6 @@ import {
 } from '@chakra-ui/react'
 import React from "react";
 
-
 export default function Scenarios() {
     return <Box padding='4'>
         <TableContainer>
@@ -23,8 +22,8 @@ export default function Scenarios() {
                 <Tr>
                     <Th>Rule Name</Th>
                     <Th>Device Name</Th>
-                        <Th>Descrption</Th>
-                        <Th>Options</Th>
+                    <Th>Descrption</Th>
+                   <Th>Options</Th>
                 </Tr>
             </Thead>
             <Tbody>
@@ -44,7 +43,22 @@ export default function Scenarios() {
                         </Button>
                     </Td>   
                 </Tr>
-
+                <Tr>
+                    <Td>feet</Td>
+                    <Td>centimetres (cm)</Td>
+                    <Td>30.48</Td>
+                    <Td>
+                        <Button ml={2} colorScheme='green' >
+                            Add
+                        </Button>
+                        <Button ml={2} colorScheme='blue' >
+                            Edit
+                        </Button>
+                        <Button ml={2} colorScheme='red' >
+                            Delete
+                        </Button>
+                    </Td>
+                </Tr>y>
 
             </Tbody>
         </Table>
