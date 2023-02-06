@@ -1,4 +1,5 @@
 ﻿using SmartHomeManager.Domain.DeviceLoggingDomain.Interfaces;
+using SmartHomeManager.Domain.DeviceLoggingDomain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,8 +14,12 @@ namespace SmartHomeManager.Domain.DeviceLoggingDomain.Services
 
         public GetDeviceService(iDeviceLogRepository deviceLogRepository)
         {
-            this. deviceLogRepository = deviceLogRepository;
+            _deviceLogRepository = deviceLogRepository;
         }
 
+        public async Task<IEnumerable<DeviceLog>> GetAll()
+        {
+            return await _deviceLogRepository.GetAll();
+        }
     }
 }
