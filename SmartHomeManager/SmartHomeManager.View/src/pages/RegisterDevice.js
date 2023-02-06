@@ -65,8 +65,8 @@ export default function RegisterDevice() {
         deviceBrand: deviceBrand,
         deviceModel: deviceModel,
         deviceTypeName: deviceTypeName,
-        accountId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        profileId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        accountId: "06419047-3d8e-47fa-a239-80b7f78c4a2e",
+        profileId: "5aa787d2-6f13-4a60-9894-2d9cab41bd6b",
       }),
     }).then((data) => {
       setDeviceTypeNames([]);
@@ -84,16 +84,16 @@ export default function RegisterDevice() {
       <Stack spacing={5} minW="full">
         <FormControl isRequired>
           <FormLabel>Device Name</FormLabel>
-          <Input onChange={(e) => setDeviceName(e.target.value)} type="text" placeholder="Alex's Smart Fan" />
+          <Input onChange={(e) => setDeviceName(e.target.value)} type="text" placeholder="John's Smart Fan" />
         </FormControl>
         <FormControl isRequired>
           <FormLabel>Device Brand</FormLabel>
-          <Input isReadOnly onChange={(e) => setDeviceBrand(e.target.value)} type="text" placeholder="Xiaomi" value="Xiaomi" />
+          <Input isDisabled onChange={(e) => setDeviceBrand(e.target.value)} type="text" placeholder="Xiaomi" value="Xiaomi" />
         </FormControl>
         <FormControl isRequired>
           <FormLabel>Device Model</FormLabel>
           <Input
-            isReadOnly
+            isDisabled
             onChange={(e) => setDeviceModel(e.target.value)}
             type="text"
             placeholder="Mi Smart Standing Fan 2 Lite, White"

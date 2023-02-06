@@ -2,6 +2,7 @@
 using SmartHomeManager.Domain.DeviceDomain.Services;
 using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.DeviceDomain.Entities;
+using SmartHomeManager.Domain.DeviceDomain.Entities.DTOs;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -28,9 +29,9 @@ namespace SmartHomeManager.API.Controllers.DeviceAPIs
 
         // POST api/<RegisterDeviceController>/RegisterDevice
         [HttpPost("RegisterDevice")]
-        public async Task RegisterDevice([FromBody] Device device)
+        public async Task RegisterDevice([FromBody] DeviceWebRequest deviceWebRequest)
         {
-            await _registerDeviceService.RegisterDeviceAsync(device);   
+            await _registerDeviceService.RegisterDeviceAsync(deviceWebRequest.DeviceName, deviceWebRequest.DeviceBrand, deviceWebRequest.DeviceModel, deviceWebRequest.DeviceTypeName, deviceWebRequest.AccountId, deviceWebRequest.ProfileId);
         }
 
         // POST api/<RegisterDeviceController>/AddDeviceType
