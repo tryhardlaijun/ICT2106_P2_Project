@@ -8,6 +8,7 @@ using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.NotificationDomain.Entities;
 using SmartHomeManager.Domain.NotificationDomain.Interfaces;
+using SmartHomeManager.Domain.RoomDomain.Entities;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SmartHomeManager.DataSource.NotificationDataSource
@@ -29,7 +30,8 @@ namespace SmartHomeManager.DataSource.NotificationDataSource
         {
 
             // Init Repo with DB Context...
-            _applicationDbContext = applicationDbContext;  
+            _applicationDbContext = applicationDbContext;
+            
 
 
             // Set up tmp account for testing...
@@ -112,9 +114,14 @@ namespace SmartHomeManager.DataSource.NotificationDataSource
         }
 
 
-        public Task<Notification?> GetByIdAsync(Guid id)
+        public async Task<Notification?> GetByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+
+            //return await _applicationDbContext.Notifications.(id);
+            //Notification? result = _applicationDbContext.Find(id);
+            //yield return result;
+            //throw new NotImplementedException();
+            return await _applicationDbContext.Notifications.FindAsync(id);
         }
 
         public async Task<bool> SaveAsync()
@@ -139,5 +146,7 @@ namespace SmartHomeManager.DataSource.NotificationDataSource
         {
             throw new NotImplementedException();
         }
+
+       
     }
 }
