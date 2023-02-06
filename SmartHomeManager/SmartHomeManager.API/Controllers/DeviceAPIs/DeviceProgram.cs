@@ -1,4 +1,10 @@
-﻿namespace SmartHomeManager.API.Controllers.DeviceAPIs
+﻿using Microsoft.EntityFrameworkCore;
+using SmartHomeManager.DataSource;
+using SmartHomeManager.DataSource.DeviceDataSource;
+using SmartHomeManager.Domain.Common;
+using SmartHomeManager.Domain.DeviceDomain.Entities;
+
+namespace SmartHomeManager.API.Controllers.DeviceAPIs
 {
     public class DeviceProgram
     {
@@ -70,10 +76,7 @@
                 logger.LogError(e, "An error occurred during migration.");
             }
 
-
             app.Run();
         }
-    }
-
     }
 }
