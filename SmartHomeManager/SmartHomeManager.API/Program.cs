@@ -28,6 +28,7 @@ namespace SmartHomeManager.API
             #endregion DEPENDENCY INJECTIONS
 
             builder.Services.AddScoped<AccountService, AccountService>();
+            builder.Services.AddScoped<EmailService, EmailService>();
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -45,6 +46,8 @@ namespace SmartHomeManager.API
             }
 
             app.UseHttpsRedirection();
+
+            app.UseCors();
 
             app.UseAuthorization();
 

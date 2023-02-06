@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.AccountDomain.Interfaces;
 using SmartHomeManager.Domain.AccountDomain.Services;
 
+
 namespace SmartHomeManager.API.Controllers.AccountController
 {
     [Route("api/[controller]")]
@@ -21,10 +23,12 @@ namespace SmartHomeManager.API.Controllers.AccountController
         // dependency injection is just saying this class can use this thing
         // in this context - accounts controller can use account service
         private readonly AccountService _accountService;
+        private readonly EmailService _emailService;
 
-        public AccountsController(AccountService accountService)
+        public AccountsController(AccountService accountService, EmailService emailService)
         {
             _accountService = accountService;
+            _emailService = emailService;
         }
 
         /*private readonly AccountRepository _accountRepository;
@@ -106,7 +110,16 @@ namespace SmartHomeManager.API.Controllers.AccountController
 
             if (response == "account created")
             {
-                return Ok("Account created");
+                // email service
+                bool emailResponse = _emailService.SendRegistrationEmail(account.Username, account.Email);
+
+                if (emailResponse)
+                {
+                    return Ok("Account created");
+                }
+
+                return BadRequest("Account created but email not sent");
+                
             }
 
             else

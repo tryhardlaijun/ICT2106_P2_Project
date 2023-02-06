@@ -32,13 +32,15 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
             realAccount.Email = accountRequest.Email;
             realAccount.Timezone = accountRequest.Timezone;
             realAccount.Username = accountRequest.Username;
-            
+
             /*if (_accountRepository.GetAllAsync() == null)
             {
                 return false;
             }*/
-            
-            if (_accountRepository.GetAccountByEmailAsync(accountRequest.Email) != null)
+            Account? findAccount = await _accountRepository.GetAccountByEmailAsync(accountRequest.Email);
+
+
+            if (findAccount != null)
             {
                 // return acc alr exists
                 return "account exists";
