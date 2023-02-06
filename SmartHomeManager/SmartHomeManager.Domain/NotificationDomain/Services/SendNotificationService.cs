@@ -28,41 +28,12 @@ namespace SmartHomeManager.Domain.NotificationDomain.Services
         public async Task<Tuple<NotificationResult, Notification?>> SendNotification(string notificationMessage, Guid accountId)
         {
             System.Diagnostics.Debug.WriteLine("Notification message:" + notificationMessage);
-            // ---------------------------------------------------------------
-            // USE THIS FIRST SINCE ACCOUNT SERVICE IS NOT AVAILABLE YET....
-            // Call Juleus method to get account...
-            //Account? account = await _mockAccountService.GetAccount(accountId
-
-            // Add an account first ...
-            Account addAccount = new Account
-            {
-                AccountId = Guid.NewGuid(),
-                Email = "test@email.com",
-                Username = "test123",
-                Address = "Singapore 000000",
-                Timezone = 8,
-                Password = "test123password"
-            };
-
-            await _mockAccountService.AddAccount(addAccount);
-
-            var accounts = await _mockAccountService.GetAllAccounts();
-
-            foreach (Account iterableAccount in accounts)
-            {
-                System.Diagnostics.Debug.WriteLine(iterableAccount.AccountId);
-            }
-
-            var accountToBeFound = await _mockAccountService.GetAccount(addAccount.AccountId);
-            // ---------------------------------------------------------------
 
 
-            // TODO: Use Juleus Account Service to get an account, then use that account to create a notification, pass it as a FK.
-            // TODO: Use Juleus Account Service to check if account exists. if does not exist invalid...
-            // TODO: check NotificationMessage for any SQL injection...
-
+            var account = await _mockAccountService.GetAccount(accountId);
+            
             //Check if account exist
-            if (accountToBeFound == null)
+            if (account == null)
             {
                 System.Diagnostics.Debug.WriteLine("Account not found");
                 return Tuple.Create(NotificationResult.Error_AccountNotFound, new Notification());
@@ -74,10 +45,10 @@ namespace SmartHomeManager.Domain.NotificationDomain.Services
             // Generate notification object..
             Notification notificationToBeAdded = new Notification
             {
-                AccountId = addAccount.AccountId,
+                AccountId = accountId,
                 NotificationMessage = notificationMessage,
                 SentTime = DateTime.Now,
-                Account = addAccount
+                Account = account
             };
 
             bool result = await _notificationRepository.AddAsync(notificationToBeAdded);
