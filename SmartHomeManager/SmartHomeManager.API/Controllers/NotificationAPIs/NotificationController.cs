@@ -22,7 +22,7 @@ namespace SmartHomeManager.API.Controllers.NotificationAPIs
         public NotificationController(INotificationRepository notificationRepository, IGenericRepository<Account> mockAccountRepository)
         {
             _sendNotificationService = new(notificationRepository, mockAccountRepository);
-            _receiveNotificationService = new(notificationRepository);
+            _receiveNotificationService = new(notificationRepository, mockAccountRepository);
         }
 
         // API routes....
