@@ -50,26 +50,10 @@ export default function Scenarios() {
                 <Button ml={2} colorScheme="whatsapp">
                     Export Scenario
                 </Button>
-                <Button ml={2} colorScheme="whatsapp" onClick={onOpen}>
-                    Import Scenario
-                </Button>
-                <Modal isOpen={isOpen} onClose={onClose}>
-                    <ModalOverlay />
-                    <ModalContent>
-                        <ModalHeader>Modal Title</ModalHeader>
-                        <ModalCloseButton />
-                        <ModalBody>
-                            Yourfile.json
-                        </ModalBody>
-
-                        <ModalFooter>
-                            <Button colorScheme='blue' mr={3} onClick={onClose}>
-                                Close
-                            </Button>
-                            <Button variant='ghost'>Import file</Button>
-                        </ModalFooter>
-                    </ModalContent>
-                </Modal>
+                <ModalButton title="Import File" text="Room.json" action = "Upload" />
+                <ModalButton title="Simulate Clash" text="This rule will clash with another rule to turn on device at 1500." action="override" />
+                <ModalButton title="Simulate Troubleshooting" text="You fan seems to be unable to oscilate, please check if something is blocking it."
+                    action = "Try again" />
             </Box>
             
         </Box>
