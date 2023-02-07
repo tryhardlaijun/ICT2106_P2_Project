@@ -177,4 +177,8 @@ const NAV_ITEMS = [
     label: "Profiles",
     href: "/profiles",
   },
+  {
+    label: "Device Config",
+    href: "/config"
+  },
 ];
