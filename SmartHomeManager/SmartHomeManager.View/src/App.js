@@ -7,18 +7,21 @@ import Devices from "./pages/Devices";
 import Profiles from "./pages/Profiles";
 
 export function App() {
-  return (
-    <>
-      <Router>
-        <NavBar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/devices" element={<Devices />} />
-          <Route path="/profiles" element={<Profiles />} />
-        </Routes>
-      </Router>
-    </>
-  );
+	return (
+		<>
+			<Router>
+				<NavBar />
+				<Container maxW={'6xl'} py={4}>
+					<Routes>
+						<Route path="/" element={<Home />} />
+						<Route path="/devices" element={<Devices />} />
+						<Route path="/rooms" element={<Rooms />} />
+						<Route path="/profiles" element={<Profiles />} />
+					</Routes>
+				</Container>
+			</Router>
+		</>
+	)
 }
 
 export default App;
