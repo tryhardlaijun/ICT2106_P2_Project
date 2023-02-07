@@ -6,7 +6,16 @@ import {
     AccordionButton,
     Box,
     Container,
-    Heading
+    Heading,
+    Table,
+    Thead,
+    Tbody,
+    Tfoot,
+    Tr,
+    Th,
+    Td,
+    TableCaption,
+    TableContainer,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 
@@ -34,21 +43,52 @@ export default function Director() {
 
             <Accordion mt="10%" allowMultiple>
                 {historyList ? historyList.map((history, i) => {
+                    var ts = new Date(history.timestamp)
                     return (
-                        <AccordionItem>
+                        <AccordionItem key="history.historyId">
                             <Heading as='h2' >
                                 <AccordionButton>
                                     <Box as="span" flex='1' textAlign='left'>
-                                        {history.message}
+                                        {history.message}                                                                               
                                     </Box>
                                     <AccordionIcon />
                                 </AccordionButton>
                             </Heading>
                             <AccordionPanel pb="4">
-                                text
+                                <TableContainer>
+                                    <Table variant='simple'>
+                                        <Thead>
+                                            <Tr>
+                                                <Th>Fields</Th>
+                                                <Th>Values</Th>
+                                            </Tr>
+                                        </Thead>
+                                        <Tbody>
+                                            <Tr>
+                                                <Td>Scenario</Td>
+                                                <Td>{history.ruleHistory.scenarioName}</Td>
+                                            </Tr>
+                                            <Tr>
+                                                <Td>Device</Td>
+                                                <Td>{history.ruleHistory.deviceName}</Td>
+                                            </Tr>
+                                            <Tr>
+                                                <Td>Timestamp</Td>
+                                                <Td>{ts.toLocaleDateString('en-GB') + ' ' + ts.toLocaleTimeString('en-GB')}</Td>
+                                            </Tr>
+                                            <Tr>
+                                                <Td>ActionTrigger</Td>
+                                                <Td>{history.ruleHistory.actionTrigger ?? "-"}</Td>
+                                            </Tr>
+                                            <Tr>
+                                                <Td>Config Value</Td>
+                                                <Td>{history.ruleHistory.configurationValue}</Td>
+                                            </Tr>
+                                        </Tbody>
+                                    </Table>
+                                </TableContainer> 
                             </AccordionPanel>
                         </AccordionItem>
-
                     );
                 })
                 : null}                

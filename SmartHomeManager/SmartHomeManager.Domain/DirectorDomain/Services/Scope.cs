@@ -61,7 +61,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
                         History h = new History();
                         h.Message = "Light got triggered";
                         h.Timestamp = DateTime.Now.AddHours(-8); 
-                        h.ProfileId = Guid.Parse("1A0BA984-B580-41FF-B73E-096E12493441");
+                        h.ProfileId = Guid.Parse("6EFC056E-71DA-48F5-A46F-0CB2E0A46919");
                         h.RuleHistoryId = guid;
 
                         await _historyRepository.AddAsync(h);

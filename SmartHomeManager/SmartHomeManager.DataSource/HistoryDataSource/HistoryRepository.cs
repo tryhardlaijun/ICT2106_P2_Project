@@ -41,7 +41,7 @@ namespace SmartHomeManager.DataSource.HistoryDataSource
 
         public async Task<IEnumerable<History>> GetAllAsync()
         {
-            return await _applicationDbContext.Histories.ToListAsync();
+            return await _applicationDbContext.Histories.Include(r => r.RuleHistory).Include(p => p.Profile).ToListAsync();
         }
 
         public Task<History?> GetByIdAsync(Guid id)
