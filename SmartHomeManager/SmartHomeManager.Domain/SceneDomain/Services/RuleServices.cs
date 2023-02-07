@@ -27,9 +27,20 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
 		}
 
 		//Create
-		public async Task<bool> CreateRuleAsync(Rule rule)
+		public async Task<bool> CreateRuleAsync(RuleRequest ruleRequest)
 		{
-			return await _ruleRepository.AddAsync(rule);
+				var rule = new Rule
+				{
+					RuleId = ruleRequest.RuleId,
+					ScenarioId = ruleRequest.ScenarioId,
+                    ConfigurationValue = ruleRequest.ConfigurationValue,
+					ActionTrigger = ruleRequest.ActionTrigger,
+					ScheduleName = ruleRequest.ScheduleName,
+					StartTime = Convert.ToDateTime(ruleRequest.StartTime),
+					EndTime = Convert.ToDateTime(ruleRequest.EndTime),
+					DeviceId = ruleRequest.DeviceId
+				};
+            return await _ruleRepository.AddAsync(rule);
 		}
 
 		//Update

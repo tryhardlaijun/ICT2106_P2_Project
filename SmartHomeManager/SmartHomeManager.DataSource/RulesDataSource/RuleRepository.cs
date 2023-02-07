@@ -1,19 +1,19 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.Domain.Common;
+using SmartHomeManager.Domain.RoomDomain.Entities;
 using SmartHomeManager.Domain.SceneDomain.Entities;
-
-
 
 namespace SmartHomeManager.DataSource.RulesDataSource
 {
 	public class RuleRepository : IGenericRepository<Rule>
 	{
         private readonly ApplicationDbContext _applicationDbContext;
-
+        protected DbSet<Rule> _dbSet;
         public RuleRepository(ApplicationDbContext applicationDbContext)
         {
             _applicationDbContext = applicationDbContext;
-            
+            this._dbSet = _applicationDbContext.Set<Rule>();
         }
 
         // Add rule
@@ -21,8 +21,8 @@ namespace SmartHomeManager.DataSource.RulesDataSource
         {
             try
             {
-                
-                await _applicationDbContext.Rules.AddAsync(rule);
+                await RuleSeedData.Seed(_applicationDbContext);
+                await _applicationDbContext.AddRangeAsync(rule);
                 return await SaveAsync();
             }
             catch
@@ -58,7 +58,7 @@ namespace SmartHomeManager.DataSource.RulesDataSource
         // Get all
         public async Task<IEnumerable<Rule>> GetAllAsync()
         {
-            await RuleSeedData.Seed(_applicationDbContext);
+            //await RuleSeedData.Seed(_applicationDbContext);
             return await _applicationDbContext.Rules.ToListAsync();
         }
 
