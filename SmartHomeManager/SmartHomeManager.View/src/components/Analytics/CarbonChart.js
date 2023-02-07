@@ -22,13 +22,13 @@ const data = {
   labels: labels,
   datasets: [
     {
-      label: "My First dataset",
+      label: "My Household Carbon Footprint",
       backgroundColor: "rgb(255, 99, 132)",
       borderColor: "rgb(255, 99, 132)",
       data: [0, 10, 5, 2, 20, 30, 45],
     },
     {
-      label: "My Second dataset",
+      label: "National Household Average Carbon Footprint",
       backgroundColor: "rgb(124,252,0)",
       borderColor: "rgb(124,252,0)",
       data: [2, 4, 6, 10, 34, 60],

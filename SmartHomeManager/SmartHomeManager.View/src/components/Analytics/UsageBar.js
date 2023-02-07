@@ -31,8 +31,8 @@ function UsageBar() {
 
     return (
       <Container maxWidth={1600} mt={2} centerContent>
-        <Heading pb={5}>Household Energy Usage</Heading>
-        <Text pb={10}>This is your total household energy usage. </Text>
+        <Heading pb={5}>Forecast Household Energy Usage</Heading>
+        <Text pb={10}>This is your predicted total household energy usage for the following months. </Text>
           <Bar data={data} />
       </Container>
     )
