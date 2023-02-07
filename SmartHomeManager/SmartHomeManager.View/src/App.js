@@ -7,6 +7,8 @@ import Devices from "./pages/Devices";
 import Profiles from "./pages/Profiles";
 import Director from "./pages/Director";
 import Backup from "./pages/Backup";
+import Intruder from "./pages/Intruder";
+import Configuration from "./pages/Configuration";
 
 export function App() {
   return (
@@ -19,6 +21,8 @@ export function App() {
           <Route path="/profiles" element={<Profiles />} />
           <Route path="/director" element={<Director />} />
           <Route path="/backup" element={<Backup />} />
+          <Route path="/intruder" element={<Intruder />} />
+          <Route path="/configuration" element={<Configuration />} />
         </Routes>
       </Router>
     </>
