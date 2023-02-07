@@ -9,6 +9,12 @@ import {
     Legend,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
+import {
+    Heading,
+    Container,
+    Text,
+} from '@chakra-ui/react';
+
 
 ChartJS.register(
     CategoryScale,
@@ -20,17 +26,22 @@ ChartJS.register(
 );
 
 export const options = {
-    scales:{
-        yAxes:{
-            stacked: true,
-        }
-    },
+    indexAxis: 'y',
     elements: {
         bar: {
             borderWidth: 2,
         },
     },
     responsive: true,
+    plugins: {
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: 'Chart.js Horizontal Bar Chart',
+        },
+    },
 };
 
 const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
@@ -40,7 +51,7 @@ export const data = {
     datasets: [
         {
             label: 'Dataset 1',
-            data: [3, 5, 1, 4, 7, 3, 5],
+            data: [3, 4, 2, 5, 3, 2, 3],
             borderColor: 'rgb(255, 99, 132)',
             backgroundColor: 'rgba(255, 99, 132, 0.5)',
         },
@@ -48,5 +59,15 @@ export const data = {
 };
 
 export function EfficiencyBar() {
-    return <Bar options={options} data={data} />;
+
+    return (
+
+        <Container maxWidth={1600} mt={2} centerContent>
+            <Heading pb={5}>Energy Efficiency</Heading>
+            <Text pb={10}>This is your monthly energy efficiency</Text> 
+            <Bar 
+            // @ts-ignore
+            options={options} data={data} />
+        </Container>
+    )
 }
