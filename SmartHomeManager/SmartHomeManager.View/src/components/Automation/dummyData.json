@@ -1,0 +1,21 @@
+ [
+  {
+    "RuleID": "1111-1111-1111-1111",
+    "RuleName": "Light at Night",
+    "DeviceName": "Lights at Wenjun's Room",
+    "Description": "Schedule : Turn OFF at 1100"
+  },
+  {
+    "RuleID": "1111-1111-1111-1112",
+    "RuleName": "Light at Morning",
+    "DeviceName": "Lights at Wenjun's Room",
+    "Description": "Schedule : Turn ON at 0600"
+  },
+  {
+    "RuleID": "1111-1111-1111-1113",
+    "RuleName": "Fan at Night",
+    "DeviceName": "Fan at Living Room",
+    "Description": "Schedule : Turn ON at 2300"
+  }
+ ]
+

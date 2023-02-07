@@ -1,5 +1,0 @@
-{
-  "StartTime": 1300,
-  "EndTime": 1400,
-  "Action": "Turn On"
-}
