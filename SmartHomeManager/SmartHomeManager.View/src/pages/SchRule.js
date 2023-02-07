@@ -1,20 +1,9 @@
 import React, { useState } from "react";
-import {
-	Box,
-	ButtonGroup,
-	Button,
-	Heading,
-	Flex,
-	FormControl,
-	GridItem,
-	FormLabel,
-	Input,
-	Select,
-} from "@chakra-ui/react";
+import {Box, Button, Heading, Flex, FormControl, FormLabel, Input, Select} from "@chakra-ui/react";
 
 import { useToast } from "@chakra-ui/react";
 
-const Form1 = () => {
+const FormCard = () => {
 	const name = "Scencerio Name";
 	return (
 		<>
@@ -62,7 +51,7 @@ const Form1 = () => {
 	);
 };
 
-export default function Rule() {
+export default function SchRule() {
 	const toast = useToast();
 	return (
 		<>
@@ -76,8 +65,7 @@ export default function Rule() {
 				as="form"
 			>
 				<form>
-					<Form1 />
-
+					<FormCard />
 					<Button
 						mt="2%"
 						w="7rem"

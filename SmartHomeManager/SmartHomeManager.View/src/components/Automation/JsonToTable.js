@@ -21,7 +21,7 @@ function jsonToTable() {
                 <Td>{info.RuleName}</Td>
                 <Td>{info.DeviceName}</Td>
                 <Td>{info.Description}</Td>
-                <Buttons />
+                <Buttons props={info} />
             </Tr>
         );
     });
