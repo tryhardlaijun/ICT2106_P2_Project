@@ -38,7 +38,7 @@ export default function Scenarios() {
         </Box>
         <JsonToTable />
         <Box padding='3' display="flex">
-            <Box width="50%" display="flex" justifyContent="flex-end">
+            <Box width="50%" display="flex" justifyContent="flex-start">
                 <Button ml={2} colorScheme="whatsapp">
                     Add Scenario
                 </Button>

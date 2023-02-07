@@ -2,20 +2,20 @@
   {
     "RuleID": "1111-1111-1111-1111",
     "RuleName": "Light at Night",
+    "ScenarioName": "Default",
     "DeviceName": "Lights at Wenjun's Room",
-    "Description": "Schedule : Turn OFF at 1100"
+    "Description": "Schedule : Turn ON at 0500 until 1000",
+    "StartTime": "0500",
+    "EndTime": "1000"
   },
   {
     "RuleID": "1111-1111-1111-1112",
-    "RuleName": "Light at Morning",
-    "DeviceName": "Lights at Wenjun's Room",
-    "Description": "Schedule : Turn ON at 0600"
-  },
-  {
-    "RuleID": "1111-1111-1111-1113",
-    "RuleName": "Fan at Night",
-    "DeviceName": "Fan at Living Room",
-    "Description": "Schedule : Turn ON at 2300"
+    "ScenarioName": "Default",
+    "RuleName": "Light in morning",
+    "DeviceName": "Light at Living's Room",
+    "Description": "Schedule : Turn ON at 1900 until 2200",
+    "StartTime": "1900",
+    "EndTime": "2200"
   }
  ]
 
