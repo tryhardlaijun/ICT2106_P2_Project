@@ -7,16 +7,20 @@ import {
     Divider,
     MenuList,
     Button,
-    Input
+    Input,
+    useDisclosure,
+    Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, ModalCloseButton
 } from '@chakra-ui/react'   
 import React from "react";
 import Buttons from "components/Automation/Buttons"
 import JsonToTable from "components/Automation/JsonToTable"
-
+import ModalButton from "components/Automation/ModalButton"
 
 
 export default function Scenarios() {
+    const { isOpen, onOpen, onClose } = useDisclosure()
     return <Box padding='16'>
+
         <Heading alignContent="center" >Profile : Wen Jun</Heading>
         <Input placeholder='Voice Control' display="inline-block" />
 
@@ -46,10 +50,28 @@ export default function Scenarios() {
                 <Button ml={2} colorScheme="whatsapp">
                     Export Scenario
                 </Button>
-                <Button ml={2} colorScheme="whatsapp">
+                <Button ml={2} colorScheme="whatsapp" onClick={onOpen}>
                     Import Scenario
                 </Button>
+                <Modal isOpen={isOpen} onClose={onClose}>
+                    <ModalOverlay />
+                    <ModalContent>
+                        <ModalHeader>Modal Title</ModalHeader>
+                        <ModalCloseButton />
+                        <ModalBody>
+                            Yourfile.json
+                        </ModalBody>
+
+                        <ModalFooter>
+                            <Button colorScheme='blue' mr={3} onClick={onClose}>
+                                Close
+                            </Button>
+                            <Button variant='ghost'>Import file</Button>
+                        </ModalFooter>
+                    </ModalContent>
+                </Modal>
             </Box>
+            
         </Box>
     </Box>;
 }
