@@ -84,7 +84,6 @@ const options = {
 
 
 function CarbonChart() {
-
   return (
     <Container maxWidth={1600} mt={2} centerContent>
         <Heading pb={5}>Carbon Footprint</Heading>

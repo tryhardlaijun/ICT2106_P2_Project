@@ -13,6 +13,7 @@ import {
 } from '@chakra-ui/react';
 import CarbonChart from './CarbonChart';
 import UsageBar from './UsageBar';
+import Report from "./Report"
 
 
 function AnalyticsTab() {
@@ -35,7 +36,7 @@ function AnalyticsTab() {
                     <p>Energy Efficiency</p>
                 </TabPanel>
                 <TabPanel>
-                    <p>Report</p>
+                    <Report />
                 </TabPanel>
             </TabPanels>
         </Tabs>

@@ -12,7 +12,7 @@ import {
   Container,
   Text,
   Heading
-} from '@chakra-ui/react';
+} from '@chakra-ui/react'; 
 
 const labels = ["January", "February", "March", "April", "May", "June"];
     const data = {
