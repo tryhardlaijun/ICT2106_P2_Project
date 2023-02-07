@@ -30,11 +30,7 @@ namespace SmartHomeManager.API
             });
             builder.Services.AddScoped<IGenericRepository<Rule>, RuleRepository>();
             #endregion DEPENDENCY INJECTIONS
-
-            builder.Services.AddControllersWithViews()
-    .AddNewtonsoftJson(options =>
-    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-);
+        
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
