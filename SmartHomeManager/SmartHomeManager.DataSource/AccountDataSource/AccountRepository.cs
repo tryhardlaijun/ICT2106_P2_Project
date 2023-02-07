@@ -55,6 +55,13 @@ namespace SmartHomeManager.DataSource.AccountDataSource
             return tempAcc;
         }
 
+        public async Task<bool> IsEmailUnique(string email)
+        {
+            Account? tempAcc = await _dbContext.Accounts.Where(acc => acc.Email == email).FirstOrDefaultAsync();
+            if (tempAcc == null) return true;
+            return false;
+        }
+
         public async Task<int> SaveAsync()
         {
             int result = await _dbContext.SaveChangesAsync();

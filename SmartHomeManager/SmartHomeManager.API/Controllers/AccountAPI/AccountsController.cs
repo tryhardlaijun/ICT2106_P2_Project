@@ -104,31 +104,26 @@ namespace SmartHomeManager.API.Controllers.AccountController
         // POST: api/Accounts
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult> PostAccount([FromBody]AccountWebRequest account)
+        public async Task<ActionResult> PostAccount([FromBody] AccountWebRequest accountWebRequest)
         {
 
             // controller will invoke a service function
-            string response = await _accountService.CreateAccount(account);
+            string response = await _accountService.CreateAccount(accountWebRequest);
 
             if (response == "account created")
             {
-                // email service
-                bool emailResponse = _emailService.SendRegistrationEmail(account.Username, account.Email);
+                // Email service
+                bool emailResponse = _emailService.SendRegistrationEmail(accountWebRequest.Username, accountWebRequest.Email);
                 
                 if (emailResponse)
                 {
-                    return Ok();
+                    return Ok(response);
                 }
 
                 return BadRequest("Account created but email not sent");
-                
             }
 
-            else
-            {
-                return BadRequest(response);
-            }
-            
+            return BadRequest(response);
         }
 
         // POST: api/Accounts/login

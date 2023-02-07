@@ -11,4 +11,11 @@
     <Folder Include="AccountDomain\Services\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Microsoft.AspNetCore.Cryptography.KeyDerivation" />
+    <None Remove="Microsoft.AspNet.WebApi.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="7.0.2" />
+  </ItemGroup>
 </Project>

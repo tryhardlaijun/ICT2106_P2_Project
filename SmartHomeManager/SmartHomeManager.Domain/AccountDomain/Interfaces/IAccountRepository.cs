@@ -15,6 +15,7 @@ namespace SmartHomeManager.Domain.AccountDomain.Interfaces
         public Task<Account?> GetByIdAsync(Guid id);
         public Task<IEnumerable<Account>> GetAllAsync();
         public Task<Account?> GetAccountByEmailAsync(string email);
+        public Task<bool> IsEmailUnique(string email);
         public Task<bool> UpdateAsync(Account account);
         public Task<bool> DeleteAsync(Account account);
         public Task<bool> DeleteByIdAsync(Guid id);
