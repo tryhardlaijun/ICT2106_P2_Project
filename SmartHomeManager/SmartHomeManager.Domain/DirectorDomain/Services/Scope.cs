@@ -52,9 +52,9 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
                         rh.ActionTrigger = rule.ActionTrigger;
                         rh.RuleNum = rhLength;
 
-                        rh.ScenarioName = "Scenario A";
+                        rh.ScenarioName = rule.Scenario.ScenarioName;
                         rh.ConfigurationValue = rule.ConfigurationValue;
-                        rh.DeviceName = "Light";
+                        rh.DeviceName = rule.Device.DeviceName;
 
                         await _ruleHistoryRepository.AddAsync(rh);
 

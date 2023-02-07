@@ -22,6 +22,7 @@ import React, { useEffect, useState } from "react";
 export default function Director() {
 
     const [historyList, getHistory] = useState([]);
+    
 
     function fetchHistory() {
         fetch("https://localhost:7140/api/History/GetAllHistory/")
@@ -33,7 +34,7 @@ export default function Director() {
         fetchHistory();
     }, []);
 
-
+    let historyLength = historyList.length
 
     return (
         <Container mt="3%">
@@ -42,14 +43,14 @@ export default function Director() {
             </Heading>
 
             <Accordion mt="10%" allowMultiple>
-                {historyList ? historyList.map((history, i) => {
-                    var ts = new Date(history.timestamp)
+                {historyList ? historyList.reverse().map((history, i) => {
+                    let ts = new Date(history.timestamp)
                     return (
-                        <AccordionItem key="history.historyId">
+                        <AccordionItem key={history.historyId}>
                             <Heading as='h2' >
                                 <AccordionButton>
                                     <Box as="span" flex='1' textAlign='left'>
-                                        {history.message}                                                                               
+                                        <strong>Rule #{historyLength - i}: </strong> {history.message}                                                                               
                                     </Box>
                                     <AccordionIcon />
                                 </AccordionButton>

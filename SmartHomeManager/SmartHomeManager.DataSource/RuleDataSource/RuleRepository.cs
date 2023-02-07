@@ -1,11 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.SceneDomain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SmartHomeManager.DataSource.RuleDataSource
 {
@@ -36,7 +31,7 @@ namespace SmartHomeManager.DataSource.RuleDataSource
 
         public async Task<IEnumerable<Rule>> GetAllAsync()
         {
-            return await _applicationDbContext.Rules.ToListAsync();
+            return await _applicationDbContext.Rules.Include(d => d.Device).Include(s => s.Scenario).ToListAsync();
         }
 
         public Task<Rule?> GetByIdAsync(Guid id)
