@@ -5,10 +5,10 @@ import { Link } from "react-router-dom";
 function Buttons(props) {
 	return (
 		<Td>
+			{/*<Button ml={2} colorScheme="green">*/}
+			{/*	<Link to={`/`}>Add</Link>*/}
+			{/*</Button>*/}
 			<Button ml={2} colorScheme="green">
-				<Link to={`/`}>Add</Link>
-			</Button>
-			<Button ml={2} colorScheme="teal">
 				<Link to={`/`}>More</Link>
 			</Button>
 			<Button ml={2} colorScheme="blue">
