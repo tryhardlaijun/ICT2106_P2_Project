@@ -12,7 +12,7 @@ import NotificationService from "requests/services/NotificationService";
 
 export default function TestNotification(){
   
-  const SESSION_ACCOUNT_GUID = "FCAC451C-2C2E-41ED-896F-88FD50288B87";
+  const SESSION_ACCOUNT_GUID = "D492256E-06C7-453A-9280-D5CDB4318B98";
   const [errors, setErrors] = useState(null);
 
   // Form control
