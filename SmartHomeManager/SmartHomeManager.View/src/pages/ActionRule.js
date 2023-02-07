@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import {
 	Box,
-	ButtonGroup,
 	Button,
 	Heading,
 	Flex,
 	FormControl,
-	GridItem,
 	FormLabel,
 	Input,
 	Select,
@@ -14,7 +12,7 @@ import {
 
 import { useToast } from "@chakra-ui/react";
 
-const Form1 = () => {
+const FormCard = () => {
 	const name = "Scencerio Name";
 	return (
 		<>
@@ -24,20 +22,12 @@ const Form1 = () => {
 			<Input variant="unstyled" placeholder="ENTER NAME" size="lg" />
 			<Flex mt="2%">
 				<FormControl mr="5%">
-					<FormLabel>Start Time</FormLabel>
-					<Input
-						placeholder="Select Start Time"
-						size="md"
-						type="time"
-					/>
-				</FormControl>
-				<FormControl>
-					<FormLabel>Start Time</FormLabel>
-					<Input
-						placeholder="Select Start Time"
-						size="md"
-						type="time"
-					/>
+					<FormLabel>Triggering Action</FormLabel>
+					<Select placeholder="Select option">
+						<option value="option1">Wave Hands</option>
+						<option value="option2">Clap</option>
+						<option value="option3">Say Hello</option>
+					</Select>
 				</FormControl>
 			</Flex>
 			<Flex mt="2%">
@@ -62,7 +52,7 @@ const Form1 = () => {
 	);
 };
 
-export default function Rule() {
+export default function ActionRule() {
 	const toast = useToast();
 	return (
 		<>
@@ -76,8 +66,7 @@ export default function Rule() {
 				as="form"
 			>
 				<form>
-					<Form1 />
-
+					<FormCard />
 					<Button
 						mt="2%"
 						w="7rem"

@@ -178,7 +178,7 @@ const NAV_ITEMS = [
     href: "/profiles",
     },
     {
-        label: "Automation",
-        href: "Automation/Devices",
+        label: "Scenario",
+        href: "Scenario",
     },
 ];
