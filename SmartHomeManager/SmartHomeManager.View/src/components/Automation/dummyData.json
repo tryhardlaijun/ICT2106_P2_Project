@@ -5,8 +5,8 @@
     "ScenarioName": "Default",
     "DeviceName": "Lights at Wenjun's Room",
     "Description": "Schedule : Turn ON at 0500 until 1000",
-    "StartTime": "0500",
-    "EndTime": "1000"
+    "StartTime": "05:00",
+    "EndTime": "10:00"
   },
   {
     "RuleID": "1111-1111-1111-1112",
@@ -14,8 +14,8 @@
     "RuleName": "Light in morning",
     "DeviceName": "Light at Living's Room",
     "Description": "Schedule : Turn ON at 1900 until 2200",
-    "StartTime": "1900",
-    "EndTime": "2200"
+    "StartTime": "19:00",
+    "EndTime": "22:00"
   }
  ]
 

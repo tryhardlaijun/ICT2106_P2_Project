@@ -1,16 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {Box, Button, Heading, Flex, FormControl, FormLabel, Input, Select} from "@chakra-ui/react";
-
+import { useLocation } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
 
-const FormCard = () => {
+function FormCard({ruleInfo, updateForm}) {
 	const name = "Scencerio Name";
+	console.log(ruleInfo);
+	console.log(ruleInfo.RuleName)
 	return (
 		<>
 			<Heading w="100%" textAlign={"center"} fontWeight="normal" mb="2%">
-				{name}
+				{ruleInfo.ScenarioName}
 			</Heading>
-			<Input variant="unstyled" placeholder="ENTER NAME" size="lg" />
+			<Input variant="unstyled" placeholder="ENTER NAME" size="lg" value={ruleInfo.RuleName} onChange={(e)=>{updateForm({RuleName: e.target.value})}}/>
 			<Flex mt="2%">
 				<FormControl mr="5%">
 					<FormLabel>Start Time</FormLabel>
@@ -18,14 +20,18 @@ const FormCard = () => {
 						placeholder="Select Start Time"
 						size="md"
 						type="time"
+						value={ruleInfo.StartTime}
+						onChange={(e)=>{updateForm({StartTime: e.target.value})}}
 					/>
 				</FormControl>
 				<FormControl>
-					<FormLabel>Start Time</FormLabel>
+					<FormLabel>End Time</FormLabel>
 					<Input
 						placeholder="Select Start Time"
 						size="md"
 						type="time"
+						value={ruleInfo.EndTime}
+						onChange={(e)=>{updateForm({EndTime: e.target.value})}}
 					/>
 				</FormControl>
 			</Flex>
@@ -33,17 +39,16 @@ const FormCard = () => {
 				<FormControl mr="5%">
 					<FormLabel>Device</FormLabel>
 					<Select placeholder="Select option">
-						<option value="option1">Device 1</option>
-						<option value="option2">Device 2</option>
-						<option value="option3">Device 3</option>
+						<option value="option1">Wen Jun&apos;s Light</option>
+						<option value="option2">Wen Jun&apos;s Fan</option>
+						<option value="option3">Wen Jun&apos;s Aircon</option>
 					</Select>
 				</FormControl>
 				<FormControl>
 					<FormLabel>Action</FormLabel>
 					<Select placeholder="Select option">
-						<option value="option1">Action 1</option>
-						<option value="option2">Action 2</option>
-						<option value="option3">Action 3</option>
+						<option value="option1">Dim</option>
+						<option value="option2">Turn On</option>
 					</Select>
 				</FormControl>
 			</Flex>
@@ -52,7 +57,21 @@ const FormCard = () => {
 };
 
 export default function SchRule() {
+	const location = useLocation();
+	const [ruleDetail, setRuleDetail] = useState({});
+	useEffect(() => {
+		if (location.state != null) {
+			let ruleinfo = location.state;
+			console.log(location.state)
+			setRuleDetail(ruleinfo)
+		}
+	}, [location.state]);
 	const toast = useToast();
+	function updateDetails(value) {
+		return setRuleDetail((prev) => {
+		  return { ...prev, ...value };
+		});
+	  }
 	return (
 		<>
 			<Box
@@ -65,7 +84,7 @@ export default function SchRule() {
 				as="form"
 			>
 				<form>
-					<FormCard />
+					<FormCard ruleInfo = {ruleDetail} updateForm={updateDetails}/>
 					<Button
 						mt="2%"
 						w="7rem"
