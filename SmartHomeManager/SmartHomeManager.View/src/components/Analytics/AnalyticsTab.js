@@ -9,10 +9,12 @@ import {
     Center,
     Container,
     Text,
-    Heading
+    Heading,
+    Button,
 } from '@chakra-ui/react';
 import CarbonChart from './CarbonChart';
 import UsageBar from './UsageBar';
+import Report from './Report';
 
 
 function AnalyticsTab() {
@@ -39,10 +41,12 @@ function AnalyticsTab() {
                     </Container>
                 </TabPanel>
                 <TabPanel>
-                    <p>Energy Efficiency</p>
+                    <p>Efficiency</p>
                 </TabPanel>
                 <TabPanel>
-                    <p>Report</p>
+                <Container>
+                        <Report />
+                    </Container>
                 </TabPanel>
             </TabPanels>
         </Tabs>

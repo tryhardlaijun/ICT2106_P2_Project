@@ -29,7 +29,7 @@ import NotificationService from "../../requests/services/NotificationService";
 
 export default function Notification() {
 
-    const SESSION_ACCOUNT_GUID = "FCAC451C-2C2E-41ED-896F-88FD50288B87";
+    const SESSION_ACCOUNT_GUID = "E26A6352-516F-41B4-B675-5D6A0BC4B28D";
     const {isOpen, onClose, onToggle} = useDisclosure();
     const [notifications, setNotifications] = useState([]);
     const [errors, setErrors] = useState(null);
