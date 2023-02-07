@@ -90,7 +90,7 @@ export default function Notification() {
                         <NotificationPopup
                             notifications={notifications}
                         />
-                        <TestNotificationModal/>
+                        <TestNotificationModal />
                     </Flex>
                 </PopoverBody>
             </PopoverContent>

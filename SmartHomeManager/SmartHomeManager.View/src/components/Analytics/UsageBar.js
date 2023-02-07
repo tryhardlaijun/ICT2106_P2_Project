@@ -1,6 +1,18 @@
 import React from 'react'
 import Chart from "chart.js/auto";
 import { Bar } from "react-chartjs-2";
+import {
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
+  Box,
+  Center,
+  Container,
+  Text,
+  Heading
+} from '@chakra-ui/react'; 
 
 const labels = ["January", "February", "March", "April", "May", "June"];
     const data = {
@@ -18,7 +30,11 @@ function UsageBar() {
     
 
     return (
-        <Bar data={data} />
+      <Container maxWidth={1600} mt={2} centerContent>
+        <Heading pb={5}>Household Energy Usage</Heading>
+        <Text pb={10}>This is your total household energy usage. </Text>
+          <Bar data={data} />
+      </Container>
     )
   }
 

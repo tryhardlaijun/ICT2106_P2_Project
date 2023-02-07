@@ -30,10 +30,11 @@ namespace SmartHomeManager.API.Controllers.NotificationAPIs
 
         // GET /api/notification/all
         [HttpGet("all")]
+        [Produces("application/json")]
         public async Task<IActionResult> GetAllNotifications()
         {
-            // Map notfications to view model....
-            List<GetNotificationObjectViewModel> getNotifications = new List<GetNotificationObjectViewModel>();
+            // Map notfications to DTO....
+            List<GetNotificationObjectDTO> getNotifications = new List<GetNotificationObjectDTO>();
 
             IEnumerable<Notification> notifications;
             NotificationResult notificationResult;
@@ -51,13 +52,13 @@ namespace SmartHomeManager.API.Controllers.NotificationAPIs
                 notificationResult == NotificationResult.Error_DBReadFail ||
                 notificationResult == NotificationResult.Error_Other)
             {
-                return StatusCode(statusCode, CreateResponseViewModel(getNotifications, statusCode, statusMessage));
+                return StatusCode(statusCode, CreateResponseDTO(getNotifications, statusCode, statusMessage));
             }
 
 
             foreach (var notification in notifications)
             {
-                getNotifications.Add(new GetNotificationObjectViewModel
+                getNotifications.Add(new GetNotificationObjectDTO
                 {
                     NotificationId = notification.NotificationId,
                     AccountId = notification.AccountId,
@@ -67,16 +68,17 @@ namespace SmartHomeManager.API.Controllers.NotificationAPIs
             }
 
             // Success path...
-            return StatusCode(statusCode, CreateResponseViewModel(getNotifications, statusCode, statusMessage));
+            return StatusCode(statusCode, CreateResponseDTO(getNotifications, statusCode, statusMessage));
         }
 
         // TODO:    GET /api/notification/{accountId}
         [HttpGet("{accountId}")]
+        [Produces("application/json")]
         public async Task<IActionResult> GetNotificationById(Guid accountId)
         {
 
-            // Map notfications to view model....
-            List<GetNotificationObjectViewModel> getNotifications = new List<GetNotificationObjectViewModel>();
+            // Map notfications to DTO....
+            List<GetNotificationObjectDTO> getNotifications = new List<GetNotificationObjectDTO>();
 
             // Use the service here...
             IEnumerable<Notification> notifications;
@@ -95,12 +97,12 @@ namespace SmartHomeManager.API.Controllers.NotificationAPIs
                 notificationResult == NotificationResult.Error_DBReadFail ||
                 notificationResult == NotificationResult.Error_Other)
             {
-                return StatusCode(statusCode, CreateResponseViewModel(getNotifications, statusCode, statusMessage));
+                return StatusCode(statusCode, CreateResponseDTO(getNotifications, statusCode, statusMessage));
             }
 
             foreach (var notification in notifications)
             {
-                getNotifications.Add(new GetNotificationObjectViewModel
+                getNotifications.Add(new GetNotificationObjectDTO
                 {
                     NotificationId = notification.NotificationId,
                     AccountId = notification.AccountId,
@@ -109,24 +111,26 @@ namespace SmartHomeManager.API.Controllers.NotificationAPIs
                 });
             }
 
-            return StatusCode(statusCode, CreateResponseViewModel(getNotifications, statusCode, statusMessage));
+            return StatusCode(statusCode, CreateResponseDTO(getNotifications, statusCode, statusMessage));
         }
 
         // TODO:    POST /api/notification
         [HttpPost]
-        public async Task<IActionResult> AddNotification([FromBody] AddNotificationViewModel viewModel)
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        public async Task<IActionResult> AddNotification([FromBody] AddNotificationDTO clientDTO)
         {
 
-            // Map notfications to view model....
-            List<GetNotificationObjectViewModel> getNotifications = new List<GetNotificationObjectViewModel>();
+            // Map notfications to DTO....
+            List<GetNotificationObjectDTO> getNotifications = new List<GetNotificationObjectDTO>();
             int statusCode;
             string statusMessage;
             NotificationResult notificationResult;
 
             (notificationResult, Notification? notification) = await _sendNotificationService
                 .SendNotification(
-                viewModel.NotificationObject.Message,
-                viewModel.NotificationObject.AccountId
+                clientDTO.NotificationObject.Message,
+                clientDTO.NotificationObject.AccountId
             );
 
             // Get the status code and coressponding message...
@@ -138,11 +142,11 @@ namespace SmartHomeManager.API.Controllers.NotificationAPIs
                 notificationResult == NotificationResult.Error_Other)
             {
 
-                return StatusCode(statusCode, CreateResponseViewModel(getNotifications, statusCode, statusMessage));
+                return StatusCode(statusCode, CreateResponseDTO(getNotifications, statusCode, statusMessage));
 
             }
             
-            getNotifications.Add(new GetNotificationObjectViewModel
+            getNotifications.Add(new GetNotificationObjectDTO
             {
                 NotificationId = notification.NotificationId,
                 AccountId = notification.AccountId,
@@ -150,15 +154,15 @@ namespace SmartHomeManager.API.Controllers.NotificationAPIs
                 SentTime = notification.SentTime,
             });
 
-            return StatusCode(statusCode, CreateResponseViewModel(getNotifications, statusCode, statusMessage));
+            return StatusCode(statusCode, CreateResponseDTO(getNotifications, statusCode, statusMessage));
         }
 
-        private GetNotificationViewModel CreateResponseViewModel(List<GetNotificationObjectViewModel> notificationList, int statusCode, string statusMessage)
+        private GetNotificationDTO CreateResponseDTO(List<GetNotificationObjectDTO> notificationList, int statusCode, string statusMessage)
         {
-            return new GetNotificationViewModel
+            return new GetNotificationDTO
             {
                 NotificationObjects = notificationList,
-                ResponseObject = new ResponseObjectViewModel
+                ResponseObject = new ResponseObjectDTO
                 {
                     StatusCode = statusCode,
                     ServerMessage = statusMessage

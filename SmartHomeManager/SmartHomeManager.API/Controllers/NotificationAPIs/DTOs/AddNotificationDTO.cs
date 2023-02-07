@@ -1,11 +1,11 @@
 ﻿namespace SmartHomeManager.API.Controllers.NotificationAPIs.ViewModels
 {
-    public class AddNotificationViewModel
+    public class AddNotificationDTO
     {
-        public AddNotificationObjectViewModel NotificationObject { get; set; }
+        public AddNotificationObjectDTO NotificationObject { get; set; }
     }
 
-    public class AddNotificationObjectViewModel
+    public class AddNotificationObjectDTO
     {
         public string Message { get; set; }
         public Guid AccountId { get; set; }
