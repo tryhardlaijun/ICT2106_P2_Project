@@ -9,6 +9,7 @@ import Director from "./pages/Director";
 import Backup from "./pages/Backup";
 import Intruder from "./pages/Intruder";
 import Configuration from "./pages/Configuration";
+import EnergyProfile from "./pages/EnergyProfile";
 
 export function App() {
   return (
@@ -23,6 +24,7 @@ export function App() {
           <Route path="/backup" element={<Backup />} />
           <Route path="/intruder" element={<Intruder />} />
           <Route path="/configuration" element={<Configuration />} />
+          <Route path="/energyProfile" element={<EnergyProfile />} />
         </Routes>
       </Router>
     </>
