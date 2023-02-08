@@ -4,7 +4,6 @@ import {
     Box,
     FormControl,
     FormLabel,
-    FormHelperText,
     FormErrorMessage,
     Input,
     Checkbox,

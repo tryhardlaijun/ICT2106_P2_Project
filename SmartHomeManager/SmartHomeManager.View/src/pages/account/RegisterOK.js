@@ -2,17 +2,9 @@ import { React } from 'react';
 import {
     Flex,
     Box,
-    FormControl,
-    FormLabel,
-    FormHelperText,
-    FormErrorMessage,
-    Input,
-    Checkbox,
     Stack,
-    Link,
     Button,
     Heading,
-    Text,
     useColorModeValue,
 } from '@chakra-ui/react';
 

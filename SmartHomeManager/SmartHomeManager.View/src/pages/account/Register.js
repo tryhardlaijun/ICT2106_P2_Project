@@ -17,14 +17,13 @@ import {
     FormHelperText,
     NumberInput,
     NumberInputField,
-    NumberInputStepper,
     Slider,
     SliderTrack,
     SliderFilledTrack,
     SliderThumb
 } from '@chakra-ui/react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
-import bcrypt from 'bcryptjs'
+//import bcrypt from 'bcryptjs'
 
 export default function Register() {
     //Input declaration
@@ -107,9 +106,10 @@ export default function Register() {
     //Submit form
     const submitRegisterForm = () => {
         if (emailValid && passwordValid && confirmPasswordValid && emailInput.length!=0 && passwordInput.length>=8 && confirmPasswordInput.length>=8) {
+            /*
             const salt = bcrypt.genSaltSync(10)
             const hashPassword = bcrypt.hash(passwordInput, salt)
-            /*
+            
             bcrypt.compare(passwordInput, hashKey, function (err, result) {
                 console.log({ passwordInput }, result)
             });
