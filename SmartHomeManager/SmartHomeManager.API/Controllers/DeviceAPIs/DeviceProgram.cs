@@ -8,7 +8,7 @@ namespace SmartHomeManager.API.Controllers.DeviceAPIs
 {
     public class DeviceProgram
     {
-        public static async Task Main(string[] args)
+        public static async Task DeviceMain(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 

@@ -66,7 +66,6 @@ export default function RegisterDevice() {
         deviceModel: deviceModel,
         deviceTypeName: deviceTypeName,
         accountId: "06419047-3d8e-47fa-a239-80b7f78c4a2e",
-        profileId: "5aa787d2-6f13-4a60-9894-2d9cab41bd6b",
       }),
     }).then((data) => {
       setDeviceTypeNames([]);
