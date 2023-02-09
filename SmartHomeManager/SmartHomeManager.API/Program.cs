@@ -1,9 +1,16 @@
 using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.DataSource;
+
+using SmartHomeManager.DataSource.AccountDataSource;
+using SmartHomeManager.DataSource.ProfileDataSource;
+using SmartHomeManager.Domain.AccountDomain.Interfaces;
+using SmartHomeManager.Domain.AccountDomain.Services;
 using SmartHomeManager.DataSource.RoomDataSource;
 using SmartHomeManager.DataSource.RoomDataSource.Mocks;
 using SmartHomeManager.Domain.RoomDomain.Interfaces;
 using SmartHomeManager.Domain.RoomDomain.Mocks;
+using SmartHomeManager.Domain.Common;
+using System.Diagnostics;
 
 namespace SmartHomeManager.API;
 
@@ -22,6 +29,7 @@ public class Program
             });
         });
 
+
         builder.Services.AddControllers();
 
         #region DEPENDENCY INJECTIONS
@@ -32,6 +40,12 @@ public class Program
         });
         builder.Services.AddScoped<IRoomRepository, RoomRepository>();
         builder.Services.AddScoped<IDeviceInformationServiceMock, DeviceRepositoryMock>();
+        builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+        builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
+        
+        builder.Services.AddScoped<AccountService>();
+        builder.Services.AddScoped<EmailService>();
+        builder.Services.AddScoped<ProfileService>();
 
         #endregion DEPENDENCY INJECTIONS
 
@@ -54,29 +68,6 @@ public class Program
         app.UseAuthorization();
 
         app.MapControllers();
-
-        // the `using` statement will automatically dispose of the object
-        // when the method call ends
-        using var scope = app.Services.CreateScope();
-        var services = scope.ServiceProvider;
-
-        // try create database and table, if fails, catch and do something
-        // it will actually create a database if it does not exist in SQL server
-        try
-        {
-            var context = services.GetRequiredService<ApplicationDbContext>();
-
-            // in order to use await in a method, the caller method must be async as well
-            // await context.Database.MigrateAsync();
-            await RoomSeedData.Seed(context);
-        }
-        catch (Exception e)
-        {
-            // Tells the logger to log against the Program class
-            var logger = services.GetRequiredService<ILogger<Program>>();
-
-            logger.LogError(e, "An error occurred during migration.");
-        }
 
         app.Run();
     }
