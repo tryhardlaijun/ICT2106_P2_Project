@@ -15,6 +15,8 @@ namespace SmartHomeManager.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // For allowing React to communicate with API
+
             builder.Services.AddCors(options =>
             {
                 options.AddDefaultPolicy(policy =>
