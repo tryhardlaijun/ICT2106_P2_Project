@@ -27,10 +27,10 @@ public class DeviceRepositoryMock : IDeviceInformationServiceMock
 
     public IEnumerable<Device> GetDevicesInRoom(Guid roomId)
     {
-        //load the data
+        // load the data
         var allDevices = _db.Devices.ToList();
         
-        //filter the data
+        // filter the data
         var result = allDevices.Where(device => device.RoomId == roomId);
 
         return result;

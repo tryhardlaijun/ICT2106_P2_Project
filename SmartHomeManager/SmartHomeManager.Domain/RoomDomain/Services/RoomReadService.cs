@@ -7,7 +7,7 @@ using SmartHomeManager.Domain.RoomDomain.Mocks;
 
 namespace SmartHomeManager.Domain.RoomDomain.Services;
 
-public class RoomReadService
+public class RoomReadService : IRoomReadService
 {
     private readonly IDeviceInformationServiceMock _deviceInformationService;
     private readonly IRoomRepository _roomRepository;
@@ -18,18 +18,23 @@ public class RoomReadService
         _deviceInformationService = deviceInformationService;
     }
 
+    public IList<Room> GetRoomsByAccountId(Guid accountId)
+    {
+        return _roomRepository.GetRoomsRelatedToAccount(accountId).ToList();
+    }
+
     public async Task<GetRoomWebRequest?> GetRoomById(Guid roomId)
     {
         var res = await _roomRepository.Get(roomId);
         if (res == null) return null;
-        
+
         var ret = new GetRoomWebRequest
         {
             RoomId = res.RoomId,
             Name = res.Name,
             AccountId = res.AccountId
         };
-        
+
         return ret;
     }
 
