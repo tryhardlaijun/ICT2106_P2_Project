@@ -26,17 +26,7 @@ public class RoomsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<GetRoomWebRequest>>> GetRooms()
     {
-        var result = await _roomReadService.GetAllRooms();
-        // if (!result.Any()) return NotFound();
-
-        var resp = result.Select(room => new GetRoomWebRequest
-        {
-            RoomId = room.RoomId,
-            Name = room.Name,
-            AccountId = room.AccountId
-        }).ToList();
-
-        return Ok(resp);
+        return Ok(await _roomReadService.GetAllRooms());
     }
 
     // GET: api/Rooms/5
@@ -45,15 +35,7 @@ public class RoomsController : ControllerBase
     {
         var result = await _roomReadService.GetRoomById(roomId);
         if (result == null) return NotFound();
-
-        var resp = new GetRoomWebRequest
-        {
-            RoomId = result.RoomId,
-            Name = result.Name,
-            AccountId = result.AccountId
-        };
-
-        return resp;
+        return result;
     }
 
     // PUT: api/Rooms/5
@@ -61,25 +43,13 @@ public class RoomsController : ControllerBase
     [HttpPut("{roomId}")]
     public async Task<IActionResult> PutRoom(Guid roomId, EditRoomWebRequest roomWebRequest)
     {
-        try
-        {
-            var res = await _roomReadService.GetRoomById(roomId);
+        var res = await _roomReadService.GetRoomById(roomId);
 
-            if (res == null) return BadRequest();
-
-            res.Name = roomWebRequest.Name ?? res.Name;
-
-            _roomWriteService.UpdateRoom(res);
-            await _roomWriteService.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            var isExist = RoomExists(roomId);
-            if (!isExist.Result)
-                return NotFound();
-            throw;
-        }
-
+        if (res == null) return BadRequest();
+        
+        var name = roomWebRequest.Name ?? res.Name;
+        await _roomWriteService.UpdateRoom(roomId, name);
+        
         return NoContent();
     }
 
@@ -88,37 +58,22 @@ public class RoomsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<GetRoomWebRequest>> PostRoom(CreateRoomWebRequest roomWebRequest)
     {
-        var newRoom = new Room
-        {
-            Name = roomWebRequest.Name,
-            AccountId = roomWebRequest.AccountId
-        };
-
-        _roomWriteService.AddRoom(newRoom);
-        await _roomWriteService.SaveChangesAsync();
-
-        var resp = new GetRoomWebRequest
-        {
-            RoomId = newRoom.RoomId,
-            Name = newRoom.Name,
-            AccountId = newRoom.AccountId
-        };
+        var resp = await _roomWriteService.AddRoom(roomWebRequest.Name, roomWebRequest.AccountId);
 
         // the route values specifies the action to be called and the route values to be used for that action
         // for example new { roomId = xxx } must match [HttpGet("{roomId}")]
         // as in the parameter names must match, roomId with roomId
-        return CreatedAtAction("GetRoom", new { roomId = newRoom.RoomId }, resp);
+        return CreatedAtAction("GetRoom", new { roomId = resp.RoomId }, resp);
     }
 
     // DELETE: api/Rooms/5
     [HttpDelete("{roomId}")]
     public async Task<IActionResult> DeleteRoom(Guid roomId)
     {
-        var room = await _roomReadService.GetRoomById(roomId);
-        if (room == null) return NotFound();
+        var res = await _roomReadService.GetRoomById(roomId);
+        if (res == null) return NotFound();
 
-        _roomWriteService.RemoveRoom(room);
-        await _roomWriteService.SaveChangesAsync();
+        await _roomWriteService.RemoveRoom(res.RoomId);
 
         return NoContent();
     }
@@ -128,18 +83,10 @@ public class RoomsController : ControllerBase
     public ActionResult<IEnumerable<GetRoomWebRequest>> GetRoomsRelatedToAccount(Guid accountId)
     {
         var result = _roomReadService.GetRoomsRelatedToAccount(accountId);
-
-        var resp = result.Select(room => new GetRoomWebRequest
-        {
-            RoomId = room.RoomId,
-            Name = room.Name,
-            AccountId = room.AccountId
-        }).ToList();
-
-        return Ok(resp);
+        return Ok(result);
     }
 
-    // GET: api/Rooms/GetRoomsRelatedToAccount/roomId
+    // GET: api/Rooms/GetDevicesRelatedToRoom/roomId
     [HttpGet("GetDevicesInRoom/{roomId}")]
     public ActionResult<IEnumerable<Device>> GetDevicesInRoom(Guid roomId)
     {

@@ -69,10 +69,10 @@ public class RoomRepository : IRoomRepository
 
     public IEnumerable<Room> GetRoomsRelatedToAccount(Guid accountId)
     {
-        //load the data
+        // load the data
         var allRooms = _db.Rooms.ToList();
         
-        //filter the data
+        // filter the data
         IEnumerable<Room> result = _db.Rooms.ToList().Where(room => room.AccountId == accountId);
 
         return result;

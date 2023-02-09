@@ -1,4 +1,5 @@
 ﻿using SmartHomeManager.Domain.RoomDomain.Entities;
+using SmartHomeManager.Domain.RoomDomain.Entities.DTOs;
 using SmartHomeManager.Domain.RoomDomain.Interfaces;
 
 namespace SmartHomeManager.Domain.RoomDomain.Services;
@@ -12,33 +13,53 @@ public class RoomWriteService
         _roomRepository = roomRepository;
     }
 
-    public void AddRoom(Room room)
+    public async Task<GetRoomWebRequest> AddRoom(String name, Guid accountId)
     {
-        _roomRepository.Add(room);
+        var newRoom = new Room
+        {
+            Name = name,
+            AccountId = accountId
+        };
+        
+        _roomRepository.Add(newRoom);
+        await _roomRepository.SaveChangesAsync();
+        
+        var ret = new GetRoomWebRequest
+        {
+            RoomId = newRoom.RoomId,
+            Name = newRoom.Name,
+            AccountId = newRoom.AccountId
+        };
+        
+        return ret;
     }
 
-    public void AddRangeOfRooms(IEnumerable<Room> rooms)
+    public async Task AddRangeOfRooms(IEnumerable<Room> rooms)
     {
         _roomRepository.AddRange(rooms);
+        await _roomRepository.SaveChangesAsync();
     }
 
-    public void RemoveRoom(Room room)
+    public async Task RemoveRoom(Guid roomId)
     {
-        _roomRepository.Remove(room);
+        var res = await _roomRepository.Get(roomId);
+        if (res == null) return;
+        _roomRepository.Remove(res);
+        await _roomRepository.SaveChangesAsync();
     }
 
-    public void RemoveRangeOfRooms(IEnumerable<Room> rooms)
+    public async Task RemoveRangeOfRooms(IEnumerable<Room> rooms)
     {
         _roomRepository.RemoveRange(rooms);
+        await _roomRepository.SaveChangesAsync();
     }
 
-    public void UpdateRoom(Room room)
+    public async Task UpdateRoom(Guid roomId, String name)
     {
-        _roomRepository.Update(room);
-    }
-
-    public async Task SaveChangesAsync()
-    {
+        var res = await _roomRepository.Get(roomId);
+        if (res == null) return;
+        res.Name = name;
+        _roomRepository.Update(res);
         await _roomRepository.SaveChangesAsync();
     }
 }

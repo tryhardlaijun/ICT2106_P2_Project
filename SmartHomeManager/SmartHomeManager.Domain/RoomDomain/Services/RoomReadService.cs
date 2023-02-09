@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 using SmartHomeManager.Domain.DeviceDomain.Entities;
 using SmartHomeManager.Domain.RoomDomain.Entities;
+using SmartHomeManager.Domain.RoomDomain.Entities.DTOs;
 using SmartHomeManager.Domain.RoomDomain.Interfaces;
 using SmartHomeManager.Domain.RoomDomain.Mocks;
 
@@ -17,14 +18,32 @@ public class RoomReadService
         _deviceInformationService = deviceInformationService;
     }
 
-    public async Task<Room?> GetRoomById(Guid roomId)
+    public async Task<GetRoomWebRequest?> GetRoomById(Guid roomId)
     {
-        return await _roomRepository.Get(roomId);
+        var res = await _roomRepository.Get(roomId);
+        if (res == null) return null;
+        
+        var ret = new GetRoomWebRequest
+        {
+            RoomId = res.RoomId,
+            Name = res.Name,
+            AccountId = res.AccountId
+        };
+        
+        return ret;
     }
 
-    public async Task<IEnumerable<Room>> GetAllRooms()
+    public async Task<IEnumerable<GetRoomWebRequest>> GetAllRooms()
     {
-        return await _roomRepository.GetAll();
+        var result = await _roomRepository.GetAll();
+        var resp = result.Select(room => new GetRoomWebRequest
+        {
+            RoomId = room.RoomId,
+            Name = room.Name,
+            AccountId = room.AccountId
+        }).ToList();
+
+        return resp;
     }
 
     public IEnumerable<Room> FindRoomByCondition(Expression<Func<Room, bool>> predicate)
@@ -38,8 +57,16 @@ public class RoomReadService
     }
 
     // IList allows for more direct manipulation, so IEnumerable is used instead
-    public IEnumerable<Room> GetRoomsRelatedToAccount(Guid accountId)
+    public IEnumerable<GetRoomWebRequest> GetRoomsRelatedToAccount(Guid accountId)
     {
-        return _roomRepository.GetRoomsRelatedToAccount(accountId);
+        var result = _roomRepository.GetRoomsRelatedToAccount(accountId);
+        var resp = result.Select(room => new GetRoomWebRequest
+        {
+            RoomId = room.RoomId,
+            Name = room.Name,
+            AccountId = room.AccountId
+        }).ToList();
+
+        return resp;
     }
 }
