@@ -24,7 +24,6 @@ import {
     SliderThumb
 } from '@chakra-ui/react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
-import bcrypt from 'bcryptjs'
 
 export default function MyAccount() {
 
