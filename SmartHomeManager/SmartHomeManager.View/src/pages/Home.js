@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+
 
 export default function Home() {
-  return <div>Home</div>;
+    return <div>Devices</div>;
 }
