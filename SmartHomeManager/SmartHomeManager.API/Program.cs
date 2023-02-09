@@ -31,16 +31,18 @@ namespace SmartHomeManager.API
                 options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
             builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+            builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
             #endregion DEPENDENCY INJECTIONS
 
-            builder.Services.AddScoped<AccountService, AccountService>();
-            builder.Services.AddScoped<EmailService, EmailService>();
+            builder.Services.AddScoped<AccountService>();
+            builder.Services.AddScoped<EmailService>();
+            builder.Services.AddScoped<ProfileService>();
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            
-            
+
             /*builder.Services.AddHttpContextAccessor();*/
+
 
             var app = builder.Build();
 

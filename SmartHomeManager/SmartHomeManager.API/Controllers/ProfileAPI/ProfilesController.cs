@@ -6,7 +6,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.DataSource;
+using SmartHomeManager.DataSource.ProfileDataSource;
+using SmartHomeManager.Domain.AccountDomain.DTOs;
 using SmartHomeManager.Domain.AccountDomain.Entities;
+using SmartHomeManager.Domain.AccountDomain.Interfaces;
+using SmartHomeManager.Domain.AccountDomain.Services;
 
 namespace SmartHomeManager.API.Controllers.ProfileController
 {
@@ -14,29 +18,30 @@ namespace SmartHomeManager.API.Controllers.ProfileController
     [ApiController]
     public class ProfilesController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ProfileService _profileService;
 
-        public ProfilesController(ApplicationDbContext context)
+        public ProfilesController(ProfileService profileService)
         {
-            _context = context;
+            _profileService = profileService ?? throw new ArgumentNullException("profile service null");
         }
 
-        // GET: api/Profiles
+        /*// GET: api/Profiles
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Profile>>> GetProfiles()
         {
-            if (_context.Profiles == null)
+            *//*if (_context.Profiles == null)
             {
                 return NotFound();
             }
-            return await _context.Profiles.ToListAsync();
+            return await _context.Profiles.ToListAsync();*//*
+            return NoContent();
         }
 
         // GET: api/Profiles/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Profile>> GetProfile(Guid id)
         {
-            if (_context.Profiles == null)
+            *//*if (_context.Profiles == null)
             {
                 return NotFound();
             }
@@ -47,7 +52,8 @@ namespace SmartHomeManager.API.Controllers.ProfileController
                 return NotFound();
             }
 
-            return profile;
+            return profile;*//*
+            return NoContent();
         }
 
         // PUT: api/Profiles/5
@@ -55,7 +61,7 @@ namespace SmartHomeManager.API.Controllers.ProfileController
         [HttpPut("{id}")]
         public async Task<IActionResult> PutProfile(Guid id, Profile profile)
         {
-            if (id != profile.ProfileId)
+            *//*if (id != profile.ProfileId)
             {
                 return BadRequest();
             }
@@ -76,31 +82,31 @@ namespace SmartHomeManager.API.Controllers.ProfileController
                 {
                     throw;
                 }
-            }
+            }*//*
 
             return NoContent();
         }
-
+*/
         // POST: api/Profiles
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Profile>> PostProfile(Profile profile)
+        public async Task<ActionResult> PostProfile([FromBody] Profile profile)
         {
-            if (_context.Profiles == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.Profiles'  is null.");
-            }
-            _context.Profiles.Add(profile);
-            await _context.SaveChangesAsync();
+            string response = await _profileService.CreateProfile(profile);
 
-            return CreatedAtAction("GetProfile", new { id = profile.ProfileId }, profile);
+            if (response == "Profile created successfully")
+            {
+                return Ok("Profile created successfully");
+            }
+
+            return BadRequest(response);
         }
 
-        // DELETE: api/Profiles/5
+        /*// DELETE: api/Profiles/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProfile(Guid id)
+        public async Task<IActionResult> DeleteProfile(Guid id) 
         {
-            if (_context.Profiles == null)
+            *//*if (_context.Profiles == null)
             {
                 return NotFound();
             }
@@ -111,14 +117,15 @@ namespace SmartHomeManager.API.Controllers.ProfileController
             }
 
             _context.Profiles.Remove(profile);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();*//*
 
             return NoContent();
         }
 
         private bool ProfileExists(Guid id)
         {
-            return (_context.Profiles?.Any(e => e.ProfileId == id)).GetValueOrDefault();
-        }
+            *//*return (_context.Profiles?.Any(e => e.ProfileId == id)).GetValueOrDefault();*//*
+            return true;
+        }*/
     }
 }
