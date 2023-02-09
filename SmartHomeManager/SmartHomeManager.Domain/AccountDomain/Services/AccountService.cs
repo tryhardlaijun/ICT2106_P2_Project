@@ -51,7 +51,7 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
 			int result = await _accountRepository.SaveAsync();
 			if (result > 0)
 			{
-				return "Account created successfully";
+				return "account created";
 			}
 
 			return "account not added";

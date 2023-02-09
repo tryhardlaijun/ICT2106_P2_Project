@@ -1,4 +1,6 @@
 import { React, useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import {
     Flex,
     Box,
@@ -17,6 +19,9 @@ import {
 
 export default function Login() {
 
+    //Navigation declaration
+    const navigate = useNavigate()
+
     //Email input + validation
     const [emailInput, updateEmailInput] = useState("")
     const [emailValid, updateEmailValid] = useState(true)
@@ -33,6 +38,8 @@ export default function Login() {
             updateEmailValid(mailFormat.test(emailInput))
         }
     }
+
+    //Function to submit login form
     const submitLoginForm = () => {
         if(emailValid && passwordInput.length>=8){
         const obj = {
@@ -50,7 +57,7 @@ export default function Login() {
                 const msg = await response.text();
                 if (response.ok) {
                     updateErrorStatus(false);
-                    window.location.href = "/";
+                    navigate("/", { replace: true });
                 } else {
                     updateErrorStatus(true);
                     throw new Error(msg);
@@ -109,7 +116,9 @@ export default function Login() {
                                 align={'start'}
                                 justify={'space-between'}>
                                 <Checkbox>Remember me</Checkbox>
-                                <Link color={'blue.400'} href="./forgetpw">Forgot password?</Link>
+                                <Link color={'blue.400'}
+                                    as={RouterLink}
+                                    to="/forgetpw">Forgot password?</Link>
                             </Stack>
                             <Button
                                 onClick={() => submitLoginForm()}
@@ -124,7 +133,9 @@ export default function Login() {
                         </Stack>
                         <Stack pt={6}>
                             <Text align={'center'}>
-                                Don&#39;t have an account? <Link color={'blue.400'} href="./register">Sign up</Link>
+                                Don&#39;t have an account? <Link color={'blue.400'}
+                                    as={RouterLink}
+                                    to="/register">Sign up</Link>
                             </Text>
                         </Stack>
                     </Stack>
