@@ -1,16 +1,16 @@
 using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.DataSource;
-
 using SmartHomeManager.DataSource.AccountDataSource;
+using SmartHomeManager.DataSource.DeviceDataSource;
 using SmartHomeManager.DataSource.ProfileDataSource;
-using SmartHomeManager.Domain.AccountDomain.Interfaces;
-using SmartHomeManager.Domain.AccountDomain.Services;
 using SmartHomeManager.DataSource.RoomDataSource;
 using SmartHomeManager.DataSource.RoomDataSource.Mocks;
+using SmartHomeManager.Domain.AccountDomain.Interfaces;
+using SmartHomeManager.Domain.AccountDomain.Services;
+using SmartHomeManager.Domain.Common;
+using SmartHomeManager.Domain.DeviceDomain.Entities;
 using SmartHomeManager.Domain.RoomDomain.Interfaces;
 using SmartHomeManager.Domain.RoomDomain.Mocks;
-using SmartHomeManager.Domain.Common;
-using System.Diagnostics;
 
 namespace SmartHomeManager.API;
 
@@ -29,26 +29,29 @@ public class Program
             });
         });
 
-
-        builder.Services.AddControllers();
-
         #region DEPENDENCY INJECTIONS
-
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
         {
             options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
         });
+
+        // DEVICE
+        builder.Services.AddScoped<IGenericRepository<Device>, DeviceRepository>();
+        builder.Services.AddScoped<IGenericRepository<DeviceType>, DeviceTypeRepository>();
+
+        // ROOM
         builder.Services.AddScoped<IRoomRepository, RoomRepository>();
         builder.Services.AddScoped<IDeviceInformationServiceMock, DeviceRepositoryMock>();
+
+        // ACCOUNT
         builder.Services.AddScoped<IAccountRepository, AccountRepository>();
         builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
-        
         builder.Services.AddScoped<AccountService>();
         builder.Services.AddScoped<EmailService>();
         builder.Services.AddScoped<ProfileService>();
-
         #endregion DEPENDENCY INJECTIONS
 
+        builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 

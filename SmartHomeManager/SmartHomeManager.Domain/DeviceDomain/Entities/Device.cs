@@ -22,13 +22,12 @@ namespace SmartHomeManager.Domain.DeviceDomain.Entities
         [Required]
         public string DeviceTypeName { get; set; }
 
+        public string? Password { get; set; }
+
         public Guid? RoomId { get; set; }
 
         [Required]
         public Guid AccountId { get; set; }
-
-        [Required]
-        public Guid ProfileId { get; set; }
 
         [ForeignKey("DeviceTypeName")]
         public DeviceType DeviceType { get; set; }
