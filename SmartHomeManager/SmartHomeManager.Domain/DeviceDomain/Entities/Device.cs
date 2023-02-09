@@ -27,9 +27,6 @@ namespace SmartHomeManager.Domain.DeviceDomain.Entities
         [Required]
         public Guid AccountId { get; set; }
 
-        [Required]
-        public Guid ProfileId { get; set; }
-
         [ForeignKey("DeviceTypeName")]
         public DeviceType DeviceType { get; set; }
 
