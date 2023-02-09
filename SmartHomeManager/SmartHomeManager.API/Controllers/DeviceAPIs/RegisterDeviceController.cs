@@ -31,7 +31,7 @@ namespace SmartHomeManager.API.Controllers.DeviceAPIs
         [HttpPost("RegisterDevice")]
         public async Task RegisterDevice([FromBody] DeviceWebRequest deviceWebRequest)
         {
-            await _registerDeviceService.RegisterDeviceAsync(deviceWebRequest.DeviceName, deviceWebRequest.DeviceBrand, deviceWebRequest.DeviceModel, deviceWebRequest.DeviceTypeName, deviceWebRequest.AccountId, deviceWebRequest.ProfileId);
+            await _registerDeviceService.RegisterDeviceAsync(deviceWebRequest.DeviceName, deviceWebRequest.DeviceBrand, deviceWebRequest.DeviceModel, deviceWebRequest.DeviceTypeName, deviceWebRequest.AccountId);
         }
 
         // POST api/<RegisterDeviceController>/AddDeviceType

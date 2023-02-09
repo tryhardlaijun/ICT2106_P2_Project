@@ -18,8 +18,5 @@ namespace SmartHomeManager.Domain.DeviceDomain.Entities.DTOs
 
         [Required]
         public Guid AccountId { get; set; }
-
-        [Required]
-        public Guid ProfileId { get; set; }
     }
 }
