@@ -12,7 +12,6 @@ public class RoomSeedData
         if (context.Accounts.Any()) return;
         if (context.Rooms.Any()) return;
         if (context.RoomCoordinates.Any()) return;
-        if (context.Profiles.Any()) return;
         if (context.DeviceTypes.Any()) return;
         if (context.Devices.Any()) return;
         if (context.DeviceCoordinates.Any()) return;
@@ -23,7 +22,6 @@ public class RoomSeedData
 
         context.Rooms.RemoveRange(context.Rooms);
         context.RoomCoordinates.RemoveRange(context.RoomCoordinates);
-        context.Profiles.RemoveRange(context.Profiles);
         context.DeviceTypes.RemoveRange(context.DeviceTypes);
         context.Devices.RemoveRange(context.Devices);
         context.DeviceCoordinates.RemoveRange(context.DeviceCoordinates);
@@ -65,16 +63,6 @@ public class RoomSeedData
             }
         };
 
-        var profiles = new List<Profile>
-        {
-            new()
-            {
-                ProfileId = Guid.NewGuid(),
-                Name = "My Profile",
-                AccountId = accounts[0].AccountId
-            }
-        };
-
         var deviceTypes = new List<DeviceType>
         {
             new()
@@ -93,7 +81,6 @@ public class RoomSeedData
                 DeviceModel = "Hue",
                 DeviceTypeName = deviceTypes[0].DeviceTypeName,
                 AccountId = accounts[0].AccountId,
-                ProfileId = profiles[0].ProfileId
             }
         };
 
@@ -118,9 +105,6 @@ public class RoomSeedData
         await context.SaveChangesAsync();
 
         await context.RoomCoordinates.AddRangeAsync(roomCoordinates);
-        await context.SaveChangesAsync();
-
-        await context.Profiles.AddRangeAsync(profiles);
         await context.SaveChangesAsync();
 
         await context.DeviceTypes.AddRangeAsync(deviceTypes);
