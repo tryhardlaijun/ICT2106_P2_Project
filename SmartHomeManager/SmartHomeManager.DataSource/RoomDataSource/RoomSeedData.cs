@@ -3,6 +3,7 @@ using SmartHomeManager.Domain.DeviceDomain.Entities;
 using SmartHomeManager.Domain.RoomDomain.Entities;
 
 namespace SmartHomeManager.DataSource.RoomDataSource;
+
 public class RoomSeedData
 {
     public static async Task Seed(ApplicationDbContext context)
@@ -30,61 +31,61 @@ public class RoomSeedData
 
         // create objects
         var accounts = new List<Account>
+        {
+            new()
             {
-                new Account
-                {
-                    AccountId = Guid.NewGuid(),
-                    Email = "John",
-                    Username = "Doe",
-                    Address = "Ang Mo Kio",
-                    Timezone = 8,
-                    Password = "Ang Mo Kio",
-                }
-            };
+                AccountId = Guid.NewGuid(),
+                Email = "John",
+                Username = "Doe",
+                Address = "Ang Mo Kio",
+                Timezone = 8,
+                Password = "P@assw0rd"
+            }
+        };
 
         var rooms = new List<Room>
         {
-            new Room
+            new()
             {
                 RoomId = Guid.NewGuid(),
                 Name = "Bedroom",
-                AccountId = accounts[0].AccountId,
+                AccountId = accounts[0].AccountId
             }
         };
 
         var roomCoordinates = new List<RoomCoordinate>
         {
-            new RoomCoordinate
+            new()
             {
                 XCoordinate = 0,
                 YCoordinate = 0,
                 Width = 2,
                 Height = 1,
-                RoomId = rooms[0].RoomId,
+                RoomId = rooms[0].RoomId
             }
         };
 
         var profiles = new List<Profile>
         {
-            new Profile
+            new()
             {
                 ProfileId = Guid.NewGuid(),
                 Name = "My Profile",
-                AccountId = accounts[0].AccountId,
+                AccountId = accounts[0].AccountId
             }
         };
 
         var deviceTypes = new List<DeviceType>
         {
-            new DeviceType
+            new()
             {
-                DeviceTypeName = "Light",
+                DeviceTypeName = "Light"
             }
         };
 
         var devices = new List<Device>
         {
-            new Device
+            new()
             {
                 DeviceId = Guid.NewGuid(),
                 DeviceName = "Light",
@@ -92,19 +93,19 @@ public class RoomSeedData
                 DeviceModel = "Hue",
                 DeviceTypeName = deviceTypes[0].DeviceTypeName,
                 AccountId = accounts[0].AccountId,
-                ProfileId = profiles[0].ProfileId,
+                ProfileId = profiles[0].ProfileId
             }
         };
 
         var deviceCoordinates = new List<DeviceCoordinate>
         {
-            new DeviceCoordinate
+            new()
             {
                 XCoordinate = 0,
                 YCoordinate = 0,
                 Width = 2,
                 Height = 1,
-                DeviceId = devices[0].DeviceId,
+                DeviceId = devices[0].DeviceId
             }
         };
 

@@ -4,65 +4,29 @@ using SmartHomeManager.Domain.RoomDomain.Entities;
 using SmartHomeManager.Domain.RoomDomain.Interfaces;
 
 namespace SmartHomeManager.DataSource.RoomDataSource;
+
 public class RoomRepository : IRoomRepository
 {
-    // readonly - can only be set in ctor, can't be set after ctor exits
-    protected readonly ApplicationDbContext _db;
+    private readonly ApplicationDbContext _db;
+    private readonly DbSet<Room> _dbSet;
 
-    // NOT IN USE, for note taking / learning purposes only
-    // internal means only accessible within the same assembly
-    // internal DbSet<T> _dbSet
-
-    // dbSet of type T
-    protected DbSet<Room> _dbSet;
-
-    // ctor Dependency Injection
     public RoomRepository(ApplicationDbContext db)
     {
         _db = db;
-
-        // sets it to the generic class of the repository
-        this._dbSet = _db.Set<Room>();
+        _dbSet = _db.Set<Room>();
     }
 
-    public Room? Get(int? id)
+    public async Task<Room?> Get(Guid id)
     {
-        if (id == null) { return null; }
-
-        // similar to SingleOrDefault()
-        Room? result = _dbSet.Find(id);
-
-        // returns only the 1st row. If more than 1 row, then it will NOT throw exception.
-        // Category resultExample2 = _db.Category.FirstOrDefault(obj => obj.Id == id);
-
-        // returns only 1 row. If more than 1 row, then will throw exception.
-        // If there is 0 rows, then will return null.
-        // Difference between Find() and SingleOrDefault is that
-        // Find() is only for PK
-        // SingleOrDefault is able to take an expression (like a lambda func)
-        // and find objects that satisfies a given condition
-        // Category resultExample3 = _db.Category.SingleOrDefault(obj => obj.Id == id);
-
-        // returns only 1 row. If there is 0 rows, then will throw exception.
-        // Category resultExample4 = _db.Category.Single(obj => obj.Id == id);
+        var result = await _dbSet.FindAsync(id);
 
         return result;
     }
 
-    public IEnumerable<Room> GetAll()
+    public async Task<IEnumerable<Room>> GetAll()
     {
-        // test
-        // return _dbSet.ToList();
-
-        IQueryable<Room> query = _dbSet;
-        return query.ToList();
-    }
-
-    public IEnumerable<Room> Find(Expression<Func<Room, bool>> predicate)
-    {
-        IQueryable<Room> query = _dbSet;
-        IQueryable<Room> result = query.Where(predicate);
-        return result.ToList();
+        IEnumerable<Room> query = await _dbSet.ToListAsync();
+        return query;
     }
 
     public void Add(Room entity)
@@ -84,4 +48,34 @@ public class RoomRepository : IRoomRepository
     {
         _dbSet.RemoveRange(entities);
     }
+
+    public void Update(Room room)
+    {
+        _dbSet.Update(room);
+    }
+
+    public IEnumerable<Room> Find(Expression<Func<Room, bool>> predicate)
+    {
+        // this might be a dangerous method because the function assumes that the data is loaded already
+        IQueryable<Room> query = _dbSet;
+        var result = query.Where(predicate);
+        return result.ToList();
+    }
+
+    public async Task SaveChangesAsync()
+    {
+        await _db.SaveChangesAsync();
+    }
+
+    public IEnumerable<Room> GetRoomsRelatedToAccount(Guid accountId)
+    {
+        // load the data
+        var allRooms = _db.Rooms.ToList();
+        
+        // filter the data
+        IEnumerable<Room> result = _db.Rooms.ToList().Where(room => room.AccountId == accountId);
+
+        return result;
+    }
+    
 }

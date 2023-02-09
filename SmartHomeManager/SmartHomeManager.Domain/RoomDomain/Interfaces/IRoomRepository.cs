@@ -1,19 +1,18 @@
-﻿using SmartHomeManager.Domain.RoomDomain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
+using SmartHomeManager.Domain.RoomDomain.Entities;
 
 namespace SmartHomeManager.Domain.RoomDomain.Interfaces;
+
 public interface IRoomRepository
 {
-    Room? Get(int? id);
-    IEnumerable<Room> GetAll();
+    Task<Room?> Get(Guid roomId);
+    Task<IEnumerable<Room>> GetAll();
     IEnumerable<Room> Find(Expression<Func<Room, bool>> predicate);
     void Add(Room entity);
     void AddRange(IEnumerable<Room> entities);
     void Remove(Room entity);
     void RemoveRange(IEnumerable<Room> entities);
+    void Update(Room entity);
+    IEnumerable<Room> GetRoomsRelatedToAccount(Guid accountId);
+    Task SaveChangesAsync();
 }
