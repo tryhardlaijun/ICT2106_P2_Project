@@ -32,18 +32,24 @@ namespace SmartHomeManager.API.Controllers.AccountController
             _emailService = emailService;
         }
 
+        /*private readonly AccountRepository _accountRepository;
+        
+        public AccountsController(AccountRepository accountRepository)
+        {
+            _accountRepository = accountRepository;
+        }*/
+
         // GET: api/Accounts
-        [HttpGet]
+        /*[HttpGet]
         public async Task<ActionResult<IEnumerable<Account>>> GetAccounts()
         {
-            IEnumerable<Account> accounts = await _accountService.GetAccounts();
-            if (accounts == null)
+            if (_accountRepository.GetAllAsync() == null)
             {
                 return NotFound();
             }
-            return Ok(accounts);
-
-        }
+            *//*return await _accountRepository.GetAllAsync();*//*
+            return await _accountRepository.GetAllAsync();
+        }*/
 
         // GET: api/Accounts/5
         [HttpGet("{id}")]
