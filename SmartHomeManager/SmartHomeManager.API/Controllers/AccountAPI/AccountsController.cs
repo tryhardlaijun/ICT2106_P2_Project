@@ -40,16 +40,18 @@ namespace SmartHomeManager.API.Controllers.AccountController
         }*/
 
         // GET: api/Accounts
-        /*[HttpGet]
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<Account>>> GetAccounts()
         {
-            if (_accountRepository.GetAllAsync() == null)
+            IEnumerable<Account> accounts = await _accountService.GetAccounts();
+
+            if (accounts == null)
             {
                 return NotFound();
             }
-            *//*return await _accountRepository.GetAllAsync();*//*
-            return await _accountRepository.GetAllAsync();
-        }*/
+
+            return Ok(accounts);
+        }
 
         // GET: api/Accounts/5
         [HttpGet("{id}")]
