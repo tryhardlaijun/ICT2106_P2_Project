@@ -84,7 +84,7 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
 			return accounts;
 		}
 		
-		public async Task<int> VerifyLogin(LoginWebRequest login)
+		public async Task<Guid?> VerifyLogin(LoginWebRequest login)
 		{
 			Account? account = await _accountRepository.GetAccountByEmailAsync(login.Email);
             //Hash the password of the user using the newly created Guid as the salt
@@ -92,25 +92,24 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
             if (account != null)
 			{
                 string hashedPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                password: login.Password,
-                salt: account.AccountId.ToByteArray(),
-                prf: KeyDerivationPrf.HMACSHA256,
-                iterationCount: 100000,
-                numBytesRequested: 256 / 8));
+																password: login.Password,
+																salt: account.AccountId.ToByteArray(),
+																prf: KeyDerivationPrf.HMACSHA256,
+																iterationCount: 100000,
+																numBytesRequested: 256 / 8));
 
                 login.Password = hashedPassword;
 
                 if (account.Password == login.Password)
 				{
 					// account exists and password is correct
-					return 1;
+					//return 1;
+					return account.AccountId;
 				}
-				// account exists but password is wrong
-				return 2;
 			}
 
-			// account does not exist
-			return 3;
+            // account does not exist/account exists but password is wrong
+            return null;
 		}
 	}
 }

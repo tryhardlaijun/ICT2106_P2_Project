@@ -160,22 +160,17 @@ namespace SmartHomeManager.API.Controllers.AccountController
         [HttpPost("login")]
         public async Task<ActionResult> VerifyLogin([FromBody]LoginWebRequest login)
         {
-            int response = await _accountService.VerifyLogin(login);
+            Guid? accountId = await _accountService.VerifyLogin(login);
 
             // login successful
-            if (response == 1)
-            {            
-                return Ok(1);
-            }
-
-            // account exists, password wrong
-            else if (response == 2)
+            if (accountId != null)
             {
-                return BadRequest(1);
+                return Ok(accountId);
             }
 
-            // account does not exist
-            return BadRequest(2);
+            // login unsuccessful
+            return BadRequest();
+            
         }
 
 

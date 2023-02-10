@@ -110,47 +110,47 @@ export default function Register() {
 
     //Submit form
     const submitRegisterForm = () => {
-        if (emailValid && passwordValid && confirmPasswordValid && emailInput.length!=0 && passwordInput.length>=8 && confirmPasswordInput.length>=8) {
+        if (emailValid && passwordValid && confirmPasswordValid && emailInput.length != 0 
+            && passwordInput.length >= 8 && confirmPasswordInput.length >= 8) {
 
             //JSO stringify to send to api controller
-            const obj = {
+            const registerAccountObj = {
                 "email": emailInput, "username": usernameInput, "address": addressInput, "timezone": timezoneInput, "password": passwordInput
             }
-            const message = JSON.stringify(obj)
             fetch('https://localhost:7140/api/Accounts/', {
                 method: 'POST',
-                body: message,
+                body: JSON.stringify(registerAccountObj),
                 headers: {
                     'Content-type': 'application/problem+json; charset=utf-8',
                 },
             })
-                .then(async response => {
-                    const msg = await response.text();
-                    if (response.ok) {
-                        /* 
-                        * Ok(1) - Account Created & Email Sent
-                        * Ok(2) - Account Created but Email Not Sent
-                        */
-                        updateAccountCreateFailStatus(false);
-                        navigate("/account-created", { replace: true });
-                    } else {
-                        throw new Error(msg)
-                    }
-                })
-                .catch((err) => {
+            .then(async response => {
+                const msg = await response.text();
+                if (response.ok) {
                     /* 
-                    * BadRequest(1) - Account Not Created
-                    * BadRequest(2) - Email already exists
+                    * Ok(1) - Account Created & Email Sent
+                    * Ok(2) - Account Created but Email Not Sent
                     */
-                    if(err.message==1){
-                        updateErrorMessage("Account not created.")
-                    }else if(err.message==2){
-                        updateErrorMessage("Email already exists.")
-                    }
-                    updateAccountCreationMessage("Your account fail to create: " + errorMessage +" Please try again.")
-                    updateAccountCreateFailStatus(true);
-                });
-        }else{
+                    updateAccountCreateFailStatus(false);
+                    navigate("/account-created", { replace: true });
+                } else {
+                    throw new Error(msg)
+                }
+            })
+            .catch((err) => {
+                /* 
+                * BadRequest(1) - Account Not Created
+                * BadRequest(2) - Email already exists
+                */
+                if(err.message==1){
+                    updateErrorMessage("Account not created.")
+                }else if(err.message==2){
+                    updateErrorMessage("Email already exists.")
+                }
+                updateAccountCreationMessage("Your account fail to create: " + errorMessage +" Please try again.")
+                updateAccountCreateFailStatus(true);
+            });
+        } else {
             updateAccountCreateFailStatus(true);
             updateAccountCreationMessage("Please key in all your information to create an account with us");
         }

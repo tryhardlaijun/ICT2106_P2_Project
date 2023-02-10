@@ -40,36 +40,36 @@ export default function Login() {
 
     //Function to submit login form
     const submitLoginForm = () => {
-        if(emailValid && passwordInput.length>=8){
-            const obj = {
+        if (emailValid && passwordInput.length >= 8) {
+            const loginAccountObj = {
                 "email": emailInput, "password": passwordInput
             }
-            const message = JSON.stringify(obj)
             fetch('https://localhost:7140/api/Accounts/login', {
                 method: 'POST',
-                body: message,
+                body: JSON.stringify(loginAccountObj),
                 headers: {
                     'Content-type': 'application/problem+json; charset=utf-8',
                 },
             })
-                .then(async response => {
-                    const msg = await response.text();
-                    /* Ok(1) - Login Successful*/
-                    if (response.ok) {
-                        updateErrorStatus(false);
-                        navigate("/", { replace: true });
-                    } else {
-                        updateErrorStatus(true);
-                        throw new Error(msg);
-                    }
-                })
-                .catch((err) => {
-                    /* BadRequest(1) - Login Unsuccessful, wrong password
-                    * BadRequest(2) - Login Unsuccessful, account does not exist
-                    */
-                    updateErrorMsg("Incorrect email or password");
-                });
-        }else{
+            .then(async response => {
+                const msg = await response.text();
+                /* Ok(1) - Login Successful */
+                if (response.ok) {
+                    localStorage.setItem('accountId', msg);
+                    updateErrorStatus(false);
+                    navigate("/", { replace: true });
+                } else {
+                    updateErrorStatus(true);
+                    throw new Error(msg);
+                }
+            })
+            .catch((err) => {
+                /*  BadRequest(1) - Login Unsuccessful, wrong password
+                *   BadRequest(2) - Login Unsuccessful, account does not exist
+                */
+                updateErrorMsg("Incorrect email or password");
+            });
+        } else {
             updateErrorStatus(true);
             updateErrorMsg("Incorrect email or password");
         }
@@ -92,9 +92,9 @@ export default function Login() {
                     boxShadow={'lg'}
                     p={8}>
                     <Stack spacing={4}>
-                    
+
                         {
-                            errorStatus ? <Heading color={'red'} textAlign={'center'} fontSize={'1xl'}>{errorMsg}</Heading>:""
+                            errorStatus ? <Heading color={'red'} textAlign={'center'} fontSize={'1xl'}>{errorMsg}</Heading> : ""
                         }
                         <FormControl id="email" isInvalid={!emailValid}>
                             <FormLabel>Email address</FormLabel>
