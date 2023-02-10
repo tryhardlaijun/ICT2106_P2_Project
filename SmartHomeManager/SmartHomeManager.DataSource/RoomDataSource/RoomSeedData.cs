@@ -81,6 +81,7 @@ public class RoomSeedData
                 DeviceModel = "Hue",
                 DeviceTypeName = deviceTypes[0].DeviceTypeName,
                 AccountId = accounts[0].AccountId,
+                RoomId = rooms[0].RoomId
             }
         };
 

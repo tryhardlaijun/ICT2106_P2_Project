@@ -1,4 +1,4 @@
-﻿namespace SmartHomeManager.Domain.RoomDomain.Entities.DTOs;
+﻿namespace SmartHomeManager.Domain.RoomDomain.DTOs.Requests;
 
 public class CreateRoomWebRequest
 {
