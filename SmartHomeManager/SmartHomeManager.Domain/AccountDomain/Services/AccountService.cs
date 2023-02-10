@@ -31,7 +31,7 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
 
 			// Create new Account object and assign the web request variables to it, except for the password
             Account realAccount = new Account();
-			realAccount.AccountId = new Guid();
+			realAccount.AccountId = Guid.NewGuid();
             realAccount.Address = accountWebRequest.Address;
             realAccount.Email = accountWebRequest.Email;
             realAccount.Timezone = accountWebRequest.Timezone;
@@ -87,9 +87,20 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
 		public async Task<int> VerifyLogin(LoginWebRequest login)
 		{
 			Account? account = await _accountRepository.GetAccountByEmailAsync(login.Email);
-			if (account != null)
+            //Hash the password of the user using the newly created Guid as the salt
+            
+            if (account != null)
 			{
-				if (account.Password == login.Password)
+                string hashedPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                password: login.Password,
+                salt: account.AccountId.ToByteArray(),
+                prf: KeyDerivationPrf.HMACSHA256,
+                iterationCount: 100000,
+                numBytesRequested: 256 / 8));
+
+                login.Password = hashedPassword;
+
+                if (account.Password == login.Password)
 				{
 					// account exists and password is correct
 					return 1;

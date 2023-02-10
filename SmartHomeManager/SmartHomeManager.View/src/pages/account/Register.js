@@ -48,6 +48,7 @@ export default function Register() {
     const [passwordMessage, updatePasswordMessage] = useState("")
     const [confirmPasswordMessage, updateConfirmPasswordMessage] = useState("")
     const [accountCreationMessage, updateAccountCreationMessage] = useState("")
+    const [errorMessage, updateErrorMessage] = useState("")
 
     //Show password
     const [showPassword, setShowPassword] = useState(false);
@@ -126,20 +127,27 @@ export default function Register() {
                 .then(async response => {
                     const msg = await response.text();
                     if (response.ok) {
+                        /* 
+                        * Ok(1) - Account Created & Email Sent
+                        * Ok(2) - Account Created but Email Not Sent
+                        */
                         updateAccountCreateFailStatus(false);
                         navigate("/account-created", { replace: true });
                     } else {
                         throw new Error(msg)
                     }
                 })
-                .then(data => {
-                    console.log("d");
-                    console.log({data});
-                })
                 .catch((err) => {
-                    console.log("e");
-                    console.log(err.message);
-                    updateAccountCreationMessage("Your account fail to create: " + err.message +". Please try again.")
+                    /* 
+                    * BadRequest(1) - Account Not Created
+                    * BadRequest(2) - Email already exists
+                    */
+                    if(err.message==1){
+                        updateErrorMessage("Account not created.")
+                    }else if(err.message==2){
+                        updateErrorMessage("Email already exists.")
+                    }
+                    updateAccountCreationMessage("Your account fail to create: " + errorMessage +" Please try again.")
                     updateAccountCreateFailStatus(true);
                 });
         }else{

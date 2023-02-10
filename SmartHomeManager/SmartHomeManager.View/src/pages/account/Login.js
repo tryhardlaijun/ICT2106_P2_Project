@@ -41,36 +41,34 @@ export default function Login() {
     //Function to submit login form
     const submitLoginForm = () => {
         if(emailValid && passwordInput.length>=8){
-        const obj = {
-            "email": emailInput, "password": passwordInput
-        }
-        const message = JSON.stringify(obj)
-        fetch('https://localhost:7140/api/Accounts/login', {
-            method: 'POST',
-            body: message,
-            headers: {
-                'Content-type': 'application/problem+json; charset=utf-8',
-            },
-        })
-            .then(async response => {
-                const msg = await response.text();
-                if (response.ok) {
-                    updateErrorStatus(false);
-                    navigate("/", { replace: true });
-                } else {
-                    updateErrorStatus(true);
-                    throw new Error(msg);
-                }
+            const obj = {
+                "email": emailInput, "password": passwordInput
+            }
+            const message = JSON.stringify(obj)
+            fetch('https://localhost:7140/api/Accounts/login', {
+                method: 'POST',
+                body: message,
+                headers: {
+                    'Content-type': 'application/problem+json; charset=utf-8',
+                },
             })
-            .then(data => {
-                console.log("d");
-                console.log({ data });
-            })
-            .catch((err) => {
-                console.log("e");
-                console.log(err.message);
-                updateErrorMsg(err.message);
-            });
+                .then(async response => {
+                    const msg = await response.text();
+                    /* Ok(1) - Login Successful*/
+                    if (response.ok) {
+                        updateErrorStatus(false);
+                        navigate("/", { replace: true });
+                    } else {
+                        updateErrorStatus(true);
+                        throw new Error(msg);
+                    }
+                })
+                .catch((err) => {
+                    /* BadRequest(1) - Login Unsuccessful, wrong password
+                    * BadRequest(2) - Login Unsuccessful, account does not exist
+                    */
+                    updateErrorMsg("Incorrect email or password");
+                });
         }else{
             updateErrorStatus(true);
             updateErrorMsg("Incorrect email or password");
