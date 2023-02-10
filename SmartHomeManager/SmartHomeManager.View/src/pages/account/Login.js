@@ -55,19 +55,21 @@ export default function Login() {
                 const msg = await response.text();
                 /* Ok(1) - Login Successful */
                 if (response.ok) {
-                    localStorage.setItem('accountId', msg);
+                    //localStorage.setItem('accountId', msg);
+                    console.log(msg)
                     updateErrorStatus(false);
                     navigate("/", { replace: true });
+                    localStorage.setItem('accountId', msg);
                 } else {
+                    /*  BadRequest(1) - Login Unsuccessful, wrong password
+                    *   BadRequest(2) - Login Unsuccessful, account does not exist
+                    */
                     updateErrorStatus(true);
-                    throw new Error(msg);
+                    updateErrorMsg("Incorrect email or password");
                 }
             })
             .catch((err) => {
-                /*  BadRequest(1) - Login Unsuccessful, wrong password
-                *   BadRequest(2) - Login Unsuccessful, account does not exist
-                */
-                updateErrorMsg("Incorrect email or password");
+                updateErrorMsg(err.message);
             });
         } else {
             updateErrorStatus(true);

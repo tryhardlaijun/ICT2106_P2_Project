@@ -125,7 +125,7 @@ export default function Register() {
                 },
             })
             .then(async response => {
-                const msg = await response.text();
+                const msg = parseInt(await response.text());
                 if (response.ok) {
                     /* 
                     * Ok(1) - Account Created & Email Sent
@@ -134,21 +134,23 @@ export default function Register() {
                     updateAccountCreateFailStatus(false);
                     navigate("/account-created", { replace: true });
                 } else {
-                    throw new Error(msg)
+                    /* 
+                    * BadRequest(1) - Account Not Created
+                    * BadRequest(2) - Email already exists
+                    */
+                    if(msg == 1){
+                        updateErrorMessage("Account not created.")
+                    }else if(msg == 2){
+                        updateErrorMessage("Email already exists.")
+                    }
+                    updateAccountCreationMessage("Your account fail to create: " + errorMessage +" Please try again.")
+                    updateAccountCreateFailStatus(true);
                 }
             })
             .catch((err) => {
-                /* 
-                * BadRequest(1) - Account Not Created
-                * BadRequest(2) - Email already exists
-                */
-                if(err.message==1){
-                    updateErrorMessage("Account not created.")
-                }else if(err.message==2){
-                    updateErrorMessage("Email already exists.")
-                }
-                updateAccountCreationMessage("Your account fail to create: " + errorMessage +" Please try again.")
+                updateAccountCreationMessage("Server Error: "+ err.message);
                 updateAccountCreateFailStatus(true);
+
             });
         } else {
             updateAccountCreateFailStatus(true);
