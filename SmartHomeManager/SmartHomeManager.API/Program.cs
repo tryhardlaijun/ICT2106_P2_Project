@@ -9,6 +9,7 @@ using SmartHomeManager.Domain.AccountDomain.Interfaces;
 using SmartHomeManager.Domain.AccountDomain.Services;
 using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.DeviceDomain.Entities;
+using SmartHomeManager.Domain.DeviceDomain.Interfaces;
 using SmartHomeManager.Domain.RoomDomain.Interfaces;
 using SmartHomeManager.Domain.RoomDomain.Mocks;
 
@@ -36,8 +37,8 @@ public class Program
         });
 
         // DEVICE
-        builder.Services.AddScoped<IGenericRepository<Device>, DeviceRepository>();
-        builder.Services.AddScoped<IGenericRepository<DeviceType>, DeviceTypeRepository>();
+        builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();
+        builder.Services.AddScoped<IDeviceTypeRepository, DeviceTypeRepository>();
 
         // ROOM
         builder.Services.AddScoped<IRoomRepository, RoomRepository>();

@@ -3,6 +3,7 @@ using SmartHomeManager.Domain.DeviceDomain.Services;
 using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.DeviceDomain.Entities;
 using SmartHomeManager.Domain.DeviceDomain.Entities.DTOs;
+using SmartHomeManager.Domain.DeviceDomain.Interfaces;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -14,7 +15,7 @@ namespace SmartHomeManager.API.Controllers.DeviceAPIs
     {
         private readonly RegisterDeviceService _registerDeviceService;
 
-        public RegisterDeviceController(IGenericRepository<Device> deviceRepository, IGenericRepository<DeviceType> deviceTypeRepository) 
+        public RegisterDeviceController(IDeviceRepository deviceRepository, IDeviceTypeRepository deviceTypeRepository) 
         {
             _registerDeviceService = new(deviceRepository, deviceTypeRepository);
         }
@@ -29,16 +30,26 @@ namespace SmartHomeManager.API.Controllers.DeviceAPIs
 
         // POST api/<RegisterDeviceController>/RegisterDevice
         [HttpPost("RegisterDevice")]
-        public async Task RegisterDevice([FromBody] DeviceWebRequest deviceWebRequest)
+        public async Task<ActionResult> RegisterDevice([FromBody] DeviceWebRequest deviceWebRequest)
         {
-            await _registerDeviceService.RegisterDeviceAsync(deviceWebRequest.DeviceName, deviceWebRequest.DeviceBrand, deviceWebRequest.DeviceModel, deviceWebRequest.DeviceTypeName, deviceWebRequest.AccountId);
+            if (await _registerDeviceService.RegisterDeviceAsync(deviceWebRequest.DeviceName, deviceWebRequest.DeviceBrand, deviceWebRequest.DeviceModel, deviceWebRequest.DeviceTypeName, deviceWebRequest.DeviceSerialNumber, deviceWebRequest.AccountId))
+            {
+                return Ok("RegisterDevice() success!");
+	        }
+
+            return BadRequest("RegisterDevice() failed!");
         }
 
         // POST api/<RegisterDeviceController>/AddDeviceType
         [HttpPost("AddDeviceType")]
-        public async Task AddDeviceType([FromBody] DeviceType deviceType)
+        public async Task<ActionResult> AddDeviceType([FromBody] DeviceType deviceType)
         {
-            await _registerDeviceService.AddDeviceTypeAsync(deviceType);   
+            if (await _registerDeviceService.AddDeviceTypeAsync(deviceType))
+            {
+                return Ok("AddDeviceType() success!");
+	        }
+
+            return BadRequest("AddDeviceType() failed!");
         }
     }
 }

@@ -3,6 +3,7 @@ using SmartHomeManager.DataSource;
 using SmartHomeManager.DataSource.DeviceDataSource;
 using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.DeviceDomain.Entities;
+using SmartHomeManager.Domain.DeviceDomain.Interfaces;
 
 namespace SmartHomeManager.API.Controllers.DeviceAPIs
 {
@@ -29,8 +30,8 @@ namespace SmartHomeManager.API.Controllers.DeviceAPIs
                 options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            builder.Services.AddScoped<IGenericRepository<Device>, DeviceRepository>();
-            builder.Services.AddScoped<IGenericRepository<DeviceType>, DeviceTypeRepository>();
+            builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();
+            builder.Services.AddScoped<IDeviceTypeRepository, DeviceTypeRepository>();
             #endregion DEPENDENCY INJECTIONS
 
             builder.Services.AddEndpointsApiExplorer();

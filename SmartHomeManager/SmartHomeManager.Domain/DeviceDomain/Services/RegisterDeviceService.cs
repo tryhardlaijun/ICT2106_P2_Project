@@ -1,14 +1,15 @@
 ﻿using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.DeviceDomain.Entities;
+using SmartHomeManager.Domain.DeviceDomain.Interfaces;
 
 namespace SmartHomeManager.Domain.DeviceDomain.Services
 {
     public class RegisterDeviceService
     {
-        private readonly IGenericRepository<Device> _deviceRepository;
-        private readonly IGenericRepository<DeviceType> _deviceTypeRepository;
+        private readonly IDeviceRepository _deviceRepository;
+        private readonly IDeviceTypeRepository _deviceTypeRepository;
 
-        public RegisterDeviceService(IGenericRepository<Device> deviceRepository, IGenericRepository<DeviceType> deviceTypeRepository) 
+        public RegisterDeviceService(IDeviceRepository deviceRepository, IDeviceTypeRepository deviceTypeRepository) 
         { 
             _deviceRepository = deviceRepository;
             _deviceTypeRepository = deviceTypeRepository;
@@ -19,23 +20,42 @@ namespace SmartHomeManager.Domain.DeviceDomain.Services
             return await _deviceTypeRepository.GetAllAsync();
         }
 
-        public async Task<bool> RegisterDeviceAsync(string deviceName, string deviceBrand, string deviceModel, string deviceTypeName, Guid accountId)
+        public async Task<bool> RegisterDeviceAsync(string deviceName, string deviceBrand, string deviceModel, string deviceTypeName, string deviceSerialNumber, Guid accountId)
         {
-            Device device = new()
+            try
             {
-                DeviceName = deviceName,
-                DeviceBrand = deviceBrand,
-                DeviceModel = deviceModel,
-                DeviceTypeName = deviceTypeName,
-                AccountId = accountId,
-            };
+                Device device = new()
+                {
+                    DeviceName = deviceName,
+                    DeviceBrand = deviceBrand,
+                    DeviceModel = deviceModel,
+                    DeviceTypeName = deviceTypeName,
+                    DeviceSerialNumber = deviceSerialNumber,
+                    AccountId = accountId,
+                };
 
-            return await _deviceRepository.AddAsync(device);
+                await _deviceRepository.AddAsync(device);
+
+                return await _deviceRepository.SaveAsync();
+            }
+            catch 
+	        {
+                return false;
+            }
         }
 
         public async Task<bool> AddDeviceTypeAsync(DeviceType deviceType)
         {
-            return await _deviceTypeRepository.AddAsync(deviceType);
+            try
+            {
+                await _deviceTypeRepository.AddAsync(deviceType);
+
+                return await _deviceTypeRepository.SaveAsync();
+            }
+            catch
+            {
+                return false;
+	        }
         }
     }
 }

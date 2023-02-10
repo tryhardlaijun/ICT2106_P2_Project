@@ -136,7 +136,7 @@ const NAV_ITEMS = [
   },
   {
     label: "Register Device",
-    href: "/registerdevice",
+    href: "/selectnearbydevice",
   },
   {
     label: "Profiles",
