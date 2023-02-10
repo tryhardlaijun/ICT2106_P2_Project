@@ -1,10 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.DeviceDomain.Entities;
+using SmartHomeManager.Domain.DeviceDomain.Interfaces;
 
 namespace SmartHomeManager.DataSource.DeviceDataSource
 {
-    public class DeviceRepository : IGenericRepository<Device>
+    public class DeviceRepository : IDeviceRepository
     {
         private readonly ApplicationDbContext _applicationDbContext;
 
@@ -13,95 +15,34 @@ namespace SmartHomeManager.DataSource.DeviceDataSource
             _applicationDbContext = applicationDbContext;
         }
 
-        public async Task<bool> AddAsync(Device device)
-        {
-            try
-            {
-                await _applicationDbContext.Devices.AddAsync(device);
-                await SaveAsync();
+        public async Task AddAsync(Device device) 
+	    {
+            await _applicationDbContext.AddAsync(device);
+	    }
 
-                return true;
-            }
-            catch 
-            {
-                return false;
-            }
+        public Task DeleteAsync(Guid deviceId)
+        {
+            throw new NotImplementedException();
         }
 
-        public async Task<bool> DeleteAsync(Device device)
+        public Task<IEnumerable<Device>> GetAllAsync()
         {
-            try
-            {
-                _applicationDbContext.Devices.Remove(device);
-                await SaveAsync();
-
-                return true;
-            }
-            catch 
-            {
-                return false;
-            }
+            throw new NotImplementedException();
         }
 
-        public async Task<bool> DeleteByIdAsync(Guid id)
+        public Task<Device> GetAsync(Guid deviceId)
         {
-            try
-            {
-                Device? device = await GetByIdAsync(id);
-
-                if (device is null)
-                {
-                    return false;
-                }
-
-                _applicationDbContext.Devices.Remove(device);
-                await SaveAsync();
-
-                return true;
-            }
-            catch 
-            {
-                return false; 
-            }
+            throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Device>> GetAllAsync()
+        public async Task<bool> SaveAsync() 
+	    {
+            return await _applicationDbContext.SaveChangesAsync() > 0;
+	    }
+
+        public Task UpdateAsync(Device device)
         {
-            return await _applicationDbContext.Devices.ToListAsync();
-        }
-
-        public async Task<Device?> GetByIdAsync(Guid id)
-        {
-            return await _applicationDbContext.Devices.FindAsync(id);    
-        }
-
-        public async Task<bool> SaveAsync()
-        {
-            try
-            {
-                await _applicationDbContext.SaveChangesAsync();
-
-                return true;
-            }
-            catch 
-            {
-                return false;
-            }
-        }
-
-        public async Task<bool> UpdateAsync(Device device)
-        {
-            try
-            {
-                _applicationDbContext.Devices.Update(device);
-                await SaveAsync();
-
-                return true;
-            }
-            catch 
-            {
-                return false;
-            }
+            throw new NotImplementedException();
         }
     }
 }

@@ -15,20 +15,28 @@ import {
   ModalHeader,
   ModalCloseButton,
   ModalFooter,
+  useToast,
+  Box,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 export default function RegisterDevice() {
   const [deviceTypeNames, setDeviceTypeNames] = useState([]);
 
   const [newDeviceTypeName, setNewDeviceTypeName] = useState("");
 
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const [deviceName, setDeviceName] = useState("");
-  const [deviceBrand, setDeviceBrand] = useState("Xiaomi");
-  const [deviceModel, setDeviceModel] = useState("Mi Smart Standing Fan 2 Lite, White");
+  const [deviceBrand, setDeviceBrand] = useState(searchParams.get("deviceBrand"));
+  const [deviceModel, setDeviceModel] = useState(searchParams.get("deviceModel"));
   const [deviceTypeName, setDeviceTypeName] = useState("");
+  const [deviceSerialNumber, setSerialNumber] = useState(searchParams.get("deviceSerialNumber"));
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const toast = useToast();
 
   function fetchDeviceTypes() {
     fetch("https://localhost:7140/api/RegisterDevice/GetAllDeviceTypes/")
@@ -47,7 +55,24 @@ export default function RegisterDevice() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ deviceTypeName: newDeviceTypeName }),
-    }).then((data) => {
+    }).then((response) => {
+      if (response.ok) {
+        toast({
+          title: "Success",
+          description: "Device Type has been added successfully.",
+          status: "success",
+          duration: 9000,
+          isClosable: true,
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: "Device Type adding failed.",
+          status: "error",
+          duration: 9000,
+          isClosable: true,
+        });
+      }
       setDeviceTypeNames([]);
       fetchDeviceTypes();
       onClose();
@@ -65,9 +90,27 @@ export default function RegisterDevice() {
         deviceBrand: deviceBrand,
         deviceModel: deviceModel,
         deviceTypeName: deviceTypeName,
+        deviceSerialNumber: deviceSerialNumber,
         accountId: "06419047-3d8e-47fa-a239-80b7f78c4a2e",
       }),
-    }).then((data) => {
+    }).then((response) => {
+      if (response.ok) {
+        toast({
+          title: "Success",
+          description: "Device has been registered successfully.",
+          status: "success",
+          duration: 9000,
+          isClosable: true,
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: "Device registration failed.",
+          status: "error",
+          duration: 9000,
+          isClosable: true,
+        });
+      }
       setDeviceTypeNames([]);
       fetchDeviceTypes();
       onClose();
@@ -87,17 +130,11 @@ export default function RegisterDevice() {
         </FormControl>
         <FormControl isRequired>
           <FormLabel>Device Brand</FormLabel>
-          <Input isDisabled onChange={(e) => setDeviceBrand(e.target.value)} type="text" placeholder="Xiaomi" value="Xiaomi" />
+          <Input isDisabled type="text" placeholder={deviceBrand} value={deviceBrand} />
         </FormControl>
         <FormControl isRequired>
           <FormLabel>Device Model</FormLabel>
-          <Input
-            isDisabled
-            onChange={(e) => setDeviceModel(e.target.value)}
-            type="text"
-            placeholder="Mi Smart Standing Fan 2 Lite, White"
-            value="Mi Smart Standing Fan 2 Lite, White"
-          />
+          <Input isDisabled type="text" placeholder={deviceModel} value={deviceModel} />
         </FormControl>
         <FormControl isRequired>
           <FormLabel>Device Type</FormLabel>

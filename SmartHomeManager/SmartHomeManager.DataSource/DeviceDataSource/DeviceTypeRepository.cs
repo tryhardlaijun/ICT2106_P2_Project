@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.DeviceDomain.Entities;
+using SmartHomeManager.Domain.DeviceDomain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SmartHomeManager.DataSource.DeviceDataSource
 {
-    public class DeviceTypeRepository : IGenericRepository<DeviceType>
+    public class DeviceTypeRepository : IDeviceTypeRepository
     {
         private readonly ApplicationDbContext _applicationDbContext;
 
@@ -18,56 +19,14 @@ namespace SmartHomeManager.DataSource.DeviceDataSource
             _applicationDbContext = applicationDbContext;
         }
 
-        public async Task<bool> AddAsync(DeviceType deviceType)
+        public async Task AddAsync(DeviceType deviceType)
         {
-            try
-            {
-                await _applicationDbContext.DeviceTypes.AddAsync(deviceType);
-                await SaveAsync();
-
-                return true;
-            }
-            catch 
-            {
-                return false;
-            }
+            await _applicationDbContext.DeviceTypes.AddAsync(deviceType);
         }
 
-        public async Task<bool> DeleteAsync(DeviceType deviceType)
+        public Task DeleteAsync(string deviceTypeName)
         {
-            try
-            {
-                _applicationDbContext.DeviceTypes.Remove(deviceType);
-                await SaveAsync();
-
-                return true;
-            }
-            catch 
-            {
-                return false;
-            }
-        }
-
-        public async Task<bool> DeleteByIdAsync(Guid id)
-        {
-            try
-            {
-                DeviceType? deviceType = await GetByIdAsync(id);
-
-                if (deviceType is null)
-                {
-                    return false;
-                }
-
-                _applicationDbContext.DeviceTypes.Remove(deviceType);
-                await SaveAsync();
-
-                return true;
-            }
-            catch 
-            {
-                return false; 
-            }
+            throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<DeviceType>> GetAllAsync()
@@ -75,38 +34,19 @@ namespace SmartHomeManager.DataSource.DeviceDataSource
             return await _applicationDbContext.DeviceTypes.ToListAsync();
         }
 
-        public async Task<DeviceType?> GetByIdAsync(Guid id)
+        public Task<DeviceType> GetAsync(string deviceType)
         {
-            return await _applicationDbContext.DeviceTypes.FindAsync(id);    
+            throw new NotImplementedException();
         }
 
         public async Task<bool> SaveAsync()
         {
-            try
-            {
-                await _applicationDbContext.SaveChangesAsync();
-
-                return true;
-            }
-            catch 
-            {
-                return false;
-            }
+            return await _applicationDbContext.SaveChangesAsync() > 0;
         }
 
-        public async Task<bool> UpdateAsync(DeviceType deviceType)
+        public Task UpdateAsync(DeviceType deviceType)
         {
-            try
-            {
-                _applicationDbContext.DeviceTypes.Update(deviceType);
-                await SaveAsync();
-
-                return true;
-            }
-            catch 
-            {
-                return false;
-            }
+            throw new NotImplementedException();
         }
     }
 }

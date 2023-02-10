@@ -1,10 +1,12 @@
-﻿using SmartHomeManager.Domain.AccountDomain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.RoomDomain.Entities;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SmartHomeManager.Domain.DeviceDomain.Entities
 {
+    [Index(nameof(DeviceSerialNumber), IsUnique = true)]
     public class Device
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -21,6 +23,9 @@ namespace SmartHomeManager.Domain.DeviceDomain.Entities
 
         [Required]
         public string DeviceTypeName { get; set; }
+
+        [Required]
+        public string DeviceSerialNumber { get; set; }
 
         public string? Password { get; set; }
 

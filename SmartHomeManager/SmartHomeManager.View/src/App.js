@@ -14,6 +14,7 @@ import MyAccount from "./pages/account/Setting";
 import UserProfileEdit from "./pages/profile/EditProfile";
 import ProfileLanding from "./pages/profile/ProfileLanding";
 import RegisterDevice from "./pages/RegisterDevice";
+import SelectNearbyDevice from "pages/SelectNearbyDevice";
 
 export function App() {
   return (
@@ -33,6 +34,8 @@ export function App() {
             <Route path="/edit-profile" element={<UserProfileEdit />} />
             <Route path="/profile-landing" element={<ProfileLanding />} />
             <Route path="/register" element={<Register />} />
+
+            <Route path="/selectnearbydevice" element={<SelectNearbyDevice />} />
             <Route path="/registerdevice" element={<RegisterDevice />} />
           </Routes>
         </Container>
