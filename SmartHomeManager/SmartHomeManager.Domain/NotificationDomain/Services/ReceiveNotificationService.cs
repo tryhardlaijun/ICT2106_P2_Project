@@ -57,20 +57,17 @@ namespace SmartHomeManager.Domain.NotificationDomain.Services
                 return Tuple.Create(NotificationResult.Error_AccountNotFound, allNotification);
             }
             allNotification = await _notificationRepository.GetAllByIdAsync(accountId);
-            /*//Check if DBReadFail
+            //Check if DBReadFail
             try
             {
-                
+                //Sort and get the latest 5 notifications
+                IEnumerable<Notification> latest5Notification = allNotification.OrderBy(noti => noti.SentTime).TakeLast(5);
+                return Tuple.Create(NotificationResult.Success, latest5Notification);
             }
             catch (Exception ex)
             {
                 return Tuple.Create(NotificationResult.Error_DBReadFail, allNotification);
-            }*/
-
-            //Sort and get the latest 5 notifications
-            IEnumerable<Notification> latest5Notification = allNotification.OrderBy(noti => noti.SentTime).TakeLast(5);
-
-            return Tuple.Create(NotificationResult.Success, latest5Notification);
+            }
         }
     }
 }

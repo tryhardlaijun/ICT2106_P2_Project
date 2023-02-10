@@ -37,13 +37,9 @@ function AnalyticsTab() {
                     <p>Efficiency</p>
                 </TabPanel>
                 <TabPanel>
-<<<<<<< HEAD
                 <Container>
-                        <Report />
-                    </Container>
-=======
                     <Report />
->>>>>>> dd29b558b0132bd09a8202779f6d4ace12fe602b
+                    </Container>
                 </TabPanel>
             </TabPanels>
         </Tabs>

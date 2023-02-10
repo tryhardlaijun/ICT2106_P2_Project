@@ -13,7 +13,7 @@ namespace SmartHomeManager.DataSource.NotificationDataSource
     {
 
         private const int AmountOfNotificationsToBeSeeded = 20;
-
+        
         public static async Task Seed(ApplicationDbContext context)
         {
 
@@ -29,9 +29,11 @@ namespace SmartHomeManager.DataSource.NotificationDataSource
             context.Notifications.RemoveRange(context.Notifications);
             await context.SaveChangesAsync();
 
+            Guid TempAccountGuid = new Guid("9D2B0228-4D0D-4C23-8B49-01A698857709");
+
             Account addAccount = new Account
             {
-                AccountId = Guid.NewGuid(),
+                AccountId = TempAccountGuid,
                 Email = "test@email.com",
                 Username = "test123",
                 Address = "Singapore 000000",
