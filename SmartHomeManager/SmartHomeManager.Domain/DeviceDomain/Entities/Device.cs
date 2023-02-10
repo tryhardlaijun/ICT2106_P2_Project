@@ -27,7 +27,10 @@ namespace SmartHomeManager.Domain.DeviceDomain.Entities
         [Required]
         public string DeviceSerialNumber { get; set; }
 
-        public string? Password { get; set; }
+        public string? DevicePassword { get; set; }
+
+        [Required]
+        public int DeviceWatts { get; set; }
 
         public Guid? RoomId { get; set; }
 

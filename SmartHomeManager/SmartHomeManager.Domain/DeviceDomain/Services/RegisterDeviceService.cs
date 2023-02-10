@@ -20,7 +20,7 @@ namespace SmartHomeManager.Domain.DeviceDomain.Services
             return await _deviceTypeRepository.GetAllAsync();
         }
 
-        public async Task<bool> RegisterDeviceAsync(string deviceName, string deviceBrand, string deviceModel, string deviceTypeName, string deviceSerialNumber, Guid accountId)
+        public async Task<bool> RegisterDeviceAsync(string deviceName, string deviceBrand, string deviceModel, string deviceTypeName, int deviceWatts, string deviceSerialNumber, Guid accountId)
         {
             try
             {
@@ -30,6 +30,7 @@ namespace SmartHomeManager.Domain.DeviceDomain.Services
                     DeviceBrand = deviceBrand,
                     DeviceModel = deviceModel,
                     DeviceTypeName = deviceTypeName,
+                    DeviceWatts = deviceWatts,
                     DeviceSerialNumber = deviceSerialNumber,
                     AccountId = accountId,
                 };

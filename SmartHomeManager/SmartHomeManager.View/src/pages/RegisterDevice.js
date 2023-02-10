@@ -31,6 +31,7 @@ export default function RegisterDevice() {
   const [deviceName, setDeviceName] = useState("");
   const [deviceBrand, setDeviceBrand] = useState(searchParams.get("deviceBrand"));
   const [deviceModel, setDeviceModel] = useState(searchParams.get("deviceModel"));
+  const [deviceWatts, setDeviceWatts] = useState(searchParams.get("deviceWatts"));
   const [deviceTypeName, setDeviceTypeName] = useState("");
   const [deviceSerialNumber, setSerialNumber] = useState(searchParams.get("deviceSerialNumber"));
 
@@ -89,6 +90,7 @@ export default function RegisterDevice() {
         deviceName: deviceName,
         deviceBrand: deviceBrand,
         deviceModel: deviceModel,
+        deviceWatts: deviceWatts,
         deviceTypeName: deviceTypeName,
         deviceSerialNumber: deviceSerialNumber,
         accountId: "06419047-3d8e-47fa-a239-80b7f78c4a2e",

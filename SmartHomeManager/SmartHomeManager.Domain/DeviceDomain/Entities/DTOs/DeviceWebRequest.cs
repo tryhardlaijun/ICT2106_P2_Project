@@ -20,6 +20,9 @@ namespace SmartHomeManager.Domain.DeviceDomain.Entities.DTOs
         public string DeviceSerialNumber { get; set; }
 
         [Required]
+        public int DeviceWatts { get; set; }
+
+        [Required]
         public Guid AccountId { get; set; }
     }
 }

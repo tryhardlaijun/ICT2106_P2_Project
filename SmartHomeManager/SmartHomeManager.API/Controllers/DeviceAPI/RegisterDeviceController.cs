@@ -32,7 +32,7 @@ namespace SmartHomeManager.API.Controllers.DeviceAPIs
         [HttpPost("RegisterDevice")]
         public async Task<ActionResult> RegisterDevice([FromBody] DeviceWebRequest deviceWebRequest)
         {
-            if (await _registerDeviceService.RegisterDeviceAsync(deviceWebRequest.DeviceName, deviceWebRequest.DeviceBrand, deviceWebRequest.DeviceModel, deviceWebRequest.DeviceTypeName, deviceWebRequest.DeviceSerialNumber, deviceWebRequest.AccountId))
+            if (await _registerDeviceService.RegisterDeviceAsync(deviceWebRequest.DeviceName, deviceWebRequest.DeviceBrand, deviceWebRequest.DeviceModel, deviceWebRequest.DeviceTypeName, deviceWebRequest.DeviceWatts, deviceWebRequest.DeviceSerialNumber, deviceWebRequest.AccountId))
             {
                 return Ok("RegisterDevice() success!");
 	        }

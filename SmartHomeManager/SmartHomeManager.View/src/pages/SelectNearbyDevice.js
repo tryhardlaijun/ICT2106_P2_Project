@@ -8,16 +8,19 @@ export default function SelectNearbyDevice() {
       deviceBrand: "Xiaomi",
       deviceModel: "Mi Smart Standing Fan 2",
       deviceSerialNumber: "1234",
+      deviceWatts: 600,
     },
     {
       deviceBrand: "Xiaomi",
       deviceModel: "Mi Smart LED Bulb",
       deviceSerialNumber: "5678",
+      deviceWatts: 100,
     },
     {
       deviceBrand: "NetGear",
       deviceModel: "NetGear Arlo Q",
       deviceSerialNumber: "0123",
+      deviceWatts: 300,
     },
   ];
 
@@ -30,6 +33,7 @@ export default function SelectNearbyDevice() {
         deviceBrand: device.deviceBrand,
         deviceModel: device.deviceModel,
         deviceSerialNumber: device.deviceSerialNumber,
+        deviceWatts: device.deviceWatts,
       })}`,
     });
 
@@ -47,7 +51,7 @@ export default function SelectNearbyDevice() {
       <Stack spacing={5} minW="full">
         {dummyDeviceList.map((device, i) => {
           return (
-            <Card key={i} onClick={(event) => handleSelectDevice(event, navigate, device)}>
+            <Card shadow={"md"} as="a" cursor="pointer" key={i} onClick={(event) => handleSelectDevice(event, navigate, device)}>
               <CardHeader>
                 <Heading>{device.deviceModel}</Heading>
               </CardHeader>
