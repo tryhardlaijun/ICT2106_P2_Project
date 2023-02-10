@@ -20,13 +20,13 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
 		{
 			_accountRepository = accountRepository;
 		}
-		public async Task<string> CreateAccount(AccountWebRequest accountWebRequest) 
+		public async Task<int> CreateAccount(AccountWebRequest accountWebRequest) 
 		{
 			bool isEmailUnique = await _accountRepository.IsEmailUnique(accountWebRequest.Email);
 
 			if (!isEmailUnique)
 			{
-				return "Email already in use!";
+				return 3;
 			}
 
 			// Create new Account object and assign the web request variables to it, except for the password
@@ -47,14 +47,17 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
 
 			realAccount.Password = hashedPassword;
 
-			await _accountRepository.AddAsync(realAccount);
-			int result = await _accountRepository.SaveAsync();
-			if (result > 0)
+			bool addAccountResponse = await _accountRepository.AddAsync(realAccount);
+			if (addAccountResponse)
 			{
-				return "account created";
+				return await _accountRepository.SaveAsync();
 			}
 
-			return "account not added";
+			else
+			{
+				// if account cannot be added
+				return 2;
+			}
 		}
 
 		public async Task<Account?> GetAccountByAccountId(Guid id)
@@ -81,20 +84,22 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
 			return accounts;
 		}
 		
-		public async Task<bool> VerifyLogin(LoginWebRequest login)
+		public async Task<int> VerifyLogin(LoginWebRequest login)
 		{
 			Account? account = await _accountRepository.GetAccountByEmailAsync(login.Email);
 			if (account != null)
 			{
 				if (account.Password == login.Password)
 				{
-					return true;
+					// account exists and password is correct
+					return 1;
 				}
-
-				return false;
+				// account exists but password is wrong
+				return 2;
 			}
 
-			return false;
+			// account does not exist
+			return 3;
 		}
 	}
 }
