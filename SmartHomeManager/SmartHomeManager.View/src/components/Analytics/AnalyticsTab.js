@@ -15,6 +15,7 @@ import {
 import CarbonChart from './CarbonChart';
 import UsageBar from './UsageBar';
 import Report from './Report';
+import { EfficiencyBar } from './EfficiencyBar';
 
 
 function AnalyticsTab() {
@@ -34,12 +35,10 @@ function AnalyticsTab() {
                     <UsageBar />
                 </TabPanel>
                 <TabPanel>
-                    <p>Efficiency</p>
+                    <EfficiencyBar />
                 </TabPanel>
                 <TabPanel>
-                <Container>
                     <Report />
-                    </Container>
                 </TabPanel>
             </TabPanels>
         </Tabs>
