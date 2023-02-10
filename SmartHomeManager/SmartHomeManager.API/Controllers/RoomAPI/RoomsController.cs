@@ -40,7 +40,7 @@ public class RoomsController : ControllerBase
     // PUT: api/Rooms/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{roomId}")]
-    public async Task<IActionResult> PutRoom(Guid roomId, EditRoomWebRequest roomWebRequest)
+    public async Task<IActionResult> PutRoom(Guid roomId, PutRoomWebRequest roomWebRequest)
     {
         var res = await _roomReadService.GetRoomById(roomId);
 
@@ -55,7 +55,7 @@ public class RoomsController : ControllerBase
     // POST: api/Rooms
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
-    public async Task<ActionResult<GetRoomWebResponse>> PostRoom(CreateRoomWebRequest roomWebRequest)
+    public async Task<ActionResult<GetRoomWebResponse>> PostRoom(PostRoomWebRequest roomWebRequest)
     {
         var resp = await _roomWriteService.AddRoom(roomWebRequest.Name, roomWebRequest.AccountId);
 

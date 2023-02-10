@@ -1,6 +1,6 @@
 ﻿namespace SmartHomeManager.Domain.RoomDomain.DTOs.Requests;
 
-public class EditRoomWebRequest
+public class PutRoomWebRequest
 {
     public string Name { get; set; }
 }
