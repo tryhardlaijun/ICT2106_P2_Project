@@ -6,8 +6,8 @@ using SmartHomeManager.Domain.SceneDomain.Entities;
 
 namespace SmartHomeManager.DataSource.RulesDataSource
 {
-	public class RuleRepository : IGenericRepository<Rule>
-	{
+    public class RuleRepository : IGenericRepository<Rule>
+    {
         private readonly ApplicationDbContext _applicationDbContext;
         protected DbSet<Rule> _dbSet;
         public RuleRepository(ApplicationDbContext applicationDbContext)
@@ -59,7 +59,7 @@ namespace SmartHomeManager.DataSource.RulesDataSource
         public async Task<IEnumerable<Rule>> GetAllAsync()
         {
             //await RuleSeedData.Seed(_applicationDbContext);
-            return await _applicationDbContext.Rules.ToListAsync();
+            return await _applicationDbContext.Rules.Include(d => d.Device).Include(s => s.Scenario).ToListAsync();
         }
 
 
@@ -106,4 +106,3 @@ namespace SmartHomeManager.DataSource.RulesDataSource
         }
     }
 }
-

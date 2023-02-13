@@ -15,6 +15,11 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
         {
             return await _scenarioRepository.GetAllAsync();
         }
+
+        public async Task<Scenario?> GetScenarioByIdAsync(Guid id)
+        {
+            return await _scenarioRepository.GetByIdAsync(id);
+        }
     }
 }
 

@@ -21,6 +21,11 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
         {
             throw new NotImplementedException();
         }
+
+        public async Task<Rule?> GetRuleById(Guid id)
+        {
+            return await _ruleRepository.GetByIdAsync(id);
+        }
     }
 }
 

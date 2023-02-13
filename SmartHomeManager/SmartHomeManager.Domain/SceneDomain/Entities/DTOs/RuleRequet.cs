@@ -25,5 +25,9 @@ namespace SmartHomeManager.Domain.SceneDomain.Entities
 
         public Guid DeviceId { get; set; }
 
+        public string? APIKey { get; set; }
+
+        public string? ApiValue { get; set; }
+
     }
 }

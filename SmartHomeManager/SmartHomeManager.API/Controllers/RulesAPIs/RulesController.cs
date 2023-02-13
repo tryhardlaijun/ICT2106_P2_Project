@@ -15,10 +15,12 @@ public class RulesController : ControllerBase
 {
     private readonly RuleServices _registerRuleService;
     private readonly GetRulesServices _getRulesServices;
+    //declare your service here
 
     public RulesController(IGenericRepository<Rule> ruleRepository)
     {
         _registerRuleService = new(ruleRepository);
+        //initialize your repository here
     }
 
     // GET: api/Rules/GetAllRules
@@ -71,7 +73,8 @@ public class RulesController : ControllerBase
         /*
          * 
          * INTERFACE TO BE CALLED: 
-         * void informRuleChanges(Guid ScenarioId)
+         * informRuleChanges(Guid RuleId, char CUDType)
+         * informRuleChanges(ruleRequest.RuleId, 'c')
          * 
          */
         return StatusCode(200, ruleRequest);
@@ -85,7 +88,8 @@ public class RulesController : ControllerBase
         /*
          * 
          * INTERFACE TO BE CALLED: 
-         * void informRuleChanges(Guid ScenarioId)
+         * informRuleChanges(Guid RuleId, char CUDType)
+         * informRuleChanges(rule.RuleId, 'e')
          * 
          */
         return StatusCode(200, rule);
@@ -102,9 +106,10 @@ public class RulesController : ControllerBase
             /*
              * 
              * INTERFACE TO BE CALLED: 
-             * void informRuleChanges(Guid ScenarioId)
+             * informRuleChanges(Guid RuleId, char CUDType)
+             * informRuleChanges(id, 'd')
              * 
-             */ 
+             */
             return StatusCode(200, rule);
         }
         return StatusCode(404, "rule not exist");
