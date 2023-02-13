@@ -15,11 +15,12 @@ namespace SmartHomeManager.API.Controllers.ScenariosAPIs
     public class ScenariosController : ControllerBase
     {
         private readonly ScenarioServices _scenarioServices;
-        //private readonly IGenericRepository<Scenario> _scenarioRepository;
+        //private readonly GetScenarioService _getScenarioService;
 
         public ScenariosController(IGenericRepository<Scenario> scenarioRepository)
         {
             _scenarioServices = new(scenarioRepository);
+            //_getScenarioService = new(scenarioRepository);
         }
 
         // GET: api/Scenarios/GetAllScenarios
@@ -27,6 +28,7 @@ namespace SmartHomeManager.API.Controllers.ScenariosAPIs
         public async Task<IEnumerable<ScenarioRequest>> GetAllScenarios()
         {
             var scenarios = await _scenarioServices.GetAllScenariosAsync();
+            //var scenarios = await _getScenarioService.GetAllScenarios();
             var resp = scenarios.Select(scenario => new ScenarioRequest
             {
                 ScenarioId = scenario.ScenarioId,

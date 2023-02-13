@@ -74,7 +74,7 @@ public class RulesController : ControllerBase
          * void informRuleChanges(Guid ScenarioId)
          * 
          */
-        return StatusCode(200, rule);
+        return StatusCode(200, ruleRequest);
     }
 
     // PUT api/Rules/5

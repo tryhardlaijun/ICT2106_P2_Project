@@ -12,12 +12,12 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
             _ruleRepository = ruleRepository;
 		}
         
-        public Task<IEnumerable<Rule>> GetAllRules()
+        public async Task<IEnumerable<Rule>> GetAllRules()
         {
-            return _ruleRepository.GetAllAsync();
+            return await _ruleRepository.GetAllAsync();
         }
 
-        public Task<IEnumerable<Rule>> GetAllRulesByScenarioId(Guid ScenarioId)
+        public async Task<IEnumerable<Rule>> GetAllRulesByScenarioId(Guid ScenarioId)
         {
             throw new NotImplementedException();
         }

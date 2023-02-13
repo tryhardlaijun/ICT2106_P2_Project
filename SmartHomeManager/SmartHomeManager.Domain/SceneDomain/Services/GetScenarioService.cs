@@ -12,9 +12,9 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
             _scenarioRepository = scenarioRepository;
 		}
 
-        public Task<IEnumerable<Scenario>> GetAllScenarios()
+        public async  Task<IEnumerable<Scenario>> GetAllScenarios()
         {
-            return _scenarioRepository.GetAllAsync();
+            return await _scenarioRepository.GetAllAsync();
         }
     }
 }
