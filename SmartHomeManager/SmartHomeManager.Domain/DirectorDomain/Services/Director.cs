@@ -1,17 +1,20 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SmartHomeManager.DataSource.RuleHistoryDataSource;
 using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.DirectorDomain.Entities;
+using SmartHomeManager.Domain.DirectorDomain.Interfaces;
 using SmartHomeManager.Domain.SceneDomain.Entities;
+using System.Data;
+using Rule = SmartHomeManager.Domain.SceneDomain.Entities.Rule;
 
 namespace SmartHomeManager.Domain.DirectorDomain.Services
 {
-    public class Director : BackgroundService
+    public class Director : BackgroundService, IInformDirectorServices
     {
         private readonly IServiceProvider _serviceProvider;
-        private IEnumerable<Rule>? rules;
-        private IEnumerable<Scenario>? scenarios;
+        private List<Rule>? rules;
+        private List<Scenario>? scenarios;
 
         private IGenericRepository<Rule> _ruleRepository;
         private IRuleHistoryRepository<RuleHistory> _ruleHistoryRepository;
@@ -29,7 +32,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            rules = await _ruleRepository.GetAllAsync();            
+            rules = (await _ruleRepository.GetAllAsync()).ToList();
 
             while (!stoppingToken.IsCancellationRequested)
             {
@@ -41,14 +44,15 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
         private async void CheckIfRuleTriggered()
         {
             Console.WriteLine(string.Format("{0} - {1}", "Director", DateTime.Now.ToString("HH:mm:ss.fff")));           
-                        
-            /*if (rules != null)
+                       
+
+            if (rules != null)
             {
                 var rLength = rules.Count();
                 foreach (var rule in rules)
                 {
                     var timeDiff = Math.Floor((DateTime.Now - Convert.ToDateTime(rule.StartTime)).TotalMinutes);
-                    Console.WriteLine(string.Format("Rule {0}: {1} {2}", rule.ScheduleName, rule.StartTime, timeDiff);
+                    Console.WriteLine(string.Format("Rule {0}: {1} {2}", rule.ScheduleName, rule.StartTime, timeDiff));
                     if (false || timeDiff == 0)
                     {
                         Console.WriteLine("Trigger Detected: " + rule.ScheduleName);
@@ -64,22 +68,23 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
                         var storedRule = await _ruleHistoryRepository.GetByRuleIdAsync(rule.RuleId);
                         Guid ruleHistoryId;
                         if (storedRule == null || !checkIfRuleHistoryMatch(rule, storedRule))
-                        {                            
+                        {
                             ruleHistoryId = Guid.NewGuid();
 
                             RuleHistory rh = new RuleHistory();
                             rh.RuleHistoryId = ruleHistoryId;
                             rh.RuleIndex = await _ruleHistoryRepository.GetRuleIndexLimitAsync();
                             rh.RuleName = rule.ScheduleName ?? "";
-                            rh.RuleStartTime = rule.StartTime; 
+                            rh.RuleStartTime = rule.StartTime;
                             rh.RuleEndTime = rule.EndTime;
                             // CONTINUE
 
                             await _ruleHistoryRepository.AddAsync(rh);
-                        } else
+                        }
+                        else
                         {
                             ruleHistoryId = storedRule.RuleHistoryId;
-                        }                        
+                        }
 
                         History h = new History();
                         h.Message = configMeaning;
@@ -95,13 +100,54 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
                 }
 
             }
-            */
+            
         }
 
-        /*
+        
         private bool checkIfRuleHistoryMatch(Rule r, RuleHistory ruleHistory)
         {
+            return false;
+        }
 
-        }*/
+        public void InformRuleChanges(Guid ruleID, char operation)
+        {
+            switch (operation)
+            {
+                case 'c':
+                    // Get rule by id from interface, Add new rule
+                    // Add new historyrule
+                    break;
+                case 'u':
+                    rules = rules.Where(r => r.RuleId != ruleID).ToList();
+                    // Get rule by id from interface, Add new rule
+                    // Add new historyrule 
+                    break;
+                case 'd':
+                    rules = rules.Where(r => r.RuleId != ruleID).ToList();
+                    break;
+            }
+        }
+
+        public void InformScenarioChanges(Guid scenarioID, char operation)
+        {
+            switch (operation)
+            {
+                case 'c':
+                    // Get scenario by id from interface, Add new scenario
+                    break;
+                case 'u':
+                    scenarios = scenarios.Where(s => s.ScenarioId != scenarioID).ToList();
+                    // Get scenario by id from interface, Add new scenario
+                    break;
+                case 'd':
+                    scenarios = scenarios.Where(s => s.ScenarioId != scenarioID).ToList();
+                    break;
+            }
+        }
+
+        //private async void CreateRuleHistory(RuleHistory ruleHistory)
+        //{
+        //    await _ruleHistoryRepository.AddAsync(ruleHistory);
+        //}
     }
 }
