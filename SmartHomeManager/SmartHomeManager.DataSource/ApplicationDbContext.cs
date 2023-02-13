@@ -6,6 +6,8 @@ using SmartHomeManager.Domain.DirectorDomain.Entities;
 using SmartHomeManager.Domain.NotificationDomain.Entities;
 using SmartHomeManager.Domain.RoomDomain.Entities;
 using SmartHomeManager.Domain.SceneDomain.Entities;
+using SmartHomeManager.Domain.HomeSecurityDomain.Entities;
+using SmartHomeManager.Domain.APIDomain.Entities;
 
 namespace SmartHomeManager.DataSource;
 
@@ -29,6 +31,12 @@ public class ApplicationDbContext : DbContext
         RuleHistories = base.Set<RuleHistory>();
         Scenarios = base.Set<Scenario>();
         Troubleshooters = base.Set<Troubleshooter>();
+        HomeSecurities = base.Set<HomeSecurity>();
+        HomeSecuritySettings = base.Set<HomeSecuritySetting>();
+        HomeSecurityDeviceDefinitions = base.Set<HomeSecurityDeviceDefinition>();
+        APIDatas = base.Set<APIData>();
+        APIKeys = base.Set<APIKey>();
+        APIValues = base.Set<APIValue>();
     }
 
     public DbSet<Account> Accounts { get; }
@@ -47,6 +55,12 @@ public class ApplicationDbContext : DbContext
     public DbSet<RuleHistory> RuleHistories { get; }
     public DbSet<Scenario> Scenarios { get; }
     public DbSet<Troubleshooter> Troubleshooters { get; }
+    public DbSet<HomeSecurity> HomeSecurities { get; }
+    public DbSet<HomeSecuritySetting> HomeSecuritySettings { get; }
+    public DbSet<HomeSecurityDeviceDefinition> HomeSecurityDeviceDefinitions { get; }
+    public DbSet<APIData> APIDatas { get; }
+    public DbSet<APIKey> APIKeys { get; }
+    public DbSet<APIValue> APIValues { get; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

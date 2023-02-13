@@ -46,7 +46,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
             if (rules != null)
             {
                 var rLength = rules.Count();
-                foreach (var rule in rules)
+                /*foreach (var rule in rules)
                 {
                     Console.WriteLine(string.Format("Rule {0}: {1} {2}", rule.ScheduleName, rule.StartTime, Math.Floor((DateTime.Now - Convert.ToDateTime(rule.StartTime)).TotalMinutes)));
                     if (Math.Floor((DateTime.Now - Convert.ToDateTime(rule.StartTime)).TotalMinutes) == 0)
@@ -76,7 +76,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
 
                         await _historyRepository.AddAsync(h);
                     }
-                }
+                }*/
 
             }
         }
