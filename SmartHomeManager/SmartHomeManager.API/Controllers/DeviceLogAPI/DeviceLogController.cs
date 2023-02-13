@@ -25,7 +25,7 @@ namespace SmartHomeManager.API.Controllers.DeviceLogAPI
 
         public DeviceLogController(IDeviceLogRepository deviceLogRepository, IProfileService profileService)
         {
-            _logReadService = new DeviceLogReadService(deviceLogRepository, profileService);
+           //_logReadService = new DeviceLogReadService(deviceLogRepository, profileService);
            // _logWriteService = new DeviceLogWriteService(deviceLogRepository);
             
         }
