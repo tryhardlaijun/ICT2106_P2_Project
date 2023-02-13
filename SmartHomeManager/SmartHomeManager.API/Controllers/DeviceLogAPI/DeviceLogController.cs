@@ -1,129 +1,95 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.DataSource;
-using SmartHomeManager.Domain.Common;
+using SmartHomeManager.Domain.DeviceLoggingDomain.Entities.DTO;
 using SmartHomeManager.Domain.DeviceLoggingDomain.Entities;
-using SmartHomeManager.Domain.DeviceLoggingDomain.Interfaces;
 using SmartHomeManager.Domain.DeviceLoggingDomain.Services;
-using SmartHomeManager.Domain.RoomDomain.Entities;
-
-
+using SmartHomeManager.Domain.DeviceLoggingDomain.Interfaces;
+using SmartHomeManager.Domain.DeviceLoggingDomain.Mocks;
 
 namespace SmartHomeManager.API.Controllers.DeviceLogAPI
 {
     [Route("api/[controller]")]
     [ApiController]
-    
-    public class DeviceLogController : Controller
+    public class DeviceLogController : ControllerBase
     {
-
         private readonly ApplicationDbContext _context;
-        
+        private readonly DeviceLogReadService _logReadService;
+     //   private readonly DeviceLogWriteService _logWriteService;
 
-        // Dependency Injection of repos to services...
-        public DeviceLogController(ApplicationDbContext context)
+
+        public DeviceLogController(IDeviceLogRepository deviceLogRepository, IProfileService profileService)
         {
-            _context = context;
-           
+            _logReadService = new DeviceLogReadService(deviceLogRepository, profileService);
+           // _logWriteService = new DeviceLogWriteService(deviceLogRepository);
+            
         }
+
+
+
+        // GET: api/DeviceLogs
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<DeviceLog>>> GetAll()
+        public async Task<ActionResult<DeviceLog>> GetAllDeviceLogs(Guid id)
+        {
+            return Ok(await _logReadService.GetAllDeviceLogs());
+        }
+
+        // PUT: api/DeviceLogs/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutDeviceLog(Guid id, DeviceLog deviceLog)
+        {
+            if (id != deviceLog.LogId)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(deviceLog).State = EntityState.Modified;
+
+ 
+
+            return NoContent();
+        }
+
+        // POST: api/DeviceLogs
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<DeviceLog>> PostDeviceLog(DeviceLog deviceLog)
+        {
+            if (_context.DeviceLogs == null)
+            {
+                return Problem("Entity set 'ApplicationDbContext.DeviceLogs'  is null.");
+            }
+            _context.DeviceLogs.Add(deviceLog);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetDeviceLog", new { id = deviceLog.LogId }, deviceLog);
+        }
+
+        // DELETE: api/DeviceLogs/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteDeviceLog(Guid id)
         {
             if (_context.DeviceLogs == null)
             {
                 return NotFound();
             }
+            var deviceLog = await _context.DeviceLogs.FindAsync(id);
+            if (deviceLog == null)
+            {
+                return NotFound();
+            }
 
-            var result = await _context.DeviceLogs.ToListAsync();
+            _context.DeviceLogs.Remove(deviceLog);
+            await _context.SaveChangesAsync();
 
-            return Ok(result);
+            return NoContent();
         }
-
-        // API routes....
-        // GET /api/devicelog/{deviceId}
-        // POST /api/devicelog
-        // Request body...
 
     }
 }
-
-/*namespace SmartHomeManager.API.Controllers.DeviceLogAPI
-{
-    public class HomeController : Controller
-    {
-        // GET: HomeController
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-        // GET: HomeController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: HomeController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: HomeController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: HomeController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: HomeController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: HomeController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: HomeController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-    }
-}*/

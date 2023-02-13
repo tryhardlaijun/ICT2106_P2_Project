@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.Domain.DeviceLoggingDomain.Entities;
 using SmartHomeManager.Domain.DeviceLoggingDomain.Interfaces;
+using SmartHomeManager.Domain.RoomDomain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +10,10 @@ using System.Threading.Tasks;
 
 namespace SmartHomeManager.DataSource.DeviceLogDataSource
 {
-    public class DeviceLogRepository: iDeviceLogRepository
+    public class DeviceLogRepository: IDeviceLogRepository
     {
-        protected readonly ApplicationDbContext _db;
-
-        protected DbSet<DeviceLog> _dbSet;
+        private readonly ApplicationDbContext _db;
+        private DbSet<DeviceLog> _dbSet;
         public DeviceLogRepository(ApplicationDbContext db) {
             _db = db;
 
@@ -26,14 +26,16 @@ namespace SmartHomeManager.DataSource.DeviceLogDataSource
             return query.ToList();
         }
 
-        public DeviceLog GetById(Guid id)
+        public async Task<DeviceLog> GetByDate(Guid id, DateTime date)
         {
-            throw new NotImplementedException();
+            var result = await _dbSet.FindAsync(id,date);
+            return result;
         }
 
         public void UpdateDeviceLog(IEnumerable<DeviceLog> entities)
         {
-            throw new NotImplementedException();
+            _dbSet.Update((DeviceLog)entities);
         }
+
     }
 }

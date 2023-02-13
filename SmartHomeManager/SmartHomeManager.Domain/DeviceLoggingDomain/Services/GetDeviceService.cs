@@ -22,4 +22,5 @@ namespace SmartHomeManager.Domain.DeviceLoggingDomain.Services
             return _deviceLogRepository.GetAll();
         }
     }
+
 }
