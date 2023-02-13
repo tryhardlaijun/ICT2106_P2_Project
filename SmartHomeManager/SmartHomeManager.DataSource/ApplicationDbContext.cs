@@ -8,6 +8,7 @@ using SmartHomeManager.Domain.RoomDomain.Entities;
 using SmartHomeManager.Domain.SceneDomain.Entities;
 using SmartHomeManager.Domain.HomeSecurityDomain.Entities;
 using SmartHomeManager.Domain.APIDomain.Entities;
+using SmartHomeManager.Domain.EnergyProfileDomain.Entities;
 
 namespace SmartHomeManager.DataSource;
 
@@ -37,6 +38,7 @@ public class ApplicationDbContext : DbContext
         APIDatas = base.Set<APIData>();
         APIKeys = base.Set<APIKey>();
         APIValues = base.Set<APIValue>();
+        EnergyProfiles = base.Set<EnergyProfile>();
     }
 
     public DbSet<Account> Accounts { get; }
@@ -61,6 +63,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<APIData> APIDatas { get; }
     public DbSet<APIKey> APIKeys { get; }
     public DbSet<APIValue> APIValues { get; }
+    public DbSet<EnergyProfile> EnergyProfiles { get; }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
