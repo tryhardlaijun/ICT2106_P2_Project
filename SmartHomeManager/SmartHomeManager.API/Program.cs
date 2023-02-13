@@ -2,6 +2,7 @@ using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using SmartHomeManager.DataSource;
+using SmartHomeManager.DataSource.EnergyProfileDataSource;
 using SmartHomeManager.DataSource.HistoryDataSource;
 using SmartHomeManager.DataSource.ProfileDataSource;
 using SmartHomeManager.DataSource.RuleDataSource;
@@ -11,6 +12,7 @@ using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.DeviceDomain.Entities;
 using SmartHomeManager.Domain.DirectorDomain.Entities;
 using SmartHomeManager.Domain.DirectorDomain.Services;
+using SmartHomeManager.Domain.EnergyProfileDomain.Entities;
 using SmartHomeManager.Domain.SceneDomain.Entities;
 
 namespace SmartHomeManager.API
@@ -41,6 +43,7 @@ namespace SmartHomeManager.API
             builder.Services.AddScoped<IRuleHistoryRepository<RuleHistory>, RuleHistoryRepository>();
             builder.Services.AddScoped<IGenericRepository<Rule>, RuleRepository>();
             builder.Services.AddScoped<IGenericRepository<Profile>, ProfileRepository>();
+            builder.Services.AddScoped<IGenericRepository<EnergyProfile>, EnergyProfileRepository>();
             #endregion DEPENDENCY INJECTIONS
 
             builder.Services.AddEndpointsApiExplorer();
