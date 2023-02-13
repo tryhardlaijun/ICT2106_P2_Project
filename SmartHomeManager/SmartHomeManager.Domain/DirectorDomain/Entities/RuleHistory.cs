@@ -9,6 +9,8 @@ public class RuleHistory
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid RuleHistoryId { get; set; }
 
+    [Required] public Guid RuleId { get; set; } 
+
     [Required] public int RuleIndex { get; set; }
 
     [Required] public string RuleName { get; set; }

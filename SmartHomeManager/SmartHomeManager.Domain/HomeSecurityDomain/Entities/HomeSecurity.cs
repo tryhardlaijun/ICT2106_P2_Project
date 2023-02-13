@@ -19,8 +19,5 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Entities
         [Required] public int SecurityModeState { get; set; }
 
         [Required] public Guid AccountId { get; set; }
-
-        [ForeignKey("AccountId")]
-        public Account Account { get; set; }
     }
 }

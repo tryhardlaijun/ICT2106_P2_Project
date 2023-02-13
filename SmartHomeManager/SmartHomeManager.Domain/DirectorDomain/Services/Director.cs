@@ -42,7 +42,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
         {
             Console.WriteLine(string.Format("{0} - {1}", "Director", DateTime.Now.ToString("HH:mm:ss.fff")));           
                         
-            if (rules != null)
+            /*if (rules != null)
             {
                 var rLength = rules.Count();
                 foreach (var rule in rules)
@@ -95,11 +95,13 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
                 }
 
             }
+            */
         }
 
+        /*
         private bool checkIfRuleHistoryMatch(Rule r, RuleHistory ruleHistory)
         {
 
-        }
+        }*/
     }
 }

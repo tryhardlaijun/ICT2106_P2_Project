@@ -16,7 +16,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Entities
         public DateTime Timestamp { get; set; }
 
         [Required]
-        public string DeviceAdjustedConfiguration { get; set; }
+        public int DeviceAdjustedConfiguration { get; set; }
 
         [Required]
         public Guid ProfileId { get; set; }
