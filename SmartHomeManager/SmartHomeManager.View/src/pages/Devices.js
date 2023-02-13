@@ -177,7 +177,7 @@ export default function Devices() {
 
     return (
         <div>
-            Device Logging<br></br><br></br>
+            <strong>Graphs</strong><br></br><br></br>
             <Select
                 placeholder="Select Device Energy Usage View"
                 onChange={(e) => dropDownHandler(e)}
