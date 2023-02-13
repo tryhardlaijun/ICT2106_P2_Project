@@ -44,7 +44,7 @@ namespace SmartHomeManager.Domain.DeviceLoggingDomain.Services
         // using this i already can get by week and day. 
         public IEnumerable<GetDeviceLogWebRequest> GetDeviceLogByDateAndTime(DateTime date, DateTime startTime, DateTime endTime)
         {
-            var res =  _deviceLogRepository.Get(date,startTime,endTime);
+            var res =  _deviceLogRepository.Get(date.Date,startTime, endTime);
             var resp = res.Select(log => new GetDeviceLogWebRequest
             {
                 StartTime = log.StartTime,

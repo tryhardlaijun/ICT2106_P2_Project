@@ -22,6 +22,11 @@ namespace SmartHomeManager.DataSource.DeviceLogDataSource
             this._dbSet = db.Set<DeviceLog>();
         }
 
+        public void Add(DeviceLog entity)
+        {
+            _dbSet.Add(entity);
+        }
+
         public IEnumerable<DeviceLog> Get(DateTime date, DateTime startTime, DateTime endTime)
         {
             // get all logs
@@ -32,10 +37,32 @@ namespace SmartHomeManager.DataSource.DeviceLogDataSource
             return result;
         }
 
+        public async Task<DeviceLog?> Get(DateTime date, bool DeviceState)
+        {
+            var result = await _dbSet.FindAsync(date, DeviceState);
+            return result;
+        }
+
+        public async Task<DeviceLog?> Get(DateTime date)
+        {
+            var result = await _dbSet.FindAsync(date); 
+            return result;
+        }
+
         public async Task<IEnumerable<DeviceLog>> GetAll()
         {
             IEnumerable<DeviceLog> query = await _dbSet.ToListAsync();
             return query;
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await _db.SaveChangesAsync();
+        }
+
+        public void Update(DeviceLog entity)
+        {
+            _dbSet.Update(entity);
         }
     }
 }

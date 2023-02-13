@@ -10,6 +10,8 @@ namespace SmartHomeManager.Domain.DeviceLoggingDomain.Entities.DTO
     public class GetDeviceLogWebRequest
     {
 
+        public Guid LogId { get; set; }
+
         public DateTime StartTime { get; set; }
 
         public DateTime? EndTime { get; set; }
