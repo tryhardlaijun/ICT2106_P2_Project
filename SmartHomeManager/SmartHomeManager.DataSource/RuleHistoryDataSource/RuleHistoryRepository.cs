@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SmartHomeManager.DataSource.RuleHistoryDataSource
 {
-    public class RuleHistoryRepository : IGenericRepository<RuleHistory>
+    public class RuleHistoryRepository : IRuleHistoryRepository<RuleHistory>
     {
         private readonly ApplicationDbContext _applicationDbContext;
 
@@ -47,6 +47,11 @@ namespace SmartHomeManager.DataSource.RuleHistoryDataSource
             return await _applicationDbContext.RuleHistories.ToListAsync();            
         }
 
+        public async Task<RuleHistory?> GetByRuleIdAsync(Guid ruleId)
+        {
+            return await _applicationDbContext.RuleHistories.Where(r => r.RuleHistoryId == ruleId).LastAsync();
+        }
+
         public Task<RuleHistory?> GetByIdAsync(Guid id)
         {
             throw new NotImplementedException();
@@ -62,10 +67,9 @@ namespace SmartHomeManager.DataSource.RuleHistoryDataSource
             throw new NotImplementedException();
         }
 
-        public Task<int> CountAsync()
+        public async Task<int> GetRuleIndexLimitAsync()
         {
-            return _applicationDbContext.RuleHistories.CountAsync();
+            return await _applicationDbContext.RuleHistories.MaxAsync(r => r.RuleIndex);
         }
-
     }
 }
