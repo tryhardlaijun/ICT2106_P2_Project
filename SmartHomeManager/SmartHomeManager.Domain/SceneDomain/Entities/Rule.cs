@@ -13,6 +13,8 @@ namespace SmartHomeManager.Domain.SceneDomain.Entities
         public Guid ScenarioId { get; set; }
 
         [Required]
+        public string ConfigurationKey { get; set; }
+        [Required]
         public int ConfigurationValue { get; set; }
 
         public string? ActionTrigger { get; set; }
