@@ -14,6 +14,7 @@ namespace SmartHomeManager.API.Controllers.RulesAPIs;
 public class RulesController : ControllerBase
 {
     private readonly RuleServices _registerRuleService;
+    private readonly GetRulesServices _getRulesServices;
 
     public RulesController(IGenericRepository<Rule> ruleRepository)
     {
@@ -37,7 +38,6 @@ public class RulesController : ControllerBase
             DeviceId = rule.DeviceId
         }).ToList();
         return resp;
-        //return await _registerRuleService.GetAllRulesAsync();
     }
 
     // GET api/Rules/1
@@ -58,6 +58,12 @@ public class RulesController : ControllerBase
     {
         //pass parameter instead
         await _registerRuleService.CreateRuleAsync(rule);
+        /*
+         * 
+         * INTERFACE TO BE CALLED: 
+         * void informRuleChanges(Guid ScenarioId)
+         * 
+         */
         return StatusCode(200, rule);
     }
 
@@ -66,6 +72,12 @@ public class RulesController : ControllerBase
     public async Task<ActionResult> EditRule(Rule rule)
     {
         await _registerRuleService.EditRuleAsync(rule);
+        /*
+         * 
+         * INTERFACE TO BE CALLED: 
+         * void informRuleChanges(Guid ScenarioId)
+         * 
+         */
         return StatusCode(200, rule);
     }
 
@@ -77,6 +89,12 @@ public class RulesController : ControllerBase
         if (rule != null)
         {
             await _registerRuleService.DeleteRuleByIdAsync(id);
+            /*
+             * 
+             * INTERFACE TO BE CALLED: 
+             * void informRuleChanges(Guid ScenarioId)
+             * 
+             */ 
             return StatusCode(200, rule);
         }
         return StatusCode(404, "rule not exist");

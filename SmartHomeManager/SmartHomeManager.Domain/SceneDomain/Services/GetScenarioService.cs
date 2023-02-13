@@ -1,0 +1,21 @@
+﻿using SmartHomeManager.Domain.Common;
+using SmartHomeManager.Domain.SceneDomain.Entities;
+using SmartHomeManager.Domain.SceneDomain.Interfaces;
+
+namespace SmartHomeManager.Domain.SceneDomain.Services
+{
+	public class GetScenarioService : IGetScenarioService
+	{
+        private readonly IGenericRepository<Scenario> _scenarioRepository;
+        public GetScenarioService(IGenericRepository<Scenario> scenarioRepository)
+		{
+            _scenarioRepository = scenarioRepository;
+		}
+
+        public Task<IEnumerable<Scenario>> GetAllScenarios()
+        {
+            return _scenarioRepository.GetAllAsync();
+        }
+    }
+}
+
