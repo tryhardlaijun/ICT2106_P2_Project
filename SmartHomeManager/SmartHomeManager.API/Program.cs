@@ -1,3 +1,4 @@
+using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using SmartHomeManager.DataSource;
@@ -46,7 +47,6 @@ namespace SmartHomeManager.API
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddHostedService<Director>();
-            builder.Services.AddScoped<IScope, Scope>();
 
             var app = builder.Build();
 
