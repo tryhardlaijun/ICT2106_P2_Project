@@ -29,8 +29,9 @@ namespace SmartHomeManager.API
                 options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
             builder.Services.AddScoped<IGenericRepository<Rule>, RuleRepository>();
+            builder.Services.AddScoped<IGenericRepository<Scenario>, ScenarioRepository>();
             #endregion DEPENDENCY INJECTIONS
-        
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
