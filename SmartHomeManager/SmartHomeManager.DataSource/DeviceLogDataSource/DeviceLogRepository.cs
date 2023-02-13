@@ -55,6 +55,12 @@ namespace SmartHomeManager.DataSource.DeviceLogDataSource
             return query;
         }
 
+        public async Task<DeviceLog?> GetByDate(DateTime date, Guid deviceId, bool deviceState)
+        {
+            var result = await _dbSet.FindAsync(date, deviceId, deviceState);
+            return result;
+        }
+
         public async Task SaveChangesAsync()
         {
             await _db.SaveChangesAsync();

@@ -31,8 +31,8 @@ namespace SmartHomeManager.Domain.DeviceLoggingDomain.Services
         }
 
         // get devices from profile
-        public IEnumerable<Device> GetAlllDevicesInProfile(Guid profileId){
-            return _profileService.GetAlllDevicesInProfile(profileId);
+        public IEnumerable<Device> GetAllDevicesInProfile(Guid profileId){
+            return _profileService.GetAllDevicesInProfile(profileId);
         }
 
 
@@ -40,7 +40,26 @@ namespace SmartHomeManager.Domain.DeviceLoggingDomain.Services
         public int getDeviceWatts(Guid deviceId){
             return _deviceWattsService.getDeviceWatts(deviceId);
         }
+        // look for logs (to update)
+        public async Task<GetDeviceLogWebRequest> GetDeviceLogByDate(DateTime date, Guid deviceId, bool deviceState)
+        {
+            var res = await _deviceLogRepository.GetByDate(date.Date, deviceId, deviceState);
+            if (res == null) return null;
 
+            var ret = new GetDeviceLogWebRequest
+            {
+                StartTime = res.StartTime,
+                EndTime = res.EndTime,
+                DateLogged = res.DateLogged,
+                DeviceEnergyUsage = res.DeviceEnergyUsage,
+                DeviceActivity = res.DeviceActivity,
+                DeviceState = res.DeviceState
+            };
+
+            return ret;
+            
+
+        }
         // using this i already can get by week and day. 
         public IEnumerable<GetDeviceLogWebRequest> GetDeviceLogByDateAndTime(DateTime date, DateTime startTime, DateTime endTime)
         {

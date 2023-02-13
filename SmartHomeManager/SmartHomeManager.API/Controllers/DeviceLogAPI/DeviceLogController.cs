@@ -11,6 +11,7 @@ using SmartHomeManager.Domain.DeviceLoggingDomain.Entities;
 using SmartHomeManager.Domain.DeviceLoggingDomain.Services;
 using SmartHomeManager.Domain.DeviceLoggingDomain.Interfaces;
 using SmartHomeManager.Domain.DeviceLoggingDomain.Mocks;
+using SmartHomeManager.Domain.DeviceDomain.Entities;
 
 namespace SmartHomeManager.API.Controllers.DeviceLogAPI
 {
@@ -18,15 +19,15 @@ namespace SmartHomeManager.API.Controllers.DeviceLogAPI
     [ApiController]
     public class DeviceLogController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+
         private readonly DeviceLogReadService _logReadService;
-     //   private readonly DeviceLogWriteService _logWriteService;
+        private readonly DeviceLogWriteService _logWriteService;
 
 
-        public DeviceLogController(IDeviceLogRepository deviceLogRepository, IProfileService profileService)
+        public DeviceLogController(IDeviceLogRepository deviceLogRepository, IProfileService profileService, IDeviceWattsService deviceWattsService)
         {
-           //_logReadService = new DeviceLogReadService(deviceLogRepository, profileService);
-           // _logWriteService = new DeviceLogWriteService(deviceLogRepository);
+           _logReadService = new DeviceLogReadService(deviceLogRepository, profileService, deviceWattsService);
+            _logWriteService = new DeviceLogWriteService(deviceLogRepository);
             
         }
 
@@ -39,57 +40,58 @@ namespace SmartHomeManager.API.Controllers.DeviceLogAPI
             return Ok(await _logReadService.GetAllDeviceLogs());
         }
 
+
+        /*        // PUT: api/DeviceLogs/5
+                // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+                [HttpPut("{id}")]
+                public async Task<IActionResult<GetDeviceLogWebRequest> GetDeviceLog(DateTime date, DateTime startTime, DateTime endTime)
+                {
+                     var result = await _logReadService.GetDeviceLogByDateAndTime(date, startTime, endTime);
+                     if (result == null) return NotFound();
+                     return result; 
+                }
+        */
+
+        // this is update from switching off device
         // PUT: api/DeviceLogs/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutDeviceLog(Guid id, DeviceLog deviceLog)
+        public async Task<IActionResult> PutDeviceLog(DateTime date, Guid deviceId, EditDeviceLogWebRequest deviceLogWebRequest)
         {
-            if (id != deviceLog.LogId)
-            {
-                return BadRequest();
-            }
+            var res = await _logReadService.GetDeviceLogByDate(date, deviceId, true);
 
-            _context.Entry(deviceLog).State = EntityState.Modified;
+            if (res == null) return BadRequest();
 
- 
+            var endTime = deviceLogWebRequest.EndTime;
+            // switching the state
+            var deviceState = false;
+            await _logWriteService.UpdateDeviceLog((DateTime)endTime, deviceState);
 
             return NoContent();
+
         }
+
+
+        // GET: api/Rooms/GetDevicesRelatedToRoom/profileId
+        [HttpGet("GetDevicesInProfile/{profileId}")]
+        public ActionResult<IEnumerable<Device>> GetDevicesInRoom(Guid profileId)
+        {
+            var result = _logReadService.GetAllDevicesInProfile(profileId);
+            if (!result.Any()) return NotFound();
+
+            return Ok(result);
+        }
+
 
         // POST: api/DeviceLogs
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<DeviceLog>> PostDeviceLog(DeviceLog deviceLog)
+        public async Task<ActionResult<GetDeviceLogWebRequest>> PostDeviceLog(CreateDeviceLogWebRequest deviceLogWebRequest )
         {
-            if (_context.DeviceLogs == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.DeviceLogs'  is null.");
-            }
-            _context.DeviceLogs.Add(deviceLog);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetDeviceLog", new { id = deviceLog.LogId }, deviceLog);
+        var resp = await _logWriteService.AddDeviceLog(deviceLogWebRequest.DeviceId);
+        return Ok(resp);
         }
 
-        // DELETE: api/DeviceLogs/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteDeviceLog(Guid id)
-        {
-            if (_context.DeviceLogs == null)
-            {
-                return NotFound();
-            }
-            var deviceLog = await _context.DeviceLogs.FindAsync(id);
-            if (deviceLog == null)
-            {
-                return NotFound();
-            }
-
-            _context.DeviceLogs.Remove(deviceLog);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
 
     }
 }

@@ -9,6 +9,6 @@ namespace SmartHomeManager.Domain.DeviceLoggingDomain.Mocks
 {
     public interface IProfileService
     {
-        IEnumerable<Device> GetAlllDevicesInProfile(Guid profileId);
+        IEnumerable<Device> GetAllDevicesInProfile(Guid profileId);
     }
 }
