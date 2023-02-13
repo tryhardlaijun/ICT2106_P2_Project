@@ -8,8 +8,12 @@ namespace SmartHomeManager.Domain.DeviceLoggingDomain.Entities.DTO
 {
     public class EditDeviceLogWebRequest
     {
-        public DateTime? EndTime { get; set; }
-        public bool DeviceState { get; set; }
+        public DateTime StartTime { get; set; }
+
+        public int DeviceEnergyUsage { get; set; }
+
+        public int DeviceActivity { get; set; }
+
        
     }
 }

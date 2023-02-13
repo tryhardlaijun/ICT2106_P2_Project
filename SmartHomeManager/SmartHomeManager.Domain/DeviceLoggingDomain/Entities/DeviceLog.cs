@@ -23,10 +23,10 @@ namespace SmartHomeManager.Domain.DeviceLoggingDomain.Entities
         public DateTime DateLogged { get; set; }
 
         [Required]
-        public int DeviceEnergyUsage { get; set; }
+        public double DeviceEnergyUsage { get; set; }
 
         [Required]
-        public int DeviceActivity { get; set; }
+        public double DeviceActivity { get; set; }
 
         [Required]
         public bool DeviceState { get; set; }

@@ -31,7 +31,11 @@ namespace SmartHomeManager.API.Controllers.DeviceLogAPI
             
         }
 
-
+        private int getDeviceWatts(Guid deviceId) {
+            // get watt of device
+            var watt = 0;
+            return watt;
+        }
 
         // GET: api/DeviceLogs
         [HttpGet]
@@ -52,6 +56,39 @@ namespace SmartHomeManager.API.Controllers.DeviceLogAPI
                 }
         */
 
+        // get log by their date, start time,end time, device id.
+        // once found log bring out their device watt usage
+
+        // GET: api/Analytics/deviceId?startTime=xxxx&&endTime=xxxx
+        [HttpGet("Analytics/{deviceId}")]
+        public ActionResult<IEnumerable<DeviceLog>> GetDailyDeviceLog(Guid deviceId, DateTime startTime,DateTime endTime)
+        {   
+            var date = DateTime.Now.Date;
+            var totalUsage = 0;
+            var result = _logReadService.GetDeviceLogByDateAndTime(deviceId, date, startTime, endTime);
+            if (!result.Any()) return NotFound();
+            foreach (var item in result)
+            {
+                totalUsage += item.DeviceEnergyUsage;
+            }
+            return Ok(totalUsage);
+        }
+        // date passed shld be start date of the week
+        // GET: api/Analytics/Devices/deviceId?date=xxxxxx
+        [HttpGet("Analytics/{deviceId}")]
+        public ActionResult<IEnumerable<DeviceLog>> GetWeeklyDeviceLog(Guid deviceId, DateTime date)
+        {
+            var totalUsage = 0;
+            var result = _logReadService.GetDeviceLogByDay(deviceId, date);
+            if (!result.Any()) return NotFound();
+            foreach (var item in result)
+            {
+                totalUsage += item.DeviceEnergyUsage;
+            }
+            return Ok(totalUsage);
+        }
+
+
         // this is update from switching off device
         // PUT: api/DeviceLogs/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -62,19 +99,26 @@ namespace SmartHomeManager.API.Controllers.DeviceLogAPI
 
             if (res == null) return BadRequest();
 
-            var endTime = deviceLogWebRequest.EndTime;
-            // switching the state
-            var deviceState = false;
-            await _logWriteService.UpdateDeviceLog((DateTime)endTime, deviceState);
+            var endTime = DateTime.Now;
+            var startTime = deviceLogWebRequest.StartTime.TimeOfDay.TotalSeconds;
+            var deviceUsage = deviceLogWebRequest.DeviceActivity;
+            var deviceActivity = deviceLogWebRequest.DeviceEnergyUsage;
+            var deviceWatt = getDeviceWatts(deviceId);
+            // calculating new usage and activity
+            var timeDifference = (endTime.TimeOfDay.TotalSeconds - startTime)/3600;
+            var totalWatts = timeDifference * deviceWatt;
+            
+   
+            await _logWriteService.UpdateDeviceLog(deviceId, timeDifference, totalWatts, endTime, false);
 
             return NoContent();
 
         }
 
 
-        // GET: api/Rooms/GetDevicesRelatedToRoom/profileId
+        // GET: api/Analytics/GetDevicesInProfile/profileId
         [HttpGet("GetDevicesInProfile/{profileId}")]
-        public ActionResult<IEnumerable<Device>> GetDevicesInRoom(Guid profileId)
+        public ActionResult<IEnumerable<Device>> GetDevicesFromProfile(Guid profileId)
         {
             var result = _logReadService.GetAllDevicesInProfile(profileId);
             if (!result.Any()) return NotFound();

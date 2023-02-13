@@ -40,6 +40,19 @@ namespace SmartHomeManager.Domain.DeviceLoggingDomain.Services
         public int getDeviceWatts(Guid deviceId){
             return _deviceWattsService.getDeviceWatts(deviceId);
         }
+
+        public IEnumerable<GetDeviceLogWebRequest> GetDeviceLogByDay(Guid deviceId, DateTime date)
+        {
+            var res = _deviceLogRepository.Get(deviceId, date);
+            var resp = res.Select(log => new GetDeviceLogWebRequest
+            {
+                DeviceEnergyUsage = (int)log.DeviceEnergyUsage,
+            }).ToList();
+
+            return resp;
+
+        }
+
         // look for logs (to update)
         public async Task<GetDeviceLogWebRequest> GetDeviceLogByDate(DateTime date, Guid deviceId, bool deviceState)
         {
@@ -51,8 +64,8 @@ namespace SmartHomeManager.Domain.DeviceLoggingDomain.Services
                 StartTime = res.StartTime,
                 EndTime = res.EndTime,
                 DateLogged = res.DateLogged,
-                DeviceEnergyUsage = res.DeviceEnergyUsage,
-                DeviceActivity = res.DeviceActivity,
+                DeviceEnergyUsage = (int)res.DeviceEnergyUsage,
+                DeviceActivity = (int)res.DeviceActivity,
                 DeviceState = res.DeviceState
             };
 
@@ -61,17 +74,12 @@ namespace SmartHomeManager.Domain.DeviceLoggingDomain.Services
 
         }
         // using this i already can get by week and day. 
-        public IEnumerable<GetDeviceLogWebRequest> GetDeviceLogByDateAndTime(DateTime date, DateTime startTime, DateTime endTime)
+        public IEnumerable<GetDeviceLogWebRequest> GetDeviceLogByDateAndTime(Guid deviceId, DateTime date, DateTime startTime, DateTime endTime)
         {
-            var res =  _deviceLogRepository.Get(date.Date,startTime, endTime);
+            var res =  _deviceLogRepository.Get(deviceId, date, startTime, endTime);
             var resp = res.Select(log => new GetDeviceLogWebRequest
             {
-                StartTime = log.StartTime,
-                EndTime = log.EndTime,
-                DateLogged = log.DateLogged,
-                DeviceEnergyUsage = log.DeviceEnergyUsage,
-                DeviceActivity = log.DeviceActivity,
-                DeviceState = log.DeviceState
+                DeviceEnergyUsage = (int)log.DeviceEnergyUsage,
             }).ToList();
 
             return resp;
@@ -86,8 +94,8 @@ namespace SmartHomeManager.Domain.DeviceLoggingDomain.Services
                 StartTime = dLogs.StartTime,
                 EndTime = dLogs.EndTime,
                 DateLogged = dLogs.DateLogged,
-                DeviceEnergyUsage = dLogs.DeviceEnergyUsage,
-                DeviceActivity = dLogs.DeviceActivity,
+                DeviceEnergyUsage = (int)dLogs.DeviceEnergyUsage,
+                DeviceActivity = (int)dLogs.DeviceActivity,
                 DeviceState = dLogs.DeviceState
 
             }).ToList();

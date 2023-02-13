@@ -43,11 +43,13 @@ namespace SmartHomeManager.Domain.DeviceLoggingDomain.Services
 
 
         // should update when devices turn off hence device state
-        public async Task UpdateDeviceLog(DateTime date, bool DeviceState) { 
-            var res = await _deviceLogRepository.Get(date.Date, DeviceState);
+        public async Task UpdateDeviceLog(Guid deviceId, double deviceActivity, double deviceUsage, DateTime date, bool deviceState) { 
+            var res = await _deviceLogRepository.Get(date.Date, deviceId, deviceState);
             if (res != null) return;
             res.EndTime = DateTime.Now;
-            res.DeviceState = DeviceState;
+            res.DeviceState = deviceState;
+            res.DeviceActivity = deviceActivity;
+            res.DeviceEnergyUsage = deviceUsage;
             _deviceLogRepository.Update(res);
             await _deviceLogRepository.SaveChangesAsync();
         }

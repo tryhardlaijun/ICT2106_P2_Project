@@ -27,19 +27,30 @@ namespace SmartHomeManager.DataSource.DeviceLogDataSource
             _dbSet.Add(entity);
         }
 
-        public IEnumerable<DeviceLog> Get(DateTime date, DateTime startTime, DateTime endTime)
+        public IEnumerable<DeviceLog> Get(Guid deviceId, DateTime date)
         {
             // get all logs
             var allLogs = _db.DeviceLogs.ToList();
 
-            IEnumerable<DeviceLog> result = _db.DeviceLogs.ToList().Where(log => log.DateLogged == date && log.StartTime >= startTime && log.EndTime <= endTime) ;
+            IEnumerable<DeviceLog> result = _db.DeviceLogs.ToList().Where(log => log.DeviceId == deviceId && log.DateLogged.Date == date.Date);
 
             return result;
         }
 
-        public async Task<DeviceLog?> Get(DateTime date, bool DeviceState)
+        public IEnumerable<DeviceLog> Get(Guid deviceId, DateTime date, DateTime startTime, DateTime endTime)
         {
-            var result = await _dbSet.FindAsync(date, DeviceState);
+            // get all logs
+            var allLogs = _db.DeviceLogs.ToList();
+
+            IEnumerable<DeviceLog> result = _db.DeviceLogs.ToList().Where(log => log.DeviceId == deviceId && log.DateLogged.Date == date && log.StartTime.TimeOfDay >= startTime.TimeOfDay && log.EndTime?.TimeOfDay <= endTime.TimeOfDay) ;
+
+            return result;
+        }
+
+        // there should only be 1 device log where device state is True everyday
+        public async Task<DeviceLog?> Get(DateTime date, Guid deviceId, bool deviceState)
+        {
+            var result = await _dbSet.FindAsync(date, deviceId, deviceState);
             return result;
         }
 
@@ -55,7 +66,7 @@ namespace SmartHomeManager.DataSource.DeviceLogDataSource
             return query;
         }
 
-        public async Task<DeviceLog?> GetByDate(DateTime date, Guid deviceId, bool deviceState)
+        public async Task<DeviceLog> GetByDate(DateTime date, Guid deviceId, bool deviceState)
         {
             var result = await _dbSet.FindAsync(date, deviceId, deviceState);
             return result;
