@@ -25,6 +25,7 @@ export default function Scenarios() {
 			<Box h="60px">
 				<Menu isLazy>
 					<MenuButton
+						margin = "2"
 						as={Button}
 						variant="solid"
 						backgroundColor="gray.300"
