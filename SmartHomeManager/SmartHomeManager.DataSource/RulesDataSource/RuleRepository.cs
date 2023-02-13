@@ -21,7 +21,7 @@ namespace SmartHomeManager.DataSource.RulesDataSource
         {
             try
             {
-                await RuleSeedData.Seed(_applicationDbContext);
+                //await RuleSeedData.Seed(_applicationDbContext);
                 await _applicationDbContext.AddRangeAsync(rule);
                 return await SaveAsync();
             }

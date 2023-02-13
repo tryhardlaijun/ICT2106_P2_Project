@@ -32,12 +32,15 @@ public class RulesController : ControllerBase
         {
             RuleId = rule.RuleId,
             ScenarioId = rule.ScenarioId,
+            ConfigurationKey = rule.ConfigurationKey,
             ConfigurationValue = rule.ConfigurationValue,
             ActionTrigger = rule.ActionTrigger,
             ScheduleName = rule.ScheduleName,
             StartTime = Convert.ToDateTime(rule.StartTime),
             EndTime = Convert.ToDateTime(rule.EndTime),
-            DeviceId = rule.DeviceId
+            DeviceId = rule.DeviceId,
+            APIKey = rule.APIKey,
+            ApiValue = rule.ApiValue,
         }).ToList();
         return resp;
     }
@@ -62,12 +65,15 @@ public class RulesController : ControllerBase
         {
             RuleId = ruleRequest.RuleId,
             ScenarioId = ruleRequest.ScenarioId,
+            ConfigurationKey = ruleRequest.ConfigurationKey,
             ConfigurationValue = ruleRequest.ConfigurationValue,
             ActionTrigger = ruleRequest.ActionTrigger,
             ScheduleName = ruleRequest.ScheduleName,
             StartTime = Convert.ToDateTime(ruleRequest.StartTime),
             EndTime = Convert.ToDateTime(ruleRequest.EndTime),
-            DeviceId = ruleRequest.DeviceId
+            DeviceId = ruleRequest.DeviceId,
+            APIKey = ruleRequest.APIKey,
+            ApiValue = ruleRequest.ApiValue,
         };
         await _registerRuleService.CreateRuleAsync(rule);
         /*
