@@ -54,9 +54,19 @@ public class RulesController : ControllerBase
 
     // POST api/Rules
     [HttpPost("CreateRule")]
-    public async Task<ActionResult> CreateRule([FromBody] RuleRequest rule)
+    public async Task<ActionResult> CreateRule([FromBody] RuleRequest ruleRequest)
     {
-        //pass parameter instead
+        var rule = new Rule
+        {
+            RuleId = ruleRequest.RuleId,
+            ScenarioId = ruleRequest.ScenarioId,
+            ConfigurationValue = ruleRequest.ConfigurationValue,
+            ActionTrigger = ruleRequest.ActionTrigger,
+            ScheduleName = ruleRequest.ScheduleName,
+            StartTime = Convert.ToDateTime(ruleRequest.StartTime),
+            EndTime = Convert.ToDateTime(ruleRequest.EndTime),
+            DeviceId = ruleRequest.DeviceId
+        };
         await _registerRuleService.CreateRuleAsync(rule);
         /*
          * 
