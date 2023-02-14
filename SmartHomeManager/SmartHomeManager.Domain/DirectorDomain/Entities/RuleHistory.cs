@@ -1,26 +1,33 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SmartHomeManager.Domain.DirectorDomain.Entities
+namespace SmartHomeManager.Domain.DirectorDomain.Entities;
+
+public class RuleHistory
 {
-    public class RuleHistory
-    {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid RuleHistoryId { get; set; }
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public Guid RuleHistoryId { get; set; }
 
-        public DateTime? StartTime { get; set; }
+    [Required] public Guid RuleId { get; set; } 
 
-        public DateTime? EndTime { get; set; }
+    [Required] public int RuleIndex { get; set; }
 
-        public string? ActionTrigger { get; set; }
+    [Required] public string ScheduleName { get; set; }
 
-        [Required]
-        public string ScenarioName { get; set; }
+    public DateTime? RuleStartTime { get; set; }
 
-        [Required]
-        public int ConfigurationValue { get; set; }
+    public DateTime? RuleEndTime { get; set; }
 
-        [Required]
-        public string DeviceName { get; set; }
-    }
+    public string? RuleActionTrigger { get; set; }
+
+    public string? APIKey { get; set; }
+
+    public string? ApiValue { get; set; }
+
+    [Required] public string ScenarioName { get; set; }
+
+    [Required] public string DeviceName { get; set; }
+
+    [Required] public string DeviceConfiguration { get; set; }
 }

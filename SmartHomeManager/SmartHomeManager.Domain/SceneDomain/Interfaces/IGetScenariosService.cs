@@ -2,7 +2,7 @@
 
 namespace SmartHomeManager.Domain.SceneDomain.Interfaces
 {
-	public interface IGetScenarioService
+	public interface IGetScenariosService
 	{
         // get all rules on startup and when director is informed
         Task<IEnumerable<Scenario>> GetAllScenarios();

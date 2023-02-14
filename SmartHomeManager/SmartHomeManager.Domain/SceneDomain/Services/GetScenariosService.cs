@@ -4,10 +4,10 @@ using SmartHomeManager.Domain.SceneDomain.Interfaces;
 
 namespace SmartHomeManager.Domain.SceneDomain.Services
 {
-	public class GetScenarioService : IGetScenarioService
+	public class GetScenariosService : IGetScenariosService
 	{
         private readonly IGenericRepository<Scenario> _scenarioRepository;
-        public GetScenarioService(IGenericRepository<Scenario> scenarioRepository)
+        public GetScenariosService(IGenericRepository<Scenario> scenarioRepository)
 		{
             _scenarioRepository = scenarioRepository;
 		}
