@@ -1,4 +1,5 @@
 import { React, useState } from 'react';
+import { useNavigate, Link as RouterLink } from "react-router-dom";
 import {
     Flex,
     Box,
@@ -17,6 +18,9 @@ import {
 
 export default function Login() {
 
+    //Navigation declaration
+    const navigate = useNavigate()
+
     //Email input + validation
     const [emailInput, updateEmailInput] = useState("")
     const [emailValid, updateEmailValid] = useState(true)
@@ -33,39 +37,39 @@ export default function Login() {
             updateEmailValid(mailFormat.test(emailInput))
         }
     }
+
+    //Function to submit login form
     const submitLoginForm = () => {
-        if(emailValid && passwordInput.length>=8){
-        const obj = {
-            "email": emailInput, "password": passwordInput
-        }
-        const message = JSON.stringify(obj)
-        fetch('https://localhost:7140/api/Accounts/login', {
-            method: 'POST',
-            body: message,
-            headers: {
-                'Content-type': 'application/problem+json; charset=utf-8',
-            },
-        })
+        if (emailValid && passwordInput.length >= 8) {
+            const loginAccountObj = {
+                "email": emailInput, "password": passwordInput
+            }
+            fetch('https://localhost:7140/api/Accounts/login', {
+                method: 'POST',
+                body: JSON.stringify(loginAccountObj),
+                headers: {
+                    'Content-type': 'application/problem+json; charset=utf-8',
+                },
+            })
             .then(async response => {
                 const msg = await response.text();
+                /* Ok(1) - Login Successful */
                 if (response.ok) {
                     updateErrorStatus(false);
-                    window.location.href = "/";
+                    navigate("/", { replace: true });
+                    localStorage.setItem('accountId', msg);
                 } else {
+                    /*  BadRequest(1) - Login Unsuccessful, wrong password
+                    *   BadRequest(2) - Login Unsuccessful, account does not exist
+                    */
                     updateErrorStatus(true);
-                    throw new Error(msg);
+                    updateErrorMsg("Incorrect email or password");
                 }
             })
-            .then(data => {
-                console.log("d");
-                console.log({ data });
-            })
             .catch((err) => {
-                console.log("e");
-                console.log(err.message);
                 updateErrorMsg(err.message);
             });
-        }else{
+        } else {
             updateErrorStatus(true);
             updateErrorMsg("Incorrect email or password");
         }
@@ -88,9 +92,9 @@ export default function Login() {
                     boxShadow={'lg'}
                     p={8}>
                     <Stack spacing={4}>
-                    
+
                         {
-                            errorStatus ? <Heading color={'red'} textAlign={'center'} fontSize={'1xl'}>{errorMsg}</Heading>:""
+                            errorStatus ? <Heading color={'red'} textAlign={'center'} fontSize={'1xl'}>{errorMsg}</Heading> : ""
                         }
                         <FormControl id="email" isInvalid={!emailValid}>
                             <FormLabel>Email address</FormLabel>
@@ -109,7 +113,9 @@ export default function Login() {
                                 align={'start'}
                                 justify={'space-between'}>
                                 <Checkbox>Remember me</Checkbox>
-                                <Link color={'blue.400'} href="./forgetpw">Forgot password?</Link>
+                                <Link color={'blue.400'}
+                                    as={RouterLink}
+                                    to="/forgetpw">Forgot password?</Link>
                             </Stack>
                             <Button
                                 onClick={() => submitLoginForm()}
@@ -124,7 +130,9 @@ export default function Login() {
                         </Stack>
                         <Stack pt={6}>
                             <Text align={'center'}>
-                                Don&#39;t have an account? <Link color={'blue.400'} href="./register">Sign up</Link>
+                                Don&#39;t have an account? <Link color={'blue.400'}
+                                    as={RouterLink}
+                                    to="/register">Sign up</Link>
                             </Text>
                         </Stack>
                     </Stack>

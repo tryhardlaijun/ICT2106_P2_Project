@@ -20,18 +20,18 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
 		{
 			_accountRepository = accountRepository;
 		}
-		public async Task<string> CreateAccount(AccountWebRequest accountWebRequest) 
+		public async Task<int> CreateAccount(AccountWebRequest accountWebRequest) 
 		{
 			bool isEmailUnique = await _accountRepository.IsEmailUnique(accountWebRequest.Email);
 
 			if (!isEmailUnique)
 			{
-				return "Email already in use!";
+				return 3;
 			}
 
 			// Create new Account object and assign the web request variables to it, except for the password
             Account realAccount = new Account();
-			realAccount.AccountId = new Guid();
+			realAccount.AccountId = Guid.NewGuid();
             realAccount.Address = accountWebRequest.Address;
             realAccount.Email = accountWebRequest.Email;
             realAccount.Timezone = accountWebRequest.Timezone;
@@ -47,14 +47,17 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
 
 			realAccount.Password = hashedPassword;
 
-			await _accountRepository.AddAsync(realAccount);
-			int result = await _accountRepository.SaveAsync();
-			if (result > 0)
+			bool addAccountResponse = await _accountRepository.AddAsync(realAccount);
+			if (addAccountResponse)
 			{
-				return "Account created successfully";
+				return await _accountRepository.SaveAsync();
 			}
 
-			return "account not added";
+			else
+			{
+				// if account cannot be added
+				return 2;
+			}
 		}
 
 		public async Task<Account?> GetAccountByAccountId(Guid id)
@@ -81,20 +84,32 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
 			return accounts;
 		}
 		
-		public async Task<bool> VerifyLogin(LoginWebRequest login)
+		public async Task<Guid?> VerifyLogin(LoginWebRequest login)
 		{
 			Account? account = await _accountRepository.GetAccountByEmailAsync(login.Email);
-			if (account != null)
+            //Hash the password of the user using the newly created Guid as the salt
+            
+            if (account != null)
 			{
-				if (account.Password == login.Password)
-				{
-					return true;
-				}
+                string hashedPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+																password: login.Password,
+																salt: account.AccountId.ToByteArray(),
+																prf: KeyDerivationPrf.HMACSHA256,
+																iterationCount: 100000,
+																numBytesRequested: 256 / 8));
 
-				return false;
+                login.Password = hashedPassword;
+
+                if (account.Password == login.Password)
+				{
+					// account exists and password is correct
+					//return 1;
+					return account.AccountId;
+				}
 			}
 
-			return false;
+            // account does not exist/account exists but password is wrong
+            return null;
 		}
 	}
 }

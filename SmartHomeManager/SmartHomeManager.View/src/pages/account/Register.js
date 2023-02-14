@@ -1,4 +1,5 @@
 import { React, useState } from 'react';
+import { useNavigate, Link as RouterLink } from "react-router-dom";
 import {
     Flex,
     Box,
@@ -23,9 +24,12 @@ import {
     SliderThumb
 } from '@chakra-ui/react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
-//import bcrypt from 'bcryptjs'
 
 export default function Register() {
+
+    //Navigation declaration
+    const navigate = useNavigate()
+
     //Input declaration
     const [emailInput, updateEmailInput] = useState("")
     const [usernameInput, updateUsernameInput] = useState("")
@@ -44,6 +48,7 @@ export default function Register() {
     const [passwordMessage, updatePasswordMessage] = useState("")
     const [confirmPasswordMessage, updateConfirmPasswordMessage] = useState("")
     const [accountCreationMessage, updateAccountCreationMessage] = useState("")
+    const [errorMessage, updateErrorMessage] = useState("")
 
     //Show password
     const [showPassword, setShowPassword] = useState(false);
@@ -105,54 +110,49 @@ export default function Register() {
 
     //Submit form
     const submitRegisterForm = () => {
-        if (emailValid && passwordValid && confirmPasswordValid && emailInput.length!=0 && passwordInput.length>=8 && confirmPasswordInput.length>=8) {
-            /*
-            const salt = bcrypt.genSaltSync(10)
-            const hashPassword = bcrypt.hash(passwordInput, salt)
-            
-            bcrypt.compare(passwordInput, hashKey, function (err, result) {
-                console.log({ passwordInput }, result)
-            });
-            console.log({ emailInput })
-            console.log({ usernameInput })
-            console.log({ timezoneInput })
-            console.log({ passwordInput })
-            console.log({ confirmPasswordInput })
-            console.log({ addressInput })
-            */
+        if (emailValid && passwordValid && confirmPasswordValid && emailInput.length != 0 
+            && passwordInput.length >= 8 && confirmPasswordInput.length >= 8) {
 
             //JSO stringify to send to api controller
-            const obj = {
+            const registerAccountObj = {
                 "email": emailInput, "username": usernameInput, "address": addressInput, "timezone": timezoneInput, "password": passwordInput
             }
-            const message = JSON.stringify(obj)
             fetch('https://localhost:7140/api/Accounts/', {
                 method: 'POST',
-                body: message,
+                body: JSON.stringify(registerAccountObj),
                 headers: {
                     'Content-type': 'application/problem+json; charset=utf-8',
                 },
             })
-                .then(async response => {
-                    const msg = await response.text();
-                    if (response.ok) {
-                        updateAccountCreateFailStatus(false);
-                        window.location.href = "/account-created";
-                    } else {
-                        throw new Error(msg)
+            .then(async response => {
+                const msg = parseInt(await response.text());
+                if (response.ok) {
+                    /* 
+                    * Ok(1) - Account Created & Email Sent
+                    * Ok(2) - Account Created but Email Not Sent
+                    */
+                    updateAccountCreateFailStatus(false);
+                    navigate("/account-created", { replace: true });
+                } else {
+                    /* 
+                    * BadRequest(1) - Account Not Created
+                    * BadRequest(2) - Email already exists
+                    */
+                    if(msg == 1){
+                        updateErrorMessage("Account not created.")
+                    }else if(msg == 2){
+                        updateErrorMessage("Email already exists.")
                     }
-                })
-                .then(data => {
-                    console.log("d");
-                    console.log({data});
-                })
-                .catch((err) => {
-                    console.log("e");
-                    console.log(err.message);
-                    updateAccountCreationMessage("Your account fail to create: " + err.message +". Please try again.")
+                    updateAccountCreationMessage("Your account fail to create: " + errorMessage +" Please try again.")
                     updateAccountCreateFailStatus(true);
-                });
-        }else{
+                }
+            })
+            .catch((err) => {
+                updateAccountCreationMessage("Server Error: "+ err.message);
+                updateAccountCreateFailStatus(true);
+
+            });
+        } else {
             updateAccountCreateFailStatus(true);
             updateAccountCreationMessage("Please key in all your information to create an account with us");
         }
@@ -275,7 +275,9 @@ export default function Register() {
                         </Stack>
                         <Stack pt={6}>
                             <Text align={'center'}>
-                                Already a user? <Link color={'blue.400'} href="./login">Login</Link>
+                                Already a user? <Link color={'blue.400'}
+                                    as={RouterLink}
+                                    to="/login">Login</Link>
                             </Text>
                         </Stack>
                     </Stack>

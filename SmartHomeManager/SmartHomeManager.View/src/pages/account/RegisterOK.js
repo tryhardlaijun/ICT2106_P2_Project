@@ -1,4 +1,5 @@
 import { React } from 'react';
+import { Link as RouterLink } from "react-router-dom";
 import {
     Flex,
     Box,
@@ -10,13 +11,6 @@ import {
 
 export default function RegisterOK() {
 
-    //Function to verify email
-    const goHome = () => {
-        window.location.href = "/";
-    }
-    const login = () => {
-        window.location.href = "/login";
-    }
 
     return (
         <Flex
@@ -37,7 +31,8 @@ export default function RegisterOK() {
                                 <Heading textAlign={'center'} fontSize={'1xl'}>Check your email for verification!</Heading>
                             </Stack>
                             <Button
-                                onClick={() => login()}
+                                as={RouterLink}
+                                to="/login"
                                 bg={'blue.400'}
                                 color={'white'}
                                 _hover={{
@@ -46,7 +41,8 @@ export default function RegisterOK() {
                                 Sign in
                             </Button>
                             <Button
-                                onClick={() => goHome()}
+                                as={RouterLink}
+                                to="/"
                                 bg={'blue.400'}
                                 color={'white'}
                                 _hover={{

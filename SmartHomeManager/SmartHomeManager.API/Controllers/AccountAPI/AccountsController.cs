@@ -39,7 +39,10 @@ namespace SmartHomeManager.API.Controllers.AccountController
             _accountRepository = accountRepository;
         }*/
 
-        // GET: api/Accounts
+        /* 
+         * GET: api/Accounts
+         * Returns: 
+        */
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Account>>> GetAccounts()
         {
@@ -102,45 +105,72 @@ namespace SmartHomeManager.API.Controllers.AccountController
         }
 
         // this is an API endpoint
-        
-        // POST: api/Accounts
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+
+        /* 
+         * POST: api/Accounts
+         * Return:
+         * Ok(1) - Account Created & Email Sent
+         * Ok(2) - Account Created but Email Not Sent
+         * BadRequest(1) - Account Not Created
+         * BadRequest(2) - Email already exists
+         * 
+        */
         [HttpPost]
         public async Task<ActionResult> PostAccount([FromBody] AccountWebRequest accountWebRequest)
         {
 
             // controller will invoke a service function
-            string response = await _accountService.CreateAccount(accountWebRequest);
+            int response = await _accountService.CreateAccount(accountWebRequest);
 
-            if (response == "account created")
+            // if create account is successful
+            if (response == 1)
             {
                 // Email service
                 bool emailResponse = _emailService.SendRegistrationEmail(accountWebRequest.Username, accountWebRequest.Email);
                 
                 if (emailResponse)
                 {
-                    return Ok(response);
+                    // if everything is ok
+                    return Ok(1);
                 }
 
-                return BadRequest("Account created but email not sent");
+                // if account created, but email not sent
+                return Ok(2);
             }
 
-            return BadRequest(response);
+            // if create account is unsuccessful
+            else if (response == 2)
+            {
+                return BadRequest(1);
+            }
+
+            // email already exists
+            return BadRequest(2);
+            
         }
 
-        // POST: api/Accounts/login
+        /*
+         * POST: api/Accounts/login
+         * Return:
+         * Ok(1) - Login Successful
+         * BadRequest(1) - Login Unsuccessful, wrong password
+         * BadRequest(2) - Login Unsuccessful, account does not exist
+         */
 
         [HttpPost("login")]
         public async Task<ActionResult> VerifyLogin([FromBody]LoginWebRequest login)
         {
-            bool response = await _accountService.VerifyLogin(login);
+            Guid? accountId = await _accountService.VerifyLogin(login);
 
-            if (response)
+            // login successful
+            if (accountId != null)
             {
-                return Ok("Login successful");
+                return Ok(accountId);
             }
 
-            return Unauthorized("Incorrect email or password");
+            // login unsuccessful
+            return BadRequest();
+            
         }
 
 
