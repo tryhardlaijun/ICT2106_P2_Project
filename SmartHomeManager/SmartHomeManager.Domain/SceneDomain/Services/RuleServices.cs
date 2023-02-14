@@ -34,23 +34,39 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
 		//Create
 		public async Task<bool> CreateRuleAsync(Rule rule)
 		{
-			_informDirectorServices.InformRuleChangesAsync(rule.RuleId, 'c');
-            return await _ruleRepository.AddAsync(rule);
-		}
+			if(await _ruleRepository.AddAsync(rule))
+			{
+				_informDirectorServices.InformRuleChangesAsync(rule.RuleId, 'c');
+				return true;
+			}
+
+			return false;
+        }
 
 		//Update
 		public async Task<bool> EditRuleAsync(Rule rule)
 		{
-            _informDirectorServices.InformRuleChangesAsync(rule.RuleId, 'e');
-            return await _ruleRepository.UpdateAsync(rule);
-		}
+            if (await _ruleRepository.UpdateAsync(rule))
+            {
+                _informDirectorServices.InformRuleChangesAsync(rule.RuleId, 'u');
+                return true;
+            }
+
+            return false;
+        }
 
 		//Delete using Id
 		public async Task<bool> DeleteRuleByIdAsync(Guid id)
 		{
-            _informDirectorServices.InformRuleChangesAsync(id, 'd');
-            return await _ruleRepository.DeleteByIdAsync(id);
-		}
+			if (await _ruleRepository.DeleteByIdAsync(id))
+			{
+                _informDirectorServices.InformRuleChangesAsync(id, 'd');
+				return true;
+
+            }
+            
+			return false;
+        }
 	}
 }
 

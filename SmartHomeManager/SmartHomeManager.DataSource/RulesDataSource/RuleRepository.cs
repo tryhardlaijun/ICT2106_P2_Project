@@ -68,7 +68,7 @@ namespace SmartHomeManager.DataSource.RulesDataSource
         {
             try
             {
-                var rule = await _applicationDbContext.Rules.FindAsync(id);
+                var rule = await _applicationDbContext.Rules.Include(d => d.Device).Include(s => s.Scenario).FirstOrDefaultAsync(r => r.RuleId == id);
                 return rule;
             }
             catch

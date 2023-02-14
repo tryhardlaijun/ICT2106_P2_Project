@@ -57,6 +57,7 @@ namespace SmartHomeManager.API
             builder.Services.AddScoped<IGenericRepository<Scenario>, ScenarioRepository>();
             builder.Services.AddScoped<IGetRulesService, GetRulesServices>();
             builder.Services.AddScoped<IGetScenariosService, GetScenariosService>();
+            builder.Services.AddScoped<IInformDirectorServices, DirectorServices>();
             builder.Services.AddScoped<IEnergyProfileServices, EnergyProfileServices>();
             builder.Services.AddScoped<IGenericRepository<HomeSecurity>, HomeSecurityRepository>();
             builder.Services.AddScoped<IGenericRepository<HomeSecuritySetting>, HomeSecuritySettingRepository>();
