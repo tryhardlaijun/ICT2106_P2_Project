@@ -1,13 +1,13 @@
 ﻿using System.Linq.Expressions;
 using SmartHomeManager.Domain.DeviceDomain.Entities;
+using SmartHomeManager.Domain.RoomDomain.DTOs.Responses;
 using SmartHomeManager.Domain.RoomDomain.Entities;
-using SmartHomeManager.Domain.RoomDomain.Entities.DTOs;
 using SmartHomeManager.Domain.RoomDomain.Interfaces;
 using SmartHomeManager.Domain.RoomDomain.Mocks;
 
 namespace SmartHomeManager.Domain.RoomDomain.Services;
 
-public class RoomReadService
+public class RoomReadService : IRoomReadService
 {
     private readonly IDeviceInformationServiceMock _deviceInformationService;
     private readonly IRoomRepository _roomRepository;
@@ -18,25 +18,30 @@ public class RoomReadService
         _deviceInformationService = deviceInformationService;
     }
 
-    public async Task<GetRoomWebRequest?> GetRoomById(Guid roomId)
+    public IList<Room> GetRoomsByAccountId(Guid accountId)
+    {
+        return _roomRepository.GetRoomsRelatedToAccount(accountId).ToList();
+    }
+
+    public async Task<GetRoomWebResponse?> GetRoomById(Guid roomId)
     {
         var res = await _roomRepository.Get(roomId);
         if (res == null) return null;
-        
-        var ret = new GetRoomWebRequest
+
+        var ret = new GetRoomWebResponse
         {
             RoomId = res.RoomId,
             Name = res.Name,
             AccountId = res.AccountId
         };
-        
+
         return ret;
     }
 
-    public async Task<IEnumerable<GetRoomWebRequest>> GetAllRooms()
+    public async Task<IEnumerable<GetRoomWebResponse>> GetAllRooms()
     {
         var result = await _roomRepository.GetAll();
-        var resp = result.Select(room => new GetRoomWebRequest
+        var resp = result.Select(room => new GetRoomWebResponse
         {
             RoomId = room.RoomId,
             Name = room.Name,
@@ -57,10 +62,10 @@ public class RoomReadService
     }
 
     // IList allows for more direct manipulation, so IEnumerable is used instead
-    public IEnumerable<GetRoomWebRequest> GetRoomsRelatedToAccount(Guid accountId)
+    public IEnumerable<GetRoomWebResponse> GetRoomsRelatedToAccount(Guid accountId)
     {
         var result = _roomRepository.GetRoomsRelatedToAccount(accountId);
-        var resp = result.Select(room => new GetRoomWebRequest
+        var resp = result.Select(room => new GetRoomWebResponse
         {
             RoomId = room.RoomId,
             Name = room.Name,

@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.Domain.DeviceDomain.Entities;
-using SmartHomeManager.Domain.RoomDomain.Entities;
-using SmartHomeManager.Domain.RoomDomain.Entities.DTOs;
+using SmartHomeManager.Domain.RoomDomain.DTOs.Requests;
+using SmartHomeManager.Domain.RoomDomain.DTOs.Responses;
 using SmartHomeManager.Domain.RoomDomain.Interfaces;
 using SmartHomeManager.Domain.RoomDomain.Mocks;
 using SmartHomeManager.Domain.RoomDomain.Services;
@@ -24,14 +23,14 @@ public class RoomsController : ControllerBase
 
     // GET: api/Rooms
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<GetRoomWebRequest>>> GetRooms()
+    public async Task<ActionResult<IEnumerable<GetRoomWebResponse>>> GetRooms()
     {
         return Ok(await _roomReadService.GetAllRooms());
     }
 
     // GET: api/Rooms/5
     [HttpGet("{roomId}")]
-    public async Task<ActionResult<GetRoomWebRequest>> GetRoom(Guid roomId)
+    public async Task<ActionResult<GetRoomWebResponse>> GetRoom(Guid roomId)
     {
         var result = await _roomReadService.GetRoomById(roomId);
         if (result == null) return NotFound();
@@ -41,22 +40,22 @@ public class RoomsController : ControllerBase
     // PUT: api/Rooms/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{roomId}")]
-    public async Task<IActionResult> PutRoom(Guid roomId, EditRoomWebRequest roomWebRequest)
+    public async Task<IActionResult> PutRoom(Guid roomId, PutRoomWebRequest roomWebRequest)
     {
         var res = await _roomReadService.GetRoomById(roomId);
 
         if (res == null) return BadRequest();
-        
+
         var name = roomWebRequest.Name ?? res.Name;
         await _roomWriteService.UpdateRoom(roomId, name);
-        
+
         return NoContent();
     }
 
     // POST: api/Rooms
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
-    public async Task<ActionResult<GetRoomWebRequest>> PostRoom(CreateRoomWebRequest roomWebRequest)
+    public async Task<ActionResult<GetRoomWebResponse>> PostRoom(PostRoomWebRequest roomWebRequest)
     {
         var resp = await _roomWriteService.AddRoom(roomWebRequest.Name, roomWebRequest.AccountId);
 
@@ -80,7 +79,7 @@ public class RoomsController : ControllerBase
 
     // GET: api/Rooms/GetRoomsRelatedToAccount/accountId
     [HttpGet("GetRoomsRelatedToAccount/{accountId}")]
-    public ActionResult<IEnumerable<GetRoomWebRequest>> GetRoomsRelatedToAccount(Guid accountId)
+    public ActionResult<IEnumerable<GetRoomWebResponse>> GetRoomsRelatedToAccount(Guid accountId)
     {
         var result = _roomReadService.GetRoomsRelatedToAccount(accountId);
         return Ok(result);

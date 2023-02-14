@@ -71,11 +71,10 @@ public class RoomRepository : IRoomRepository
     {
         // load the data
         var allRooms = _db.Rooms.ToList();
-        
+
         // filter the data
-        IEnumerable<Room> result = _db.Rooms.ToList().Where(room => room.AccountId == accountId);
+        var result = allRooms.Where(room => room.AccountId == accountId);
 
         return result;
     }
-    
 }
