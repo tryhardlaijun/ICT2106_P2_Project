@@ -21,7 +21,6 @@ namespace SmartHomeManager.Domain.AccountDomain.Interfaces
         public Task<bool> DeleteAsync(Account account);
         public Task<bool> DeleteByIdAsync(Guid id);
         public Task<int> SaveAsync();
-        public Task<IEnumerable<Device?>> GetDevicesByProfileId(Guid id);
 
     }
 }
