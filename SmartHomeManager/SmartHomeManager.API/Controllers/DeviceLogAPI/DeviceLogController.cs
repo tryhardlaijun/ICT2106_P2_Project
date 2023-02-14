@@ -60,7 +60,7 @@ namespace SmartHomeManager.API.Controllers.DeviceLogAPI
         // once found log bring out their device watt usage
 
         // GET: api/Analytics/deviceId?startTime=xxxx&&endTime=xxxx
-        [HttpGet("Analytics/{deviceId}")]
+        [HttpGet("daily/{deviceId}")]
         public ActionResult<IEnumerable<DeviceLog>> GetDailyDeviceLog(Guid deviceId, DateTime startTime,DateTime endTime)
         {   
             var date = DateTime.Now.Date;
@@ -78,7 +78,7 @@ namespace SmartHomeManager.API.Controllers.DeviceLogAPI
         }
         // date passed shld be start date of the week
         // GET: api/Analytics/Devices/deviceId?date=xxxxxx
-        [HttpGet("Analytics/{deviceId}")]
+        [HttpGet("weekly/{deviceId}")]
         public ActionResult<IEnumerable<DeviceLog>> GetWeeklyDeviceLog(Guid deviceId, DateTime date)
         {
             var totalUsage = 0;
