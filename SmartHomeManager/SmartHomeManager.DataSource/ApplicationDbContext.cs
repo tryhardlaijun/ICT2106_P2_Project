@@ -2,6 +2,7 @@
 using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.DeviceDomain.Entities;
 using SmartHomeManager.Domain.DeviceLoggingDomain.Entities;
+using SmartHomeManager.Domain.DeviceStoreDomain.Entities;
 using SmartHomeManager.Domain.DirectorDomain.Entities;
 using SmartHomeManager.Domain.NotificationDomain.Entities;
 using SmartHomeManager.Domain.RoomDomain.Entities;
@@ -29,6 +30,7 @@ public class ApplicationDbContext : DbContext
         RuleHistories = base.Set<RuleHistory>();
         Scenarios = base.Set<Scenario>();
         Troubleshooters = base.Set<Troubleshooter>();
+        DeviceProducts = base.Set<DeviceProduct>();
     }
 
     public DbSet<Account> Accounts { get; }
@@ -42,6 +44,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Profile> Profiles { get; }
     public DbSet<RoomCoordinate> RoomCoordinates { get; }
     public DbSet<Room> Rooms { get; }
+    public DbSet<DeviceProduct> DeviceProducts { get; }
     public DbSet<Rule> Rules { get; }
     public DbSet<History> Histories { get; }
     public DbSet<RuleHistory> RuleHistories { get; }
