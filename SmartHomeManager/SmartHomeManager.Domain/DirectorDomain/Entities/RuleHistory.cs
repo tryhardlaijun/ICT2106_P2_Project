@@ -13,13 +13,17 @@ public class RuleHistory
 
     [Required] public int RuleIndex { get; set; }
 
-    [Required] public string RuleName { get; set; }
+    [Required] public string ScheduleName { get; set; }
 
     public DateTime? RuleStartTime { get; set; }
 
     public DateTime? RuleEndTime { get; set; }
 
     public string? RuleActionTrigger { get; set; }
+
+    public string? APIKey { get; set; }
+
+    public string? ApiValue { get; set; }
 
     [Required] public string ScenarioName { get; set; }
 
