@@ -5,8 +5,8 @@ using SmartHomeManager.DataSource;
 using SmartHomeManager.DataSource.EnergyProfileDataSource;
 using SmartHomeManager.DataSource.HistoryDataSource;
 using SmartHomeManager.DataSource.ProfileDataSource;
-using SmartHomeManager.DataSource.RuleDataSource;
 using SmartHomeManager.DataSource.RuleHistoryDataSource;
+using SmartHomeManager.DataSource.RulesDataSource;
 using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.DeviceDomain.Entities;
@@ -14,6 +14,8 @@ using SmartHomeManager.Domain.DirectorDomain.Entities;
 using SmartHomeManager.Domain.DirectorDomain.Services;
 using SmartHomeManager.Domain.EnergyProfileDomain.Entities;
 using SmartHomeManager.Domain.SceneDomain.Entities;
+using SmartHomeManager.Domain.SceneDomain.Interfaces;
+using SmartHomeManager.Domain.SceneDomain.Services;
 
 namespace SmartHomeManager.API
 {
@@ -45,6 +47,7 @@ namespace SmartHomeManager.API
             builder.Services.AddScoped<IGenericRepository<Profile>, ProfileRepository>();
             builder.Services.AddScoped<IGenericRepository<EnergyProfile>, EnergyProfileRepository>();
             builder.Services.AddScoped<IGenericRepository<Scenario>, ScenarioRepository>();
+            builder.Services.AddScoped<IGetRulesServices, GetRulesServices>();
             #endregion DEPENDENCY INJECTIONS
 
             builder.Services.AddEndpointsApiExplorer();

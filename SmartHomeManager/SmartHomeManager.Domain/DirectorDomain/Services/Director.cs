@@ -5,6 +5,7 @@ using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.DirectorDomain.Entities;
 using SmartHomeManager.Domain.DirectorDomain.Interfaces;
 using SmartHomeManager.Domain.SceneDomain.Entities;
+using SmartHomeManager.Domain.SceneDomain.Interfaces;
 using System.Data;
 using Rule = SmartHomeManager.Domain.SceneDomain.Entities.Rule;
 
@@ -16,7 +17,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
         private List<Rule>? rules;
         private List<Scenario>? scenarios;
 
-        private IGenericRepository<Rule> _ruleRepository;
+        private IGetRulesServices _ruleInterface;
         private IRuleHistoryRepository<RuleHistory> _ruleHistoryRepository;
         private IGenericRepository<History> _historyRepository;
 
@@ -27,12 +28,13 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
             var scope = _serviceProvider.CreateScope();
             _ruleHistoryRepository = scope.ServiceProvider.GetRequiredService<IRuleHistoryRepository<RuleHistory>>();
             _historyRepository = scope.ServiceProvider.GetRequiredService<IGenericRepository<History>>();
-            _ruleRepository = scope.ServiceProvider.GetRequiredService<IGenericRepository<Rule>>();
+            _ruleInterface = scope.ServiceProvider.GetRequiredService<IGetRulesServices>();
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            rules = (await _ruleRepository.GetAllAsync()).ToList();
+            
+            rules = (await _ruleInterface.GetAllRules()).ToList();                
 
             while (!stoppingToken.IsCancellationRequested)
             {
