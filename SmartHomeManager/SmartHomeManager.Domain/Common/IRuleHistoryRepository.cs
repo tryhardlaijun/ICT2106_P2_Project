@@ -16,4 +16,3 @@ namespace SmartHomeManager.DataSource.RuleHistoryDataSource
         public Task<int> CountRuleAsync();
     }
 }
-

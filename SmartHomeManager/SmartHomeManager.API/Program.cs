@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using SmartHomeManager.DataSource;
 using SmartHomeManager.DataSource.EnergyProfileDataSource;
 using SmartHomeManager.DataSource.HistoryDataSource;
+using SmartHomeManager.DataSource.HomeSecurityDataSource;
+using SmartHomeManager.DataSource.HomeSecurityDeviceDefinitionsDataSource;
+using SmartHomeManager.DataSource.HomeSecuritySettingsDataSource;
 using SmartHomeManager.DataSource.ProfileDataSource;
 using SmartHomeManager.DataSource.RuleHistoryDataSource;
 using SmartHomeManager.DataSource.RulesDataSource;
@@ -15,6 +18,8 @@ using SmartHomeManager.Domain.DirectorDomain.Services;
 using SmartHomeManager.Domain.EnergyProfileDomain.Entities;
 using SmartHomeManager.Domain.EnergyProfileDomain.Interfaces;
 using SmartHomeManager.Domain.EnergyProfileDomain.Services;
+using SmartHomeManager.Domain.HomeSecurityDomain.Entities;
+using SmartHomeManager.Domain.HomeSecurityDomain.Interfaces;
 using SmartHomeManager.Domain.SceneDomain.Entities;
 using SmartHomeManager.Domain.SceneDomain.Interfaces;
 using SmartHomeManager.Domain.SceneDomain.Services;
@@ -52,6 +57,9 @@ namespace SmartHomeManager.API
             builder.Services.AddScoped<IGetRulesService, GetRulesServices>();
             builder.Services.AddScoped<IGetScenariosService, GetScenariosService>();
             builder.Services.AddScoped<IEnergyProfileServices, EnergyProfileServices>();
+            builder.Services.AddScoped<IGenericRepository<HomeSecurity>, HomeSecurityRepository>();
+            builder.Services.AddScoped<IGenericRepository<HomeSecuritySetting>, HomeSecuritySettingRepository>();
+            builder.Services.AddScoped<IHomeSecurityDeviceDefinitionRepository<HomeSecurityDeviceDefinition>, HomeSecurityDeviceDefinitionRepository>();
             #endregion DEPENDENCY INJECTIONS
 
             builder.Services.AddEndpointsApiExplorer();

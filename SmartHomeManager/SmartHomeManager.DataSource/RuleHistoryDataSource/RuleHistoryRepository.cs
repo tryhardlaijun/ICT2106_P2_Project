@@ -14,10 +14,11 @@ namespace SmartHomeManager.DataSource.RuleHistoryDataSource
     {
         private readonly ApplicationDbContext _applicationDbContext;
 
-        public RuleHistoryRepository(ApplicationDbContext applicationDbContext) { 
-            _applicationDbContext= applicationDbContext;
+        public RuleHistoryRepository(ApplicationDbContext applicationDbContext)
+        {
+            _applicationDbContext = applicationDbContext;
         }
-        
+
         public async Task<bool> AddAsync(RuleHistory rh)
         {
             // Add task
@@ -26,7 +27,8 @@ namespace SmartHomeManager.DataSource.RuleHistoryDataSource
                 await _applicationDbContext.RuleHistories.AddAsync(rh);
                 await _applicationDbContext.SaveChangesAsync();
                 return true;
-            } catch
+            }
+            catch
             {
                 return false;
             }
@@ -44,7 +46,7 @@ namespace SmartHomeManager.DataSource.RuleHistoryDataSource
 
         public async Task<IEnumerable<RuleHistory>> GetAllAsync()
         {
-            return await _applicationDbContext.RuleHistories.ToListAsync();            
+            return await _applicationDbContext.RuleHistories.ToListAsync();
         }
 
         public async Task<RuleHistory?> GetByRuleIdAsync(Guid ruleId)
