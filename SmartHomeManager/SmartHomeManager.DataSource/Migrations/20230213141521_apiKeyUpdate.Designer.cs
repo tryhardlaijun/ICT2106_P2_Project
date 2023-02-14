@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartHomeManager.DataSource;
 
@@ -10,9 +11,11 @@ using SmartHomeManager.DataSource;
 namespace SmartHomeManager.DataSource.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230213141521_apiKeyUpdate")]
+    partial class apiKeyUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.2");
@@ -335,10 +338,6 @@ namespace SmartHomeManager.DataSource.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ApiValue")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ConfigurationKey")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("ConfigurationValue")

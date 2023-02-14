@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SmartHomeManager.Domain.SceneDomain.Entities
 {
-    public class Rule
+    public class RuleRequest
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Required]
         public Guid RuleId { get; set; }
 
         [Required]
@@ -14,6 +14,7 @@ namespace SmartHomeManager.Domain.SceneDomain.Entities
 
         [Required]
         public string ConfigurationKey { get; set; }
+
         [Required]
         public int ConfigurationValue { get; set; }
 
@@ -31,10 +32,5 @@ namespace SmartHomeManager.Domain.SceneDomain.Entities
 
         public string? ApiValue { get; set; }
 
-        [ForeignKey("ScenarioId")]
-        public Scenario Scenario { get; set; }
-
-        [ForeignKey("DeviceId")]
-        public Device Device { get; set; }
     }
 }

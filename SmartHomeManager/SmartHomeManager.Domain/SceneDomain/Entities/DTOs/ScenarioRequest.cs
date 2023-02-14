@@ -1,11 +1,11 @@
-﻿using SmartHomeManager.Domain.AccountDomain.Entities;
+﻿using SmartHomeManager.Domain.DeviceDomain.Entities;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SmartHomeManager.Domain.SceneDomain.Entities
+namespace SmartHomeManager.Domain.SceneDomain.Entities.DTOs
 {
-    public class Scenario
-    {
+	public class ScenarioRequest
+	{
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid ScenarioId { get; set; }
 
@@ -17,11 +17,6 @@ namespace SmartHomeManager.Domain.SceneDomain.Entities
 
         [Required]
         public Guid ProfileId { get; set; }
-
-        [ForeignKey("ProfileId")]
-        public Profile Profile { get; set; }
-
-        [Required]
-        public Boolean isActive { get; set; }
     }
 }
+
