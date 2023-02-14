@@ -4,6 +4,7 @@ using SmartHomeManager.Domain.SceneDomain.Services;
 using SmartHomeManager.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.DataSource;
+using SmartHomeManager.Domain.DirectorDomain.Interfaces;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -15,12 +16,10 @@ public class RulesController : ControllerBase
 {
     private readonly RuleServices _registerRuleService;
     private readonly GetRulesServices _getRulesServices;
-    //declare your service here
 
-    public RulesController(IGenericRepository<Rule> ruleRepository)
+    public RulesController(IGenericRepository<Rule> ruleRepository, IInformDirectorServices informDirectorServices)
     {
-        _registerRuleService = new(ruleRepository);
-        //initialize your repository here
+        _registerRuleService = new(ruleRepository, informDirectorServices);
     }
 
     // GET: api/Rules/GetAllRules
@@ -76,13 +75,6 @@ public class RulesController : ControllerBase
             ApiValue = ruleRequest.ApiValue,
         };
         await _registerRuleService.CreateRuleAsync(rule);
-        /*
-         * 
-         * INTERFACE TO BE CALLED: 
-         * informRuleChanges(Guid RuleId, char CUDType)
-         * informRuleChanges(ruleRequest.RuleId, 'c')
-         * 
-         */
         return StatusCode(200, ruleRequest);
     }
 
@@ -91,13 +83,6 @@ public class RulesController : ControllerBase
     public async Task<ActionResult> EditRule(Rule rule)
     {
         await _registerRuleService.EditRuleAsync(rule);
-        /*
-         * 
-         * INTERFACE TO BE CALLED: 
-         * informRuleChanges(Guid RuleId, char CUDType)
-         * informRuleChanges(rule.RuleId, 'e')
-         * 
-         */
         return StatusCode(200, rule);
     }
 
@@ -109,13 +94,6 @@ public class RulesController : ControllerBase
         if (rule != null)
         {
             await _registerRuleService.DeleteRuleByIdAsync(id);
-            /*
-             * 
-             * INTERFACE TO BE CALLED: 
-             * informRuleChanges(Guid RuleId, char CUDType)
-             * informRuleChanges(id, 'd')
-             * 
-             */
             return StatusCode(200, rule);
         }
         return StatusCode(404, "rule not exist");

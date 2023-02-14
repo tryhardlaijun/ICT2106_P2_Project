@@ -27,10 +27,6 @@ namespace SmartHomeManager.API.Controllers.HistoryAPIs
         [HttpGet("GetAllHistory")]
         public async Task<IEnumerable<History>> GetRuleHistories()
         {
-            /*if (_ruleHistoryService.RuleHistors == null)
-            {
-                return NotFound();
-            }*/
             return await _ruleHistoryService.GetAllRulesAsync();
         }
         

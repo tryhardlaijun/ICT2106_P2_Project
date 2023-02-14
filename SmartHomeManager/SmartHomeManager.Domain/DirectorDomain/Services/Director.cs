@@ -2,11 +2,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SmartHomeManager.DataSource.RuleHistoryDataSource;
 using SmartHomeManager.Domain.Common;
+using SmartHomeManager.Domain.DeviceDomain.Entities;
 using SmartHomeManager.Domain.DirectorDomain.Entities;
 using SmartHomeManager.Domain.DirectorDomain.Interfaces;
+using SmartHomeManager.Domain.EnergyProfileDomain.Interfaces;
 using SmartHomeManager.Domain.SceneDomain.Entities;
 using SmartHomeManager.Domain.SceneDomain.Interfaces;
 using System.Data;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 using Rule = SmartHomeManager.Domain.SceneDomain.Entities.Rule;
 
 namespace SmartHomeManager.Domain.DirectorDomain.Services
@@ -14,12 +18,17 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
     public class Director : BackgroundService, IInformDirectorServices
     {
         private readonly IServiceProvider _serviceProvider;
+
+        private readonly IGetRulesService _ruleInterface;
+        private readonly IGetScenariosService _scenarioInterface;
+        private readonly IEnergyProfileServices _energyProfileInterface;
+
+        private readonly IRuleHistoryRepository<RuleHistory> _ruleHistoryRepository;
+        private readonly IGenericRepository<History> _historyRepository;
+
         private List<Rule>? rules;
         private List<Scenario>? scenarios;
-
-        private IGetRulesServices _ruleInterface;
-        private IRuleHistoryRepository<RuleHistory> _ruleHistoryRepository;
-        private IGenericRepository<History> _historyRepository;
+        private DateTime timeMark;
 
         public Director(IServiceProvider serviceProvider)
         {
@@ -28,25 +37,45 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
             var scope = _serviceProvider.CreateScope();
             _ruleHistoryRepository = scope.ServiceProvider.GetRequiredService<IRuleHistoryRepository<RuleHistory>>();
             _historyRepository = scope.ServiceProvider.GetRequiredService<IGenericRepository<History>>();
-            _ruleInterface = scope.ServiceProvider.GetRequiredService<IGetRulesServices>();
+
+            _ruleInterface = scope.ServiceProvider.GetRequiredService<IGetRulesService>();
+            _scenarioInterface = scope.ServiceProvider.GetRequiredService<IGetScenariosService>();
+            _energyProfileInterface = scope.ServiceProvider.GetRequiredService<IEnergyProfileServices>();
+
+            timeMark = DateTime.Now.AddMinutes(-1);
         }
 
+
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-        {
-            
-            rules = (await _ruleInterface.GetAllRules()).ToList();                
+        {            
+            rules = (await _ruleInterface.GetAllRules()).ToList();       
+            scenarios = (await _scenarioInterface.GetAllScenarios()).ToList();
 
             while (!stoppingToken.IsCancellationRequested)
-            {
-                CheckIfRuleTriggered();
-                await Task.Delay(30000);
+            {             
+                if(TimeCheck()) CheckIfRuleTriggered();
+                await Task.Delay(20000);
             }
+        }
+
+        private bool TimeCheck()
+        {
+            var now = DateTime.Now;
+            var timediff = Math.Floor((now - timeMark).TotalMinutes);
+            Console.WriteLine(string.Format("Current Time: {0}\nStored Time: {1}\nTimeDiff: {2}", now, timeMark, timediff));
+            if(timediff > 0) {
+                Console.WriteLine("Go");
+                timeMark = now;
+                return true;
+            }
+            return false;
+            
+
         }
 
         private async void CheckIfRuleTriggered()
         {
-            Console.WriteLine(string.Format("{0} - {1}", "Director", DateTime.Now.ToString("HH:mm:ss.fff")));           
-                       
+            Console.WriteLine(string.Format("{0} - {1}", "Director", DateTime.Now.ToString("HH:mm:ss.fff")));
 
             if (rules != null)
             {
@@ -59,97 +88,83 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
                     {
                         Console.WriteLine("Trigger Detected: " + rule.ScheduleName);
                         var deviceID = rule.DeviceId;
-                        var configKey = "SPEED"; // rule.configurationValue
-                        var configValue = 3; // rule.configurationKey
+                        var configKey = rule.ConfigurationKey;
+                        var configValue = rule.ConfigurationValue;
 
-                        int adjustedConfigValue = 4;// getAdjustedConfigValue(deviceID, configKey, configValue);
+                        int adjustedConfigValue = _energyProfileInterface.getRevisedConfigValue(deviceID, configKey, configValue);
 
+                        // Set device thru device interface
                         // await setDeviceConfig(deviceID, configKey, configValue);
 
                         var configMeaning = string.Format("{0} is set to {1}", configKey, configValue); // await getConfigMeaning(deviceID, configKey, configValue);
                         var storedRule = await _ruleHistoryRepository.GetByRuleIdAsync(rule.RuleId);
-                        Guid ruleHistoryId;
-                        if (storedRule == null || !checkIfRuleHistoryMatch(rule, storedRule))
-                        {
-                            ruleHistoryId = Guid.NewGuid();
-
-                            RuleHistory rh = new RuleHistory();
-                            rh.RuleHistoryId = ruleHistoryId;
-                            rh.RuleIndex = await _ruleHistoryRepository.GetRuleIndexLimitAsync();
-                            rh.RuleName = rule.ScheduleName ?? "";
-                            rh.RuleStartTime = rule.StartTime;
-                            rh.RuleEndTime = rule.EndTime;
-                            // CONTINUE
-
-                            await _ruleHistoryRepository.AddAsync(rh);
-                        }
-                        else
-                        {
-                            ruleHistoryId = storedRule.RuleHistoryId;
-                        }
 
                         History h = new History();
                         h.Message = configMeaning;
                         h.Timestamp = DateTime.Now.AddHours(-8);
                         h.DeviceAdjustedConfiguration = adjustedConfigValue;
                         h.ProfileId = rule.Device.ProfileId;
-                        h.RuleHistoryId = ruleHistoryId;
+                        h.RuleHistoryId = storedRule.RuleHistoryId;
 
                         await _historyRepository.AddAsync(h);
 
+                        // Notify troubleshooter interface
                         // await informTrigger(deviceID, configKey, configValue);
                     }
                 }
-
-            }
-            
+            }            
         }
 
-        
-        private bool checkIfRuleHistoryMatch(Rule r, RuleHistory ruleHistory)
-        {
-            return false;
-        }
-
-        public void InformRuleChanges(Guid ruleID, char operation)
+        public async void InformRuleChangesAsync(Guid ruleID, char operation)
         {
             switch (operation)
             {
-                case 'c':
-                    // Get rule by id from interface, Add new rule
-                    // Add new historyrule
+                case 'c':                    
+                    await addNewRule(await _ruleInterface.GetRuleById(ruleID));                    
                     break;
-                case 'u':
-                    rules = rules.Where(r => r.RuleId != ruleID).ToList();
-                    // Get rule by id from interface, Add new rule
-                    // Add new historyrule 
+                case 'u':                    
+                    rules = rules != null ? rules.Where(r => r.RuleId != ruleID).ToList() : null;
+                    await addNewRule(await _ruleInterface.GetRuleById(ruleID));                                     
                     break;
                 case 'd':
-                    rules = rules.Where(r => r.RuleId != ruleID).ToList();
+                    rules = rules != null ? rules.Where(r => r.RuleId != ruleID).ToList() : null;
                     break;
+            }
+
+            async Task addNewRule(Rule rule){
+                rules.Add(rule);
+                RuleHistory rh = new RuleHistory
+                {
+                    RuleId = ruleID,
+                    RuleIndex = await _ruleHistoryRepository.CountRuleAsync(),
+                    RuleName = rule.ScheduleName ?? "",
+                    RuleStartTime = rule.StartTime,
+                    RuleEndTime = rule.EndTime,
+                    RuleActionTrigger = rule.ActionTrigger,
+                    ScenarioName = rule.Scenario.ScenarioName,
+                    DeviceName = rule.Device.DeviceName,
+                    DeviceConfiguration = string.Format("{0} is triggered", rule.Device.DeviceName) // await getConfigMeaning(rule.Device.DeviceId, rule.ConfigurationKey, rule.ConfigurationValue);
+                };
+                await _ruleHistoryRepository.AddAsync(rh);
             }
         }
 
-        public void InformScenarioChanges(Guid scenarioID, char operation)
+        public async void InformScenarioChangesAsync(Guid scenarioID, char operation)
         {
             switch (operation)
             {
-                case 'c':
-                    // Get scenario by id from interface, Add new scenario
+                case 'c':                    
+                    scenarios.Add(await _scenarioInterface.GetScenarioById(scenarioID));                    
                     break;
-                case 'u':
+                case 'u':                    
                     scenarios = scenarios.Where(s => s.ScenarioId != scenarioID).ToList();
-                    // Get scenario by id from interface, Add new scenario
+                    scenarios.Add(await _scenarioInterface.GetScenarioById(scenarioID));                                     
                     break;
                 case 'd':
                     scenarios = scenarios.Where(s => s.ScenarioId != scenarioID).ToList();
+                    rules = rules != null ? rules.Where(r => r.ScenarioId != scenarioID).ToList() : null;            
                     break;
             }
         }
-
-        //private async void CreateRuleHistory(RuleHistory ruleHistory)
-        //{
-        //    await _ruleHistoryRepository.AddAsync(ruleHistory);
-        //}
     }
 }

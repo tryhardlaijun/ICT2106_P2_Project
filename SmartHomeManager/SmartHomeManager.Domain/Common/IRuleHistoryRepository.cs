@@ -12,6 +12,8 @@ namespace SmartHomeManager.DataSource.RuleHistoryDataSource
         public Task<T?> GetByRuleIdAsync(Guid id);
 
         public Task<int> GetRuleIndexLimitAsync();
+
+        public Task<int> CountRuleAsync();
     }
 }
 

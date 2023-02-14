@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace SmartHomeManager.Domain.DirectorDomain.Interfaces
 {
-    internal interface IInformDirectorServices
+    public interface IInformDirectorServices
     {
-        void InformRuleChanges(Guid ruleID, char operation);
-        void InformScenarioChanges(Guid scenarioID, char operation);
+        void InformRuleChangesAsync(Guid ruleID, char operation);
+        void InformScenarioChangesAsync(Guid scenarioID, char operation);
     }
 }

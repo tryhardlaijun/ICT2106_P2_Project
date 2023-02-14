@@ -71,5 +71,9 @@ namespace SmartHomeManager.DataSource.RuleHistoryDataSource
         {
             return await _applicationDbContext.RuleHistories.MaxAsync(r => r.RuleIndex);
         }
+        public async Task<int> CountRuleAsync()
+        {
+            return await _applicationDbContext.RuleHistories.CountAsync();
+        }
     }
 }

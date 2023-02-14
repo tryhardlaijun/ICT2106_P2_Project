@@ -13,6 +13,8 @@ using SmartHomeManager.Domain.DeviceDomain.Entities;
 using SmartHomeManager.Domain.DirectorDomain.Entities;
 using SmartHomeManager.Domain.DirectorDomain.Services;
 using SmartHomeManager.Domain.EnergyProfileDomain.Entities;
+using SmartHomeManager.Domain.EnergyProfileDomain.Interfaces;
+using SmartHomeManager.Domain.EnergyProfileDomain.Services;
 using SmartHomeManager.Domain.SceneDomain.Entities;
 using SmartHomeManager.Domain.SceneDomain.Interfaces;
 using SmartHomeManager.Domain.SceneDomain.Services;
@@ -47,13 +49,15 @@ namespace SmartHomeManager.API
             builder.Services.AddScoped<IGenericRepository<Profile>, ProfileRepository>();
             builder.Services.AddScoped<IGenericRepository<EnergyProfile>, EnergyProfileRepository>();
             builder.Services.AddScoped<IGenericRepository<Scenario>, ScenarioRepository>();
-            builder.Services.AddScoped<IGetRulesServices, GetRulesServices>();
+            builder.Services.AddScoped<IGetRulesService, GetRulesServices>();
+            builder.Services.AddScoped<IGetScenariosService, GetScenariosService>();
+            builder.Services.AddScoped<IEnergyProfileServices, EnergyProfileServices>();
             #endregion DEPENDENCY INJECTIONS
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            //builder.Services.AddHostedService<Director>();
+            // builder.Services.AddHostedService<Director>();
 
             var app = builder.Build();
 
