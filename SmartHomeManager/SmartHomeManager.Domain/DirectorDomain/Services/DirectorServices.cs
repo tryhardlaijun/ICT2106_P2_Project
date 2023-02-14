@@ -13,7 +13,7 @@ using Rule = SmartHomeManager.Domain.SceneDomain.Entities.Rule;
 
 namespace SmartHomeManager.Domain.DirectorDomain.Services
 {
-    public class Director : BackgroundService, IInformDirectorServices
+    public class DirectorServices : BackgroundService, IInformDirectorServices
     {
         private readonly IServiceProvider _serviceProvider;
 
@@ -28,7 +28,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
         private List<Scenario> scenarios;
         private DateTime timeMark;
 
-        public Director(IServiceProvider serviceProvider)
+        public DirectorServices(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
 
