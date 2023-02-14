@@ -49,7 +49,7 @@ namespace SmartHomeManager.API
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddHostedService<Director>();
+            //builder.Services.AddHostedService<Director>();
 
             var app = builder.Build();
 
@@ -73,5 +73,5 @@ namespace SmartHomeManager.API
 
     }
 
-    
+
 }

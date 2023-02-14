@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace SmartHomeManager.DataSource.EnergyProfileDataSource
 {
+
     public class EnergyProfileRepository : IGenericRepository<EnergyProfile>
     {
         private readonly ApplicationDbContext _applicationDbContext;
