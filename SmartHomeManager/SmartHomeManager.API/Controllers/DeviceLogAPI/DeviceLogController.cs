@@ -37,9 +37,9 @@ namespace SmartHomeManager.API.Controllers.DeviceLogAPI
             return watt;
         }
 
-        // GET: api/DeviceLogs
+        // GET: api/DeviceLog
         [HttpGet]
-        public async Task<ActionResult<DeviceLog>> GetAllDeviceLogs(Guid id)
+        public async Task<ActionResult<DeviceLog>> GetAllDeviceLogs()
         {
             return Ok(await _logReadService.GetAllDeviceLogs());
         }
@@ -78,7 +78,7 @@ namespace SmartHomeManager.API.Controllers.DeviceLogAPI
         }
         // date passed shld be start date of the week
         // GET: api/Analytics/Devices/deviceId?date=xxxxxx
-        [HttpGet("weekly/{deviceId}")]
+        [HttpGet("{deviceId}/{date}")]
         public ActionResult<IEnumerable<DeviceLog>> GetWeeklyDeviceLog(Guid deviceId, DateTime date)
         {
             var totalUsage = 0;

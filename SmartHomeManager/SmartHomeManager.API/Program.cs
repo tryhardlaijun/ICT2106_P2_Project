@@ -10,6 +10,15 @@ namespace SmartHomeManager.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // For allowing React to communicate with API
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(policy =>
+                {
+                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");
+                });
+            });
+
             builder.Services.AddControllers();
 
             #region DEPENDENCY INJECTIONS
@@ -33,6 +42,8 @@ namespace SmartHomeManager.API
 
             app.UseHttpsRedirection();
 
+            app.UseCors();
+
             app.UseAuthorization();
 
             app.MapControllers();
@@ -50,7 +61,7 @@ namespace SmartHomeManager.API
 
                 // in order to use await in a method, the caller method must be async as well
                 // await context.Database.MigrateAsync();
-             
+
 
                 await DeviceLogSeedData.Seed(context);
             }
