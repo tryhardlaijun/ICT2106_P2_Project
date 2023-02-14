@@ -10,6 +10,9 @@ import Backup from "./pages/Backup";
 import Intruder from "./pages/Intruder";
 import Configuration from "./pages/Configuration";
 import EnergyProfile from "./pages/EnergyProfile";
+import Scenario from "./pages/Scenario";
+import SchRule from "pages/SchRule";
+import ActionRule from "pages/ActionRule";
 
 export function App() {
   return (
@@ -25,10 +28,22 @@ export function App() {
           <Route path="/intruder" element={<Intruder />} />
           <Route path="/configuration" element={<Configuration />} />
           <Route path="/energyProfile" element={<EnergyProfile />} />
+		  <Route path="/scenario" element={<Scenario />} />
+					<Route
+						path="/scenario/create/action-rule"
+						element={<ActionRule />}
+					/>
+					<Route
+						path="/scenario/create/time-rule"
+						element={<SchRule />}
+					/>
+					<Route
+						path="/scenario/edit/:id"
+						element={<SchRule />}
+					/>
         </Routes>
       </Router>
     </>
   );
-}
 
 export default App;

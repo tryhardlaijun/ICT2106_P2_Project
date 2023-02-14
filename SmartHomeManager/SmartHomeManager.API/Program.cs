@@ -44,6 +44,7 @@ namespace SmartHomeManager.API
             builder.Services.AddScoped<IGenericRepository<Rule>, RuleRepository>();
             builder.Services.AddScoped<IGenericRepository<Profile>, ProfileRepository>();
             builder.Services.AddScoped<IGenericRepository<EnergyProfile>, EnergyProfileRepository>();
+            builder.Services.AddScoped<IGenericRepository<Scenario>, ScenarioRepository>();
             #endregion DEPENDENCY INJECTIONS
 
             builder.Services.AddEndpointsApiExplorer();
