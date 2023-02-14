@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.AccountDomain.Interfaces;
-using SmartHomeManager.Domain.DeviceDomain.Entities;
 
 namespace SmartHomeManager.Domain.AccountDomain.Services
 {
@@ -19,7 +18,7 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
             _profileRepository = profileRepository;
         }
 
-        public async Task<int> CreateProfile(Profile profile)
+        public async Task<string> CreateProfile(Profile profile)
         {
             Profile newProfile = new Profile();
             newProfile.ProfileId = new Guid();
@@ -39,41 +38,11 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
 
                 if (saveResponse > 0)
                 {
-                    return 1;
+                    return "Profile created successfully";
                 }
             }
 
-            return 2;
-        }
-
-        public async Task<IEnumerable<Profile?>> GetAllProfiles(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<Profile?> GetProfileByProfileId(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<IEnumerable<Profile?>> GetProfilesByAccountId(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<IEnumerable<Device?>> GetDevicesByProfileId(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<bool> UpdateProfile(Profile profile)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<bool> DeleteProfile(Guid id)
-        {
-            throw new NotImplementedException();
+            return "Profile not added";
         }
     }
 }

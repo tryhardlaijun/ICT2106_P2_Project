@@ -23,28 +23,7 @@ namespace SmartHomeManager.DataSource.ProfileDataSource
             await _dbContext.Profiles.AddAsync(profile);
 
             return true;
-        } 
-
-        public async Task<bool> DeleteAsync(Profile profile)
-        {
-            throw new NotImplementedException();
         }
-
-        public async Task<bool> DeleteByIdAsync(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<IEnumerable<Profile>> GetAllAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<Profile?> GetByIdAsync(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<int> SaveAsync()
         {
             int result = await _dbContext.SaveChangesAsync();
@@ -52,7 +31,37 @@ namespace SmartHomeManager.DataSource.ProfileDataSource
             return result;
         }
 
-        public async Task<bool> UpdateAsync(Profile profile)
+        Task<bool> IProfileRepository.AddAsync(Profile profile)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<bool> IProfileRepository.DeleteAsync(Profile profile)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<bool> IProfileRepository.DeleteByIdAsync(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<IEnumerable<Profile>> IProfileRepository.GetAllAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<Profile?> IProfileRepository.GetByIdAsync(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<int> IProfileRepository.SaveAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<bool> IProfileRepository.UpdateAsync(Profile profile)
         {
             throw new NotImplementedException();
         }
