@@ -6,6 +6,7 @@ namespace SmartHomeManager.Domain.NotificationDomain.Entities
 {
     public class Notification
     {
+        public static Guid Accountid { get; set; }
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid NotificationId { get; set; }
 

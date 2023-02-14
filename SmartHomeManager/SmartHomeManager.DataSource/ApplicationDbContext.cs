@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SmartHomeManager.DataSource;
 using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.DeviceDomain.Entities;
 using SmartHomeManager.Domain.DeviceLoggingDomain.Entities;
@@ -59,5 +60,10 @@ namespace SmartHomeManager.DataSource
                 .OnDelete(DeleteBehavior.SetNull);
         }
 
+        internal Notification? Find(Guid? id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
+
