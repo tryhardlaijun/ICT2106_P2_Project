@@ -7,6 +7,11 @@ using System.IO;
 using System.Net;
 using System.Net.Mail;
 using System.Diagnostics;
+using SmartHomeManager.Domain.AccountDomain.Entities;
+using SmartHomeManager.Domain.AccountDomain.Interfaces;
+using SmartHomeManager.Domain.AccountDomain.DTOs;
+
+
 
 namespace SmartHomeManager.Domain.AccountDomain.Services
 {
@@ -15,6 +20,15 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
         private const string From = "1004companyemail@gmail.com";
         private const string GoogleAppPassword = "alirejlqrkfqisji";
         private const string Subject = "Test email";
+
+        private readonly IAccountRepository _accountRepository;
+
+        public EmailService(IAccountRepository accountRepository)
+        {
+            _accountRepository = accountRepository;
+        }
+
+
         
         public bool SendRegistrationEmail(string username, string recipient)
         {
@@ -35,7 +49,38 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
                 return false;
             }
         }
+        public async Task<bool> SendPurchaseEmailConfirmation(Guid accountId)
+        {
 
+            Account account = await _accountRepository.GetByIdAsync(accountId);
+
+            string messageBody = "You have purchased device xxx";
+
+            if (account == null)
+            {
+                return false;
+
+            }
+            else
+            {
+
+                try
+                {
+                    var smtpClient = setupClient();
+                    string recipient = account.Email.ToString();
+                    var mailMessage = setupMessage(messageBody, recipient);
+
+                    smtpClient.Send(mailMessage);
+                    return true;
+                }
+
+                catch (Exception e)
+                {
+                    Debug.WriteLine(e);
+                    return false;
+                }
+            } 
+        }
         public SmtpClient setupClient()
         {
             var smtpClient = new SmtpClient("smtp.gmail.com")
@@ -62,6 +107,8 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
 
             return mailMessage;
         }
+
+     
     }
 }
 

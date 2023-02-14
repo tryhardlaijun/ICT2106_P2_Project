@@ -7,12 +7,15 @@ using System.Threading.Tasks;
 using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.AccountDomain.Interfaces;
 using SmartHomeManager.Domain.DeviceDomain.Entities;
+using SmartHomeManager.Domain.DeviceDomain.Interfaces;
 
 namespace SmartHomeManager.Domain.AccountDomain.Services
 {
     public class ProfileService
     {
         private readonly IProfileRepository _profileRepository;
+        private readonly IDeviceRepository _deviceRepository;
+
 
         public ProfileService(IProfileRepository profileRepository)
         {
@@ -53,7 +56,15 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
 
         public async Task<Profile?> GetProfileByProfileId(Guid id)
         {
-            throw new NotImplementedException();
+            Profile? profile = await _profileRepository.GetByIdAsync(id);
+
+            if (profile == null)
+            {
+                return null;    
+            }
+
+            return profile;
+            
         }
 
         public async Task<IEnumerable<Profile?>> GetProfilesByAccountId(Guid id)
@@ -63,7 +74,16 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
 
         public async Task<IEnumerable<Device?>> GetDevicesByProfileId(Guid id)
         {
-            throw new NotImplementedException();
+
+            Profile profile = await _profileRepository.GetByIdAsync(id);
+            if (profile == null)
+            {
+                return null;
+            }
+
+            IEnumerable<Device> devices = await _deviceRepository.GetAllAsync();
+
+            return devices;
         }
 
         public async Task<bool> UpdateProfile(Profile profile)
@@ -75,5 +95,6 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
         {
             throw new NotImplementedException();
         }
+
     }
 }
