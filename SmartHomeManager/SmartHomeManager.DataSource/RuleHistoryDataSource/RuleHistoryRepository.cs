@@ -51,7 +51,7 @@ namespace SmartHomeManager.DataSource.RuleHistoryDataSource
 
         public async Task<RuleHistory?> GetByRuleIdAsync(Guid ruleId)
         {
-            return await _applicationDbContext.RuleHistories.Where(r => r.RuleHistoryId == ruleId).LastAsync();
+            return await _applicationDbContext.RuleHistories.Where(r => r.RuleId == ruleId).OrderByDescending(r => r.RuleIndex).FirstAsync();
         }
 
         public Task<RuleHistory?> GetByIdAsync(Guid id)

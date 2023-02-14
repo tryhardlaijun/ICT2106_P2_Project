@@ -2,15 +2,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SmartHomeManager.DataSource.RuleHistoryDataSource;
 using SmartHomeManager.Domain.Common;
-using SmartHomeManager.Domain.DeviceDomain.Entities;
 using SmartHomeManager.Domain.DirectorDomain.Entities;
 using SmartHomeManager.Domain.DirectorDomain.Interfaces;
 using SmartHomeManager.Domain.EnergyProfileDomain.Interfaces;
 using SmartHomeManager.Domain.SceneDomain.Entities;
 using SmartHomeManager.Domain.SceneDomain.Interfaces;
 using System.Data;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using Rule = SmartHomeManager.Domain.SceneDomain.Entities.Rule;
 
 namespace SmartHomeManager.Domain.DirectorDomain.Services
@@ -26,8 +24,8 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
         private readonly IRuleHistoryRepository<RuleHistory> _ruleHistoryRepository;
         private readonly IGenericRepository<History> _historyRepository;
 
-        private List<Rule>? rules;
-        private List<Scenario>? scenarios;
+        private List<Rule> rules;
+        private List<Scenario> scenarios;
         private DateTime timeMark;
 
         public Director(IServiceProvider serviceProvider)
@@ -42,6 +40,8 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
             _scenarioInterface = scope.ServiceProvider.GetRequiredService<IGetScenariosService>();
             _energyProfileInterface = scope.ServiceProvider.GetRequiredService<IEnergyProfileServices>();
 
+            rules = new List<Rule>();
+            scenarios= new List<Scenario>();
             timeMark = DateTime.Now.AddMinutes(-1);
         }
 
@@ -54,7 +54,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
             while (!stoppingToken.IsCancellationRequested)
             {             
                 if(TimeCheck()) CheckIfRuleTriggered();
-                await Task.Delay(20000);
+                await Task.Delay(10000);
             }
         }
 
@@ -62,29 +62,24 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
         {
             var now = DateTime.Now;
             var timediff = Math.Floor((now - timeMark).TotalMinutes);
-            Console.WriteLine(string.Format("Current Time: {0}\nStored Time: {1}\nTimeDiff: {2}", now, timeMark, timediff));
-            if(timediff > 0) {
-                Console.WriteLine("Go");
-                timeMark = now;
+            if (timediff > 0) {
+                timeMark = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0);
                 return true;
             }
             return false;
-            
-
         }
 
         private async void CheckIfRuleTriggered()
         {
-            Console.WriteLine(string.Format("{0} - {1}", "Director", DateTime.Now.ToString("HH:mm:ss.fff")));
+            Console.WriteLine(string.Format("System Time: {0}", DateTime.Now.ToString("HH:mm:ss.fff")));
 
-            if (rules != null)
+            if (rules.Any())
             {
                 var rLength = rules.Count();
                 foreach (var rule in rules)
                 {
                     var timeDiff = Math.Floor((DateTime.Now - Convert.ToDateTime(rule.StartTime)).TotalMinutes);
-                    Console.WriteLine(string.Format("Rule {0}: {1} {2}", rule.ScheduleName, rule.StartTime, timeDiff));
-                    if (false || timeDiff == 0)
+                    if (timeDiff == 0)
                     {
                         Console.WriteLine("Trigger Detected: " + rule.ScheduleName);
                         var deviceID = rule.DeviceId;
@@ -101,7 +96,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
 
                         History h = new History();
                         h.Message = configMeaning;
-                        h.Timestamp = DateTime.Now.AddHours(-8);
+                        h.Timestamp = DateTime.Now;
                         h.DeviceAdjustedConfiguration = adjustedConfigValue;
                         h.ProfileId = rule.Device.ProfileId;
                         h.RuleHistoryId = storedRule.RuleHistoryId;
@@ -122,22 +117,22 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
                 case 'c':                    
                     await addNewRule(await _ruleInterface.GetRuleById(ruleID));                    
                     break;
-                case 'u':                    
-                    rules = rules != null ? rules.Where(r => r.RuleId != ruleID).ToList() : null;
+                case 'u':
+                    rules = rules.Where(r => r.RuleId != ruleID).ToList();
                     await addNewRule(await _ruleInterface.GetRuleById(ruleID));                                     
                     break;
                 case 'd':
-                    rules = rules != null ? rules.Where(r => r.RuleId != ruleID).ToList() : null;
+                    rules = rules.Where(r => r.RuleId != ruleID).ToList();
                     break;
             }
 
-            async Task addNewRule(Rule rule){
+            async Task addNewRule(Rule rule){                
                 rules.Add(rule);
                 RuleHistory rh = new RuleHistory
                 {
                     RuleId = ruleID,
                     RuleIndex = await _ruleHistoryRepository.CountRuleAsync(),
-                    RuleName = rule.ScheduleName ?? "",
+                    ScheduleName = rule.ScheduleName ?? "",
                     RuleStartTime = rule.StartTime,
                     RuleEndTime = rule.EndTime,
                     RuleActionTrigger = rule.ActionTrigger,
@@ -162,7 +157,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
                     break;
                 case 'd':
                     scenarios = scenarios.Where(s => s.ScenarioId != scenarioID).ToList();
-                    rules = rules != null ? rules.Where(r => r.ScenarioId != scenarioID).ToList() : null;            
+                    rules = rules.Where(r => r.ScenarioId != scenarioID).ToList();            
                     break;
             }
         }
