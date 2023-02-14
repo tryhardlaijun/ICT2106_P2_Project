@@ -92,14 +92,14 @@ namespace SmartHomeManager.API.Controllers.ProfileController
         [HttpPost]
         public async Task<ActionResult> PostProfile([FromBody] Profile profile)
         {
-            string response = await _profileService.CreateProfile(profile);
+            int response = await _profileService.CreateProfile(profile);
 
-            if (response == "Profile created successfully")
+            if (response == 1)
             {
-                return Ok("Profile created successfully");
+                return Ok(1);
             }
 
-            return BadRequest(response);
+            return BadRequest(1);
         }
 
         /*// DELETE: api/Profiles/5
