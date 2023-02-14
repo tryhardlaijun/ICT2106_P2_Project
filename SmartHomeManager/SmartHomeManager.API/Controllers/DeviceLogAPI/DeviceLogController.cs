@@ -65,13 +65,16 @@ namespace SmartHomeManager.API.Controllers.DeviceLogAPI
         {   
             var date = DateTime.Now.Date;
             var totalUsage = 0;
+            var totalActivity = 0;
             var result = _logReadService.GetDeviceLogByDateAndTime(deviceId, date, startTime, endTime);
             if (!result.Any()) return NotFound();
             foreach (var item in result)
             {
                 totalUsage += item.DeviceEnergyUsage;
+                totalActivity += item.DeviceActivity;
             }
-            return Ok(totalUsage);
+            double []res = { totalUsage, totalActivity};
+            return Ok(res);
         }
         // date passed shld be start date of the week
         // GET: api/Analytics/Devices/deviceId?date=xxxxxx
@@ -79,13 +82,16 @@ namespace SmartHomeManager.API.Controllers.DeviceLogAPI
         public ActionResult<IEnumerable<DeviceLog>> GetWeeklyDeviceLog(Guid deviceId, DateTime date)
         {
             var totalUsage = 0;
+            var totalActivity = 0;
             var result = _logReadService.GetDeviceLogByDay(deviceId, date);
             if (!result.Any()) return NotFound();
             foreach (var item in result)
             {
                 totalUsage += item.DeviceEnergyUsage;
+                totalActivity += item.DeviceActivity;
             }
-            return Ok(totalUsage);
+            double[] res = { totalUsage, totalActivity };
+            return Ok(res);
         }
 
 

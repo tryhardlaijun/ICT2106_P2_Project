@@ -22,10 +22,7 @@ namespace SmartHomeManager.DataSource.DeviceLogDataSource
             this._dbSet = db.Set<DeviceLog>();
         }
 
-        public void Add(DeviceLog entity)
-        {
-            _dbSet.Add(entity);
-        }
+       
 
         public IEnumerable<DeviceLog> Get(Guid deviceId, DateTime date)
         {
@@ -77,6 +74,10 @@ namespace SmartHomeManager.DataSource.DeviceLogDataSource
             await _db.SaveChangesAsync();
         }
 
+        public void Add(DeviceLog entity)
+        {
+            _dbSet.Add(entity);
+        }
         public void Update(DeviceLog entity)
         {
             _dbSet.Update(entity);

@@ -47,6 +47,7 @@ namespace SmartHomeManager.Domain.DeviceLoggingDomain.Services
             var resp = res.Select(log => new GetDeviceLogWebRequest
             {
                 DeviceEnergyUsage = (int)log.DeviceEnergyUsage,
+                DeviceActivity = (int)log.DeviceActivity,
             }).ToList();
 
             return resp;
@@ -80,6 +81,7 @@ namespace SmartHomeManager.Domain.DeviceLoggingDomain.Services
             var resp = res.Select(log => new GetDeviceLogWebRequest
             {
                 DeviceEnergyUsage = (int)log.DeviceEnergyUsage,
+                DeviceActivity = (int)log.DeviceActivity,
             }).ToList();
 
             return resp;
