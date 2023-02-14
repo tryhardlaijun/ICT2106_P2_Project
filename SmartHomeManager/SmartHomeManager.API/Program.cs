@@ -14,6 +14,7 @@ using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.DeviceDomain.Entities;
 using SmartHomeManager.Domain.DirectorDomain.Entities;
+using SmartHomeManager.Domain.DirectorDomain.Interfaces;
 using SmartHomeManager.Domain.DirectorDomain.Services;
 using SmartHomeManager.Domain.EnergyProfileDomain.Entities;
 using SmartHomeManager.Domain.EnergyProfileDomain.Interfaces;

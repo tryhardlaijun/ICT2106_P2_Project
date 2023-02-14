@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.DirectorDomain.Entities;
+using SmartHomeManager.Domain.DirectorDomain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;

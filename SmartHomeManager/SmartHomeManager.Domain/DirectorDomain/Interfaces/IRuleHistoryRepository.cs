@@ -1,7 +1,7 @@
 ﻿using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.DirectorDomain.Entities;
 
-namespace SmartHomeManager.DataSource.RuleHistoryDataSource
+namespace SmartHomeManager.Domain.DirectorDomain.Interfaces
 {
     /// <summary>
     /// Most repositories should extend this interface for dependency injection.

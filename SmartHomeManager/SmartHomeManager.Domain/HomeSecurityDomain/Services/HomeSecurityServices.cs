@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using SmartHomeManager.DataSource.RuleHistoryDataSource;
 using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.DirectorDomain.Entities;
+using SmartHomeManager.Domain.DirectorDomain.Interfaces;
 using SmartHomeManager.Domain.HomeSecurityDomain.Entities;
 using SmartHomeManager.Domain.HomeSecurityDomain.Interfaces;
 using System;
