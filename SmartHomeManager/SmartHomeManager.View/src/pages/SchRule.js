@@ -20,20 +20,11 @@ function FormCard({ ruleInfo, updateForm }) {
 	let startTime = ruleInfo.startTime==="" ? "00:00:00":new Date(ruleInfo.startTime).toLocaleTimeString("en-SG",{hour12: false});
 	let endTime = ruleInfo.endTime==="" ? "00:00:00":new Date(ruleInfo.endTime).toLocaleTimeString("en-SG",{hour12: false});
 	let originalDevice = ruleInfo.deviceId
-	function convertToSG(hour){
-		if(hour + 8===24){
-			return 0
-		}
-		if(hour + 8 >= 24){
-			return hour+8 - 24
-		}
-		return hour+8
-	}
 	function makeDate(time){
 		console.log(time);
 		let validDate = new Date();
 		let timeArray = time.split(":")
-		validDate.setHours(convertToSG(timeArray[0]), timeArray[1])
+		validDate.setHours(timeArray[0], timeArray[1])
 		console.log(validDate);
 		return validDate.toISOString()
 	}
@@ -46,9 +37,9 @@ function FormCard({ ruleInfo, updateForm }) {
 				variant="unstyled"
 				placeholder="ENTER NAME"
 				size="lg"
-				value={ruleInfo.scheduleName}
+				value={ruleInfo.RuleName}
 				onChange={(e) => {
-					updateForm({ scheduleName: e.target.value });
+					updateForm({ RuleName: e.target.value });
 				}}
 			/>
 			<Flex mt="2%">
@@ -111,7 +102,7 @@ export default function SchRule() {
 		configurationKey: uuidv4(),
 		configurationValue: 0,
 		actionTrigger: "string",
-		scheduleName: "string1",
+		RuleName: "string1",
 		startTime: "",
 		endTime: "",
 		deviceId: "5CDDF6A7-C3B8-47A7-9DA1-19E1795EBF69",

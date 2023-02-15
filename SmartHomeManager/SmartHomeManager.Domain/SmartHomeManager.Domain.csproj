@@ -16,6 +16,7 @@
     <Folder Include="SceneDomain\Entities\DTOs\" />
     <Folder Include="SceneDomain\Interfaces\" />
   </ItemGroup>
+  <ItemGroup>
     <Compile Remove="EnergyProfile\**" />
     <EmbeddedResource Remove="EnergyProfile\**" />
     <None Remove="EnergyProfile\**" />
