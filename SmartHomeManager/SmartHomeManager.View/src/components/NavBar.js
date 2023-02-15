@@ -5,6 +5,8 @@ import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 
 import { Link as RouterLink } from "react-router-dom";
 
+import Notification from "components/Notification/Notification"
+
 export function NavBar() {
   const { isOpen, onToggle } = useDisclosure();
   return (
@@ -38,9 +40,11 @@ export function NavBar() {
           </Flex>
         </Flex>
 
+
+        <Notification />
+
         <Stack flex={{ base: 1, md: 0 }} justify={"flex-end"} direction={"row"} spacing={6}>
-          <Button fontSize={"sm"} fontWeight={400} variant={"link"} as={RouterLink}
-            to="/login">
+          <Button fontSize={"sm"} fontWeight={400} variant={"link"} as={RouterLink} to="/login">
             Sign In
           </Button>
           <Button
@@ -57,6 +61,7 @@ export function NavBar() {
           >
             Sign Up
           </Button>
+          
         </Stack>
       </Flex>
 
@@ -145,10 +150,19 @@ const NAV_ITEMS = [
   },
   {
     label: "Scenario",
-    href: "Scenario",
+    href: "/Scenario",
   },
   {
     label: "Rooms",
     href: "/rooms",
   },
+  {
+    label: "Device Config",
+    href: "/config"
+  },
+  {
+    label: "Analytics",
+    href: "/analytics",
+  },
+    
 ];

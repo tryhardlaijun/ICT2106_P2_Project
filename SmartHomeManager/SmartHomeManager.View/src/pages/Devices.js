@@ -1,6 +1,10 @@
 import React from "react";
-
-export default function Devices() {
-    return <div>Devices</div>;
+import DeviceLogging from "components/DeviceLogging";
+function Devices() {
+    return (
+        <div className="container mt-3">
+            <DeviceLogging />
+        </div>
+    );
 }
-
+export default Devices;

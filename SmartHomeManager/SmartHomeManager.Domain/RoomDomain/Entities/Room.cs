@@ -21,6 +21,6 @@ namespace SmartHomeManager.Domain.RoomDomain.Entities
 
         public RoomCoordinate RoomCoordinate { get; set; }
 
-        public Device Device { get; set; }
+        public List<Device> Devices { get; set; }
     }
 }

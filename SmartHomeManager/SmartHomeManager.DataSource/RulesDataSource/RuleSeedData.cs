@@ -62,7 +62,6 @@ public class RuleSeedData
             {
                 ScenarioId = new("AC38AF14-9A57-4DF3-89F3-78F9CE9F4983"),
                 ScenarioName = "string",
-                RuleList = "string",
                 ProfileId = profiles[0].ProfileId
             }
         };

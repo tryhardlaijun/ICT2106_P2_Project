@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SmartHomeManager.DataSource;
 using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.DeviceDomain.Entities;
 using SmartHomeManager.Domain.DeviceLoggingDomain.Entities;
@@ -10,6 +11,7 @@ using SmartHomeManager.Domain.SceneDomain.Entities;
 using SmartHomeManager.Domain.HomeSecurityDomain.Entities;
 using SmartHomeManager.Domain.APIDomain.Entities;
 using SmartHomeManager.Domain.EnergyProfileDomain.Entities;
+using SmartHomeManager.Domain.AnalysisDomain.Entities;
 
 namespace SmartHomeManager.DataSource;
 
@@ -42,6 +44,10 @@ public class ApplicationDbContext : DbContext
         APIValues = base.Set<APIValue>();
         EnergyProfiles = base.Set<EnergyProfile>();
         DeviceProducts = base.Set<DeviceProduct>();
+        CarbonFootprints = base.Set<CarbonFootprint>();
+        ForecastCharts = base.Set<ForecastChart>();
+        ForecastChartsData = base.Set<ForecastChartData>();
+        EnergyEfficiency = base.Set<EnergyEfficiency>();
     }
 
     public DbSet<Account> Accounts { get; }
@@ -69,6 +75,11 @@ public class ApplicationDbContext : DbContext
     public DbSet<APIKey> APIKeys { get; }
     public DbSet<APIValue> APIValues { get; }
     public DbSet<EnergyProfile> EnergyProfiles { get; }
+    public DbSet<CarbonFootprint> CarbonFootprints { get; }
+    public DbSet<ForecastChart> ForecastCharts { get; }
+    public DbSet<ForecastChartData> ForecastChartsData { get; }
+    public DbSet<EnergyEfficiency> EnergyEfficiency { get; }
+
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -81,11 +92,11 @@ public class ApplicationDbContext : DbContext
 
         // Remove on delete cascade, make RoomId nullable on Device table...
         modelBuilder.Entity<Room>()
-            .HasOne(room => room.Device)
-            .WithOne(device => device.Room)
-            .HasForeignKey<Device>(device => device.RoomId)
-            .IsRequired(false)
-            .OnDelete(DeleteBehavior.SetNull);
+                    .HasMany(room => room.Devices)
+                    .WithOne(device => device.Room)
+                    .HasForeignKey(device => device.RoomId)
+                    .IsRequired(false)
+                    .OnDelete(DeleteBehavior.SetNull);
 
         modelBuilder.Entity<DeviceProfile>().HasKey(deviceProfile => new { deviceProfile.DeviceId, deviceProfile.ProfileId });
     }

@@ -8,21 +8,21 @@ public class DeviceProduct
     [Key]
     [Required]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
+    public int ProductId { get; set; }
 
-    [Required] public string Name { get; set; }
+    [Required] public string ProductName { get; set; }
 
-    [Required] public string Brand { get; set; }
+    [Required] public string ProductBrand { get; set; }
 
-    [Required] public string Model { get; set; }
+    [Required] public string ProductModel { get; set; }
 
-    [Required] public string Type { get; set; }
+    [Required] public string DeviceType { get; set; }
 
-    [Required] public string Description { get; set; }
+    [Required] public string ProductDescription { get; set; }
 
-    [Required] public float Price { get; set; }
+    [Required] public double ProductPrice { get; set; }
 
-    [Required] public int Quantity { get; set; }
+    [Required] public int ProductQuantity { get; set; }
 
-    [Required] public string ImageUrl { get; set; }
+    [Required] public string ProductImageUrl { get; set; }
 }
