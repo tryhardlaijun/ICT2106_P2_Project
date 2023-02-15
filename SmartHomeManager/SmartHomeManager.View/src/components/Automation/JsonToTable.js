@@ -11,16 +11,16 @@ import {
     Box
 } from '@chakra-ui/react'
 import React from "react";
-import JsonData from "./dummyData.json";
 import Buttons from "./Buttons" 
 
-function jsonToTable() {
-    const DisplayData = JsonData.map((info) => {
+function jsonToTable({ruleData}) {
+    console.log(ruleData);
+    const DisplayData = ruleData.map((info) => {
         return (
-            <Tr key={info.RuleID}>
-                <Td>{info.RuleName}</Td>
-                <Td>{info.DeviceName}</Td>
-                <Td>{info.Description}</Td>
+            <Tr key={info.ruleId}>
+                <Td>{info.scheduleName}</Td>
+                <Td>{info.deviceId}</Td>
+                <Td>{info.startTime}</Td>
                 <Buttons props={info} />
             </Tr>
         );

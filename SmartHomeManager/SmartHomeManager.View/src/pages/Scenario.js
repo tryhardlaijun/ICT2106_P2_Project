@@ -11,12 +11,31 @@ import {
 	useDisclosure,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import JsonToTable from "components/Automation/JsonToTable";
 import ModalButton from "components/Automation/ModalButton";
+import axios from "axios";
 
 export default function Scenarios() {
 	const { isOpen, onOpen, onClose } = useDisclosure();
+	const [ allRules, setAllRules] = useState([])
+	useEffect(()=>{
+		async function getAllRules(){
+			const response = await axios(
+				`http://localhost:5186/api/Rules/GetAllRules`
+			)
+			const details = await response.data
+			console.log(details);
+			setAllRules(details)
+			return
+		}
+		getAllRules().then(()=>{
+			console.log("all rules")
+		})
+		.catch((error)=>{
+			console.log(error);
+		})
+	},[])
 	return (
 		<Box padding="16">
 			<Heading alignContent="center">Profile : Wen Jun</Heading>
@@ -43,7 +62,7 @@ export default function Scenarios() {
 					</MenuList>
 				</Menu>
 			</Box>
-			<JsonToTable />
+			<JsonToTable ruleData = {allRules}/>
 			<Box padding="3" display="flex">
 				<Box width="50%" display="flex" justifyContent="flex-start">
 					<Button ml={2} colorScheme="whatsapp">
