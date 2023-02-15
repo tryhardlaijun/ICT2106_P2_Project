@@ -27,5 +27,8 @@ namespace SmartHomeManager.Domain.AccountDomain.Entities
 
         [Required]
         public string Password { get; set; }
+
+        [Required]
+        public int DevicesOnboarded { get; set; }
     }
 }
