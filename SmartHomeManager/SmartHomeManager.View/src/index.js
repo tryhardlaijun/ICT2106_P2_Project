@@ -6,11 +6,15 @@ import reportWebVitals from './reportWebVitals';
 import { ChakraProvider } from '@chakra-ui/react';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
+// Removed React.StrictNode, prevent API calls from calling twice
+// https://stackoverflow.com/questions/73002902/api-getting-called-twice-in-react
+
 root.render(
     <ChakraProvider>
-        <React.StrictMode>
+        {/* <React.StrictMode> */}
             <App />
-        </React.StrictMode>
+        {/* </React.StrictMode> */}
     </ChakraProvider>
 );
 
