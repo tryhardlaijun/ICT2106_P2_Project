@@ -93,7 +93,7 @@ export default function RegisterDevice() {
         deviceWatts: deviceWatts,
         deviceTypeName: deviceTypeName,
         deviceSerialNumber: deviceSerialNumber,
-        accountId: "06419047-3d8e-47fa-a239-80b7f78c4a2e",
+        accountId: "11111111-1111-1111-1111-111111111111",
       }),
     }).then((response) => {
       if (response.ok) {

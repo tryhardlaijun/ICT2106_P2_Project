@@ -85,7 +85,6 @@ public class RuleSeedData
                 DeviceModel = "Hue",
                 DeviceTypeName = deviceTypes[0].DeviceTypeName,
                 AccountId = accounts[0].AccountId,
-                ProfileId = profiles[0].ProfileId,
             }
         };
 

@@ -18,7 +18,7 @@ function jsonToTable({ruleData}) {
     const DisplayData = ruleData.map((info) => {
         return (
             <Tr key={info.ruleId}>
-                <Td>{info.RuleName}</Td>
+                <Td>{info.ruleName}</Td>
                 <Td>{info.deviceId}</Td>
                 <Td>{info.startTime}</Td>
                 <Buttons props={info} />

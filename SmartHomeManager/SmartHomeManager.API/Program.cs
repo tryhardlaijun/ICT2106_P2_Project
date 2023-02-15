@@ -60,25 +60,22 @@ public class Program
             options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
         });
 
-            #region DEPENDENCY INJECTIONS
-            builder.Services.AddDbContext<ApplicationDbContext>(options =>
-            {
-                options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
-            });
-            builder.Services.AddScoped<IGenericRepository<History>, DataSource.HistoryDataSource.HistoryRepository>();
-            builder.Services.AddScoped<IRuleHistoryRepository<RuleHistory>, RuleHistoryRepository>();
-            builder.Services.AddScoped<IGenericRepository<Rule>, RuleRepository>();
-            builder.Services.AddScoped<IGenericRepository<Profile>, ProfileRepository>();
-            builder.Services.AddScoped<IGenericRepository<EnergyProfile>, EnergyProfileRepository>();
-            builder.Services.AddScoped<IGenericRepository<Scenario>, ScenarioRepository>();
-            builder.Services.AddScoped<IGetRulesService, GetRulesServices>();
-            builder.Services.AddScoped<IGetScenariosService, GetScenariosService>();
-            builder.Services.AddScoped<IInformDirectorServices, DirectorServices>();
-            builder.Services.AddScoped<IEnergyProfileServices, EnergyProfileServices>();
-            builder.Services.AddScoped<IGenericRepository<HomeSecurity>, HomeSecurityRepository>();
-            builder.Services.AddScoped<IGenericRepository<HomeSecuritySetting>, HomeSecuritySettingRepository>();
-            builder.Services.AddScoped<IHomeSecurityDeviceDefinitionRepository<HomeSecurityDeviceDefinition>, HomeSecurityDeviceDefinitionRepository>();
-            #endregion DEPENDENCY INJECTIONS
+        // MODULE 3
+        builder.Services.AddScoped<IGenericRepository<History>, DataSource.HistoryDataSource.HistoryRepository>();
+        builder.Services.AddScoped<IRuleHistoryRepository<RuleHistory>, RuleHistoryRepository>();
+        builder.Services.AddScoped<IGenericRepository<Rule>, RuleRepository>();
+        builder.Services.AddScoped<IGenericRepository<EnergyProfile>, EnergyProfileRepository>();
+        builder.Services.AddScoped<IGenericRepository<Scenario>, ScenarioRepository>();
+        builder.Services.AddScoped<IGetRulesService, GetRulesServices>();
+        builder.Services.AddScoped<IGetScenariosService, GetScenariosService>();
+        builder.Services.AddScoped<IInformDirectorServices, DirectorServices>();
+        builder.Services.AddScoped<IEnergyProfileServices, EnergyProfileServices>();
+        builder.Services.AddScoped<IGenericRepository<HomeSecurity>, HomeSecurityRepository>();
+        builder.Services.AddScoped<IGenericRepository<HomeSecuritySetting>, HomeSecuritySettingRepository>();
+        builder.Services.AddScoped<IHomeSecurityDeviceDefinitionRepository<HomeSecurityDeviceDefinition>, HomeSecurityDeviceDefinitionRepository>();
+        
+        builder.Services.AddHostedService<DirectorServices>();
+
         // DEVICE
         builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();
         builder.Services.AddScoped<IDeviceTypeRepository, DeviceTypeRepository>();
@@ -86,8 +83,6 @@ public class Program
         // ROOM
         builder.Services.AddScoped<IRoomRepository, RoomRepository>();
         builder.Services.AddScoped<IDeviceInformationServiceMock, DeviceRepositoryMock>();
-
-            builder.Services.AddHostedService<DirectorServices>();
 
         // ACCOUNT
         builder.Services.AddScoped<IAccountRepository, AccountRepository>();
@@ -120,6 +115,5 @@ public class Program
 
         app.Run();
     }
-
 
 }

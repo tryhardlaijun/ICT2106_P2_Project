@@ -97,7 +97,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
                         h.Message = configMeaning;
                         h.Timestamp = DateTime.Now;
                         h.DeviceAdjustedConfiguration = adjustedConfigValue;
-                        h.ProfileId = rule.Device.ProfileId;
+                        h.ProfileId = rule.Scenario.ProfileId;
                         h.RuleHistoryId = storedRule.RuleHistoryId;
 
                         await _historyRepository.AddAsync(h);
