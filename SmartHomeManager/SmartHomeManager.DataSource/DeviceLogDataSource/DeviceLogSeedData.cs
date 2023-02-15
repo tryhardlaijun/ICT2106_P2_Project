@@ -13,6 +13,11 @@ namespace SmartHomeManager.DataSource.DeviceLogDataSource
 {
     public class DeviceLogSeedData
     {
+
+        public static Guid TempAccountGuid = new Guid("9D2B0228-4D0D-4C23-8B49-01A698857709");
+        public static Guid TempProfileGuid = new Guid("9D2B0228-4D0D-4C23-8B49-01A698857710");
+        public static Guid TempDeviceGuid = new Guid("385576BC-F97B-4B95-9B40-F423E4D16623");
+
         public static async Task Seed(ApplicationDbContext context)
         {
 
@@ -25,79 +30,84 @@ namespace SmartHomeManager.DataSource.DeviceLogDataSource
             //if (context.DeviceLogs.Any()) return;
 
             // Delete all existing database objects for Room domain
-            //context.Accounts.RemoveRange(context.Accounts);
+            context.Accounts.RemoveRange(context.Accounts);
             //await context.SaveChangesAsync();
 
-      /*      context.Profiles.RemoveRange(context.Profiles);
+            context.Profiles.RemoveRange(context.Profiles);
             context.DeviceTypes.RemoveRange(context.DeviceTypes);
             context.Devices.RemoveRange(context.Devices);
             context.DeviceLogs.RemoveRange(context.DeviceLogs);
-*/
-           // await context.SaveChangesAsync();
-/*
+
+            await context.SaveChangesAsync();
+
+            // Device to be seeded....
+            Device deviceToBeSeeded;
 
             var accounts = new List<Account>
-        {
-            new()
             {
-                AccountId = Guid.NewGuid(),
-                Email = "John",
-                Username = "Doe",
-                Address = "Ang Mo Kio",
-                Timezone = 8,
-                Password = "P@assw0rd"
-            }
-        };
+                new()
+                {
+                    AccountId = TempAccountGuid,
+                    Email = "John",
+                    Username = "Doe",
+                    Address = "Ang Mo Kio",
+                    Timezone = 8,
+                    Password = "P@assw0rd"
+                }
+            };
             var profiles = new List<Profile>
-        {
-            new()
             {
-                ProfileId = Guid.NewGuid(),
-                Name = "My Profile",
-                AccountId = accounts[0].AccountId
-            }
-        };
+                new()
+                {
+                    ProfileId = TempProfileGuid,
+                    Name = "My Profile",
+                    AccountId = accounts[0].AccountId
+                }
+            };
 
             var deviceTypes = new List<DeviceType>
-        {
-            new()
             {
-                DeviceTypeName = "Light"
-            }
-        };
+                new()
+                {
+                    DeviceTypeName = "Light"
+                }
+            };
 
-            var devices = new List<Device>
-        {
-            new()
+
+            deviceToBeSeeded = new()
             {
-                DeviceId = Guid.NewGuid(),
+                DeviceId = TempDeviceGuid,
                 DeviceName = "Light",
                 DeviceBrand = "Philips",
                 DeviceModel = "Hue",
                 DeviceTypeName = deviceTypes[0].DeviceTypeName,
                 AccountId = accounts[0].AccountId,
                 ProfileId = profiles[0].ProfileId
-            }
-        };*/
+            };
 
-            Device? myDevice = await context.Devices.FindAsync(Guid.Parse("385576BC-F97B-4B95-9B40-F423E4D16623"));
-            // create objects
-            var DeviceLog = new List<DeviceLog>
-            {
-                new DeviceLog()
+            Random rnd = new Random();
+            var DeviceLog = new List<DeviceLog>();
+            for (int j = 13; j < 13+7; j++) { 
+                // create objects
+                for (int i = 0; i < 23; i++)
                 {
-                    LogId = Guid.NewGuid(),
-                    StartTime = DateTime.Now,
-                    EndTime = null,
-                    DateLogged = DateTime.Now,
-                    DeviceEnergyUsage = 6,
-                    DeviceActivity = 6,
-                    DeviceState = true,
-                    DeviceId = myDevice.DeviceId,
-                    Device = myDevice} };
+                    DeviceLog.Add(new DeviceLog()
+                    {
+                        LogId = Guid.NewGuid(),
+                        StartTime = DateTime.Parse($"2023-02-{j} {i}:00:00.0000000"),
+                        EndTime = DateTime.Parse($"2023-02-{j} {i + 1}:00:00.0000000"),
+                        DateLogged = DateTime.Parse($"2023-02-{j} 00:00:00.0000000"),
+                        DeviceEnergyUsage = rnd.Next(100, 1000),
+                        DeviceActivity = 1,
+                        DeviceState = false,
+                        DeviceId = deviceToBeSeeded.DeviceId,
+                        Device = deviceToBeSeeded
+                    });
+                }
+            }
 
             // add to repository and commit those changes
-/*            await context.Accounts.AddRangeAsync(accounts);
+            await context.Accounts.AddRangeAsync(accounts);
             await context.SaveChangesAsync();
             await context.Profiles.AddRangeAsync(profiles);
             await context.SaveChangesAsync();
@@ -105,9 +115,9 @@ namespace SmartHomeManager.DataSource.DeviceLogDataSource
             await context.DeviceTypes.AddRangeAsync(deviceTypes);
             await context.SaveChangesAsync();
 
-            await context.Devices.AddRangeAsync(devices);
+            await context.Devices.AddRangeAsync(deviceToBeSeeded);
             await context.SaveChangesAsync();
-*/
+
             await context.DeviceLogs.AddRangeAsync(DeviceLog);
             await context.SaveChangesAsync();
         }

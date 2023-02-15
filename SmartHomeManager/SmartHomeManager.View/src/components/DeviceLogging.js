@@ -226,9 +226,6 @@ function DeviceLogging() {
                     //fetchDeviceLogs()
                 }}
             > View weekly log </Button>
-            {weeklyDevice1Log && <h2 className="mt-3">{weeklyDevice1Log}</h2>}
-
-            {device1ID && <h2 className="mt-3">{device1ID}</h2>}
 
         </div>
     );
