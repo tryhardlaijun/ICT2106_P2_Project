@@ -2,6 +2,7 @@
 using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.DeviceDomain.Entities;
 using SmartHomeManager.Domain.DeviceLoggingDomain.Entities;
+using SmartHomeManager.Domain.DeviceStoreDomain.Entities;
 using SmartHomeManager.Domain.DirectorDomain.Entities;
 using SmartHomeManager.Domain.NotificationDomain.Entities;
 using SmartHomeManager.Domain.RoomDomain.Entities;
@@ -22,6 +23,7 @@ public class ApplicationDbContext : DbContext
         DeviceCoordinates = base.Set<DeviceCoordinate>();
         DeviceLogs = base.Set<DeviceLog>();
         DeviceTypes = base.Set<DeviceType>();
+        DeviceProfiles = base.Set<DeviceProfile>();
         Devices = base.Set<Device>();
         Notifications = base.Set<Notification>();
         Profiles = base.Set<Profile>();
@@ -39,6 +41,7 @@ public class ApplicationDbContext : DbContext
         APIKeys = base.Set<APIKey>();
         APIValues = base.Set<APIValue>();
         EnergyProfiles = base.Set<EnergyProfile>();
+        DeviceProducts = base.Set<DeviceProduct>();
     }
 
     public DbSet<Account> Accounts { get; }
@@ -48,10 +51,12 @@ public class ApplicationDbContext : DbContext
     public DbSet<DeviceLog> DeviceLogs { get; }
     public DbSet<DeviceType> DeviceTypes { get; }
     public DbSet<Device> Devices { get; }
+    public DbSet<DeviceProfile> DeviceProfiles { get; }
     public DbSet<Notification> Notifications { get; }
     public DbSet<Profile> Profiles { get; }
     public DbSet<RoomCoordinate> RoomCoordinates { get; }
     public DbSet<Room> Rooms { get; }
+    public DbSet<DeviceProduct> DeviceProducts { get; }
     public DbSet<Rule> Rules { get; }
     public DbSet<History> Histories { get; }
     public DbSet<RuleHistory> RuleHistories { get; }
@@ -81,5 +86,7 @@ public class ApplicationDbContext : DbContext
             .HasForeignKey<Device>(device => device.RoomId)
             .IsRequired(false)
             .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<DeviceProfile>().HasKey(deviceProfile => new { deviceProfile.DeviceId, deviceProfile.ProfileId });
     }
 }

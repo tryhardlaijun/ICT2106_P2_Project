@@ -1,18 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SmartHomeManager.Domain.AccountDomain.Entities
+namespace SmartHomeManager.Domain.AccountDomain.DTOs
 {
-    public class Account
+    public class AccountWebRequest
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid AccountId { get; set; }
-
         [Required]
         public string Email { get; set; }
 
@@ -27,8 +23,5 @@ namespace SmartHomeManager.Domain.AccountDomain.Entities
 
         [Required]
         public string Password { get; set; }
-
-        [Required]
-        public int DevicesOnboarded { get; set; }
     }
 }
