@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.DataSource;
 using SmartHomeManager.DataSource.DeviceLogDataSource;
+using SmartHomeManager.Domain.DeviceLoggingDomain.Interfaces;
+using SmartHomeManager.Domain.DeviceLoggingDomain.Mocks;
 
 namespace SmartHomeManager.API
 {
@@ -26,6 +28,13 @@ namespace SmartHomeManager.API
             {
                 options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            // DEVICELOG
+
+            
+            builder.Services.AddScoped<IDeviceLogRepository, DeviceLogRepository>();
+            //builder.Services.AddScoped<IProfileService, DeviceLogRepository>();
+            //builder.Services.AddScoped<IDeviceWattsService, DeviceLogRepository>();
             #endregion DEPENDENCY INJECTIONS
 
             builder.Services.AddEndpointsApiExplorer();

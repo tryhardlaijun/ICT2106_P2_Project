@@ -20,7 +20,7 @@ ChartJS.register(
     Legend
 );
 
-/*
+
  * const options = {
     responsive: true,
     plugins: {
@@ -149,7 +149,7 @@ const hourlyActivityData = {
         },
     ],
 };
-*/
+
 
 function DeviceLogging() {
     const [selectDevice, setSelectedDevice] = useState("");
@@ -159,7 +159,24 @@ function DeviceLogging() {
     const [allLog, setAllLog] = useState([]);
     const [test, setTest] = useState(0);
 
-
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await fetch('http://localhost:5186/api/DeviceLog', {
+                    method: 'GET',
+                    headers: {
+                        accept: 'text/plain',
+                    },
+                })
+                const data = await res.json()
+                console.log(data)
+                setweeklyDevice1Log(data)
+            } catch (error) {
+                console.error(error)
+            }
+        }
+        fetchData()
+    }, [])
 
 
     const onChange = (event) => {
@@ -170,7 +187,7 @@ function DeviceLogging() {
     const fetchWeeklyLog = async (id, date) => {
         try {
             //create the fetch request
-            const res = await fetch('https://localhost:7140/api/DeviceLog/${id}/${date}', {
+            const res = await fetch('https://localhost:5186/api/DeviceLog/${id}/${date}', {
                 method: 'GET',
                 headers: {
                     accept: 'text/plain',

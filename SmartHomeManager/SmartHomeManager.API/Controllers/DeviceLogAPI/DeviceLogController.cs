@@ -24,9 +24,9 @@ namespace SmartHomeManager.API.Controllers.DeviceLogAPI
         private readonly DeviceLogWriteService _logWriteService;
 
 
-        public DeviceLogController(IDeviceLogRepository deviceLogRepository, IProfileService profileService, IDeviceWattsService deviceWattsService)
+        public DeviceLogController(IDeviceLogRepository deviceLogRepository)
         {
-           _logReadService = new DeviceLogReadService(deviceLogRepository, profileService, deviceWattsService);
+           _logReadService = new DeviceLogReadService(deviceLogRepository);
             _logWriteService = new DeviceLogWriteService(deviceLogRepository);
             
         }
@@ -122,7 +122,7 @@ namespace SmartHomeManager.API.Controllers.DeviceLogAPI
         }
 
 
-        // GET: api/Analytics/GetDevicesInProfile/profileId
+/*        // GET: api/Analytics/GetDevicesInProfile/profileId
         [HttpGet("GetDevicesInProfile/{profileId}")]
         public ActionResult<IEnumerable<Device>> GetDevicesFromProfile(Guid profileId)
         {
@@ -130,7 +130,7 @@ namespace SmartHomeManager.API.Controllers.DeviceLogAPI
             if (!result.Any()) return NotFound();
 
             return Ok(result);
-        }
+        }*/
 
 
         // POST: api/DeviceLogs

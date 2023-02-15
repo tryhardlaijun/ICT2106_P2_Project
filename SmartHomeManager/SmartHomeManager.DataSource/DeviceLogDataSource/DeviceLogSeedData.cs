@@ -15,11 +15,11 @@ namespace SmartHomeManager.DataSource.DeviceLogDataSource
         public static async Task Seed(ApplicationDbContext context)
         {
             // If there is data, don't do anything
-            /*if (context.Accounts.Any()) return;
+            if (context.Accounts.Any()) return;
             if (context.Profiles.Any()) return;
             if (context.DeviceTypes.Any()) return;
             if (context.Devices.Any()) return;
-            if (context.DeviceLogs.Any()) return;*/
+            if (context.DeviceLogs.Any()) return;
 
             // Delete all existing database objects for Room domain
             //context.Accounts.RemoveRange(context.Accounts);
