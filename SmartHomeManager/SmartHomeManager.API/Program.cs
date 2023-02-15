@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.DataSource;
 using SmartHomeManager.DataSource.DeviceLogDataSource;
+using SmartHomeManager.DataSource.DeviceLogDataSource.Mocks;
 using SmartHomeManager.Domain.DeviceLoggingDomain.Interfaces;
 using SmartHomeManager.Domain.DeviceLoggingDomain.Mocks;
 
@@ -33,7 +34,7 @@ namespace SmartHomeManager.API
 
             
             builder.Services.AddScoped<IDeviceLogRepository, DeviceLogRepository>();
-            //builder.Services.AddScoped<IProfileService, DeviceLogRepository>();
+            builder.Services.AddScoped<IProfileService, ProfileRepositoryMock>();
             //builder.Services.AddScoped<IDeviceWattsService, DeviceLogRepository>();
             #endregion DEPENDENCY INJECTIONS
 

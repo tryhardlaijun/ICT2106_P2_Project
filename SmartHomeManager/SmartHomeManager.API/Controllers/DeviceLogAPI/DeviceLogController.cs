@@ -12,6 +12,7 @@ using SmartHomeManager.Domain.DeviceLoggingDomain.Services;
 using SmartHomeManager.Domain.DeviceLoggingDomain.Interfaces;
 using SmartHomeManager.Domain.DeviceLoggingDomain.Mocks;
 using SmartHomeManager.Domain.DeviceDomain.Entities;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SmartHomeManager.API.Controllers.DeviceLogAPI
 {
@@ -76,8 +77,17 @@ namespace SmartHomeManager.API.Controllers.DeviceLogAPI
             double []res = { totalUsage, totalActivity};
             return Ok(res);
         }
-        // date passed shld be start date of the week
-        // GET: api/Analytics/DeviceLog/deviceId?date=xxxxxx
+
+
+        [HttpGet("{profileId}")]
+        public ActionResult<IEnumerable<Device>> GetAllDevicesInProfile(Guid profileId)
+        {
+            var result = _logReadService.GetAllDevicesInProfile(profileId);
+            if (!result.Any()) return NotFound();
+            return Ok(result);
+        }
+            // date passed shld be start date of the week
+            // GET: api/Analytics/DeviceLog/deviceId?date=xxxxxx
         [HttpGet("{deviceId}/{date}")]
         [Consumes("application/json")]
         [Produces("application/json")]

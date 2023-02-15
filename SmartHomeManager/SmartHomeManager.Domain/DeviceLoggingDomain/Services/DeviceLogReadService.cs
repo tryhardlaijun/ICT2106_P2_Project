@@ -20,7 +20,7 @@ namespace SmartHomeManager.Domain.DeviceLoggingDomain.Services
     public class DeviceLogReadService
     {
         private readonly IDeviceLogRepository _deviceLogRepository;
-        //private readonly IProfileService _profileService;
+        private readonly IProfileService _profileService;
         //private readonly IDeviceWattsService _deviceWattsService;
 
         public DeviceLogReadService(IDeviceLogRepository deviceLogRepository)
@@ -31,9 +31,9 @@ namespace SmartHomeManager.Domain.DeviceLoggingDomain.Services
         }
 
         // get devices from profile
-/*        public IEnumerable<Device> GetAllDevicesInProfile(Guid profileId){
-            return _profileService.GetAllDevicesInProfile(profileId);
-        }*/
+       public IEnumerable<Device> GetAllDevicesInProfile(Guid profileId){
+            return _profileService.GetDevicesByProfile(profileId);
+        }
 
 
         // get watts from devices

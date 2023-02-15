@@ -215,7 +215,7 @@ function DeviceLogging() {
                 <option defaultValue disabled>
                     Select 1st device
                 </option>
-                <option value="81EB12EA-C3D7-424B-9C5C-EB3681A99E00"> Device 1</option>
+                <option value="385576BC-F97B-4B95-9B40-F423E4D16623"> Device 1</option>
                 <option value="device2"> Device 2</option>
                 <option value="device3"> Device 3</option>
             </select>
@@ -225,7 +225,7 @@ function DeviceLogging() {
                 variant="outlined"
                 colorScheme='blue'
                 onClick={() => {
-                    fetchWeeklyLog(device1ID, "2023-02-06 20:02:02.5559728")
+                    fetchWeeklyLog(device1ID, "2023-02-15 13:49:50.7925408")
                     //fetchDeviceLogs()
                 }}
             > View weekly log </Button>
