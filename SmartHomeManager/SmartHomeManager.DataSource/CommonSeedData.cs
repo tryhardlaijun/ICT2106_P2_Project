@@ -158,6 +158,7 @@ namespace SmartHomeManager.DataSource
                 {
                     RuleId = Guid.NewGuid(),
                     ScenarioId = scenarios[0].ScenarioId,
+                    ConfigurationKey = "STATUS",
                     ConfigurationValue = 0,
                     ActionTrigger = "string",
                     RuleName = "string",

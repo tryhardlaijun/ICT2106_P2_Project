@@ -46,7 +46,7 @@ public class RulesController : ControllerBase
 
     // GET api/Rules/1
     [HttpGet("{id}")]
-    public async Task<ActionResult<Rule>> GetRule([FromBody] Guid id)
+    public async Task<ActionResult<Rule>> GetRule(Guid id)
     {
         var rule = await _registerRuleService.GetRuleByIdAsync(id);
         if(rule != null)
