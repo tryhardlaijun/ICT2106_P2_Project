@@ -22,7 +22,7 @@ export default function Scenarios() {
 	useEffect(()=>{
 		async function getAllRules(){
 			const response = await axios(
-				`http://localhost:5186/api/Rules/GetAllRules`
+				`https://localhost:7140/api/Rules/GetAllRules`
 			)
 			const details = await response.data
 			console.log(details);

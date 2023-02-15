@@ -13,7 +13,7 @@ public class RuleHistory
 
     [Required] public int RuleIndex { get; set; }
 
-    [Required] public string ScheduleName { get; set; }
+    [Required] public string RuleName { get; set; }
 
     public DateTime? RuleStartTime { get; set; }
 

@@ -20,7 +20,8 @@ namespace SmartHomeManager.Domain.SceneDomain.Entities
 
         public string? ActionTrigger { get; set; }
 
-        public string? ScheduleName { get; set; }
+        [Required] 
+        public string RuleName { get; set; }
 
         public DateTime? StartTime { get; set; }
 
