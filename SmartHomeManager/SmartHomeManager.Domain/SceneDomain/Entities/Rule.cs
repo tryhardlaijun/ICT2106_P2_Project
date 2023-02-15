@@ -13,17 +13,24 @@ namespace SmartHomeManager.Domain.SceneDomain.Entities
         public Guid ScenarioId { get; set; }
 
         [Required]
+        public string ConfigurationKey { get; set; }
+        [Required]
         public int ConfigurationValue { get; set; }
 
         public string? ActionTrigger { get; set; }
 
-        public string? ScheduleName { get; set; }
+        [Required] 
+        public string RuleName { get; set; }
 
         public DateTime? StartTime { get; set; }
 
         public DateTime? EndTime { get; set; }
 
         public Guid DeviceId { get; set; }
+
+        public string? APIKey { get; set; }
+
+        public string? ApiValue { get; set; }
 
         [ForeignKey("ScenarioId")]
         public Scenario Scenario { get; set; }

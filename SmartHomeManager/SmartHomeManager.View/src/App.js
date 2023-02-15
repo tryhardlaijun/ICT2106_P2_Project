@@ -4,6 +4,14 @@ import { NavBar } from "./components/NavBar";
 import Home from "./pages/Home";
 import Devices from "./pages/Devices";
 import Profiles from "./pages/Profiles";
+import Director from "./pages/Director";
+import Backup from "./pages/Backup";
+import Intruder from "./pages/Intruder";
+import Configuration from "./pages/Configuration";
+import EnergyProfile from "./pages/EnergyProfile";
+import Scenario from "./pages/Scenario";
+import SchRule from "pages/SchRule";
+import ActionRule from "pages/ActionRule";
 import Rooms from "./pages/Rooms";
 import { Container } from "@chakra-ui/react";
 import Register from "./pages/account/Register";
@@ -37,11 +45,29 @@ export function App() {
 
             <Route path="/selectnearbydevice" element={<SelectNearbyDevice />} />
             <Route path="/registerdevice" element={<RegisterDevice />} />
+
+            <Route path="/director" element={<Director />} />
+            <Route path="/backup" element={<Backup />} />
+            <Route path="/intruder" element={<Intruder />} />
+            <Route path="/configuration" element={<Configuration />} />
+            <Route path="/energyProfile" element={<EnergyProfile />} />
+            <Route path="/scenario" element={<Scenario />} />
+            <Route
+              path="/scenario/create/action-rule"
+              element={<ActionRule />}
+            />
+            <Route
+              path="/scenario/create/time-rule"
+              element={<SchRule />}
+            />
+            <Route
+              path="/scenario/edit/:id"
+              element={<SchRule />}
+            />
           </Routes>
         </Container>
       </Router>
     </>
   );
 }
-
 export default App;

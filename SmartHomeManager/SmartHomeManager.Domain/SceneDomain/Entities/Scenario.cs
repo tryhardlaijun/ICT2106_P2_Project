@@ -20,5 +20,8 @@ namespace SmartHomeManager.Domain.SceneDomain.Entities
 
         [ForeignKey("ProfileId")]
         public Profile Profile { get; set; }
+
+        [Required]
+        public Boolean isActive { get; set; }
     }
 }

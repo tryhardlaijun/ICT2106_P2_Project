@@ -39,8 +39,8 @@ export function NavBar() {
         </Flex>
 
         <Stack flex={{ base: 1, md: 0 }} justify={"flex-end"} direction={"row"} spacing={6}>
-                  <Button fontSize={"sm"} fontWeight={400} variant={"link"} as={RouterLink}
-                      to="/login">
+          <Button fontSize={"sm"} fontWeight={400} variant={"link"} as={RouterLink}
+            to="/login">
             Sign In
           </Button>
           <Button
@@ -142,6 +142,10 @@ const NAV_ITEMS = [
   {
     label: "Profiles",
     href: "/profiles",
+  },
+  {
+    label: "Scenario",
+    href: "Scenario",
   },
   {
     label: "Rooms",
