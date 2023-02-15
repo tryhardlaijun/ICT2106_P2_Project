@@ -44,7 +44,7 @@ namespace SmartHomeManager.DataSource.AccountDataSource
             return await _dbContext.Accounts.ToListAsync();
         }
 
-        public async Task<Account?> GetByIdAsync(Guid id) 
+        public async Task<Account?> GetByIdAsync(Guid id)
         {
             return await _dbContext.Accounts.FindAsync(id);
         }

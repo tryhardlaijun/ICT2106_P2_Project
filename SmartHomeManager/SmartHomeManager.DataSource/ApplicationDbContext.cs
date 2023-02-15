@@ -19,6 +19,7 @@ public class ApplicationDbContext : DbContext
         DeviceCoordinates = base.Set<DeviceCoordinate>();
         DeviceLogs = base.Set<DeviceLog>();
         DeviceTypes = base.Set<DeviceType>();
+        DeviceProfiles = base.Set<DeviceProfile>();
         Devices = base.Set<Device>();
         Notifications = base.Set<Notification>();
         Profiles = base.Set<Profile>();
@@ -38,6 +39,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<DeviceLog> DeviceLogs { get; }
     public DbSet<DeviceType> DeviceTypes { get; }
     public DbSet<Device> Devices { get; }
+    public DbSet<DeviceProfile> DeviceProfiles { get; }
     public DbSet<Notification> Notifications { get; }
     public DbSet<Profile> Profiles { get; }
     public DbSet<RoomCoordinate> RoomCoordinates { get; }
@@ -63,5 +65,7 @@ public class ApplicationDbContext : DbContext
             .HasForeignKey<Device>(device => device.RoomId)
             .IsRequired(false)
             .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<DeviceProfile>().HasKey(deviceProfile => new { deviceProfile.DeviceId, deviceProfile.ProfileId });
     }
 }

@@ -72,18 +72,16 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Device?>> GetDevicesByProfileId(Guid id)
+        public async Task<IEnumerable<Guid>?> GetDevicesByProfileId(Guid id)
         {
 
-            Profile profile = await _profileRepository.GetByIdAsync(id);
-            if (profile == null)
+            IEnumerable<Guid> listOfDeviceIds = await _profileRepository.GetDevicesByProfileId(id);
+            if (!listOfDeviceIds.Any())
             {
                 return null;
             }
 
-            IEnumerable<Device> devices = await _deviceRepository.GetAllAsync();
-
-            return devices;
+            return listOfDeviceIds;
         }
 
         public async Task<bool> UpdateProfile(Profile profile)

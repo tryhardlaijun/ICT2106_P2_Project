@@ -46,8 +46,7 @@ namespace SmartHomeManager.Domain.DeviceDomain.Entities
         [ForeignKey("AccountId")]
         public Account Account { get; set; }
 
-        [InverseProperty("Devices")]
-        public ICollection<Profile> Profiles { get; set; }
+        /*public ICollection<DeviceProfile> DeviceProfiles { get; set; }*/
 
         public DeviceCoordinate DeviceCoordinate { get; set; }
     }
