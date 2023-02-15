@@ -17,21 +17,6 @@ namespace SmartHomeManager.DataSource.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.2");
 
-            modelBuilder.Entity("DeviceProfile", b =>
-                {
-                    b.Property<Guid>("DevicesDeviceId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("ProfilesProfileId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("DevicesDeviceId", "ProfilesProfileId");
-
-                    b.HasIndex("ProfilesProfileId");
-
-                    b.ToTable("DeviceProfile");
-                });
-
             modelBuilder.Entity("SmartHomeManager.Domain.APIDomain.Entities.APIData", b =>
                 {
                     b.Property<Guid>("APIDataId")
@@ -60,8 +45,7 @@ namespace SmartHomeManager.DataSource.Migrations
 
             modelBuilder.Entity("SmartHomeManager.Domain.APIDomain.Entities.APIKey", b =>
                 {
-                    b.Property<Guid>("APIKeyType")
-                        .ValueGeneratedOnAdd()
+                    b.Property<string>("APIKeyType")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("APILabelText")
@@ -75,8 +59,7 @@ namespace SmartHomeManager.DataSource.Migrations
 
             modelBuilder.Entity("SmartHomeManager.Domain.APIDomain.Entities.APIValue", b =>
                 {
-                    b.Property<Guid>("APIKeyType")
-                        .ValueGeneratedOnAdd()
+                    b.Property<string>("APIKeyType")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("APIValues")
@@ -96,6 +79,9 @@ namespace SmartHomeManager.DataSource.Migrations
                     b.Property<string>("Address")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("DevicesOnboarded")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -117,6 +103,21 @@ namespace SmartHomeManager.DataSource.Migrations
                     b.ToTable("Accounts");
                 });
 
+            modelBuilder.Entity("SmartHomeManager.Domain.AccountDomain.Entities.DeviceProfile", b =>
+                {
+                    b.Property<Guid>("DeviceId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("ProfileId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("DeviceId", "ProfileId");
+
+                    b.HasIndex("ProfileId");
+
+                    b.ToTable("DeviceProfiles");
+                });
+
             modelBuilder.Entity("SmartHomeManager.Domain.AccountDomain.Entities.Profile", b =>
                 {
                     b.Property<Guid>("ProfileId")
@@ -135,6 +136,100 @@ namespace SmartHomeManager.DataSource.Migrations
                     b.HasIndex("AccountId");
 
                     b.ToTable("Profiles");
+                });
+
+            modelBuilder.Entity("SmartHomeManager.Domain.AnalysisDomain.Entities.CarbonFootprint", b =>
+                {
+                    b.Property<Guid>("CarbonFootprintId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("AccountId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("HouseholdConsumption")
+                        .HasColumnType("REAL");
+
+                    b.Property<string>("MonthOfAnalysis")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("CarbonFootprintId");
+
+                    b.HasIndex("AccountId");
+
+                    b.ToTable("CarbonFootprints");
+                });
+
+            modelBuilder.Entity("SmartHomeManager.Domain.AnalysisDomain.Entities.EnergyEfficiency", b =>
+                {
+                    b.Property<Guid>("EnergyEfficiencyId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("DeviceId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("EnergyEfficiencyIndex")
+                        .HasColumnType("REAL");
+
+                    b.HasKey("EnergyEfficiencyId");
+
+                    b.HasIndex("DeviceId");
+
+                    b.ToTable("EnergyEfficiency");
+                });
+
+            modelBuilder.Entity("SmartHomeManager.Domain.AnalysisDomain.Entities.ForecastChart", b =>
+                {
+                    b.Property<Guid>("ForecastChartId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("AccountId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DateOfAnalysis")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TimespanType")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ForecastChartId");
+
+                    b.HasIndex("AccountId");
+
+                    b.ToTable("ForecastCharts");
+                });
+
+            modelBuilder.Entity("SmartHomeManager.Domain.AnalysisDomain.Entities.ForecastChartData", b =>
+                {
+                    b.Property<Guid>("ForecastChartDataId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("ForecastChartId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Index")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsForecast")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Label")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("Value")
+                        .HasColumnType("REAL");
+
+                    b.HasKey("ForecastChartDataId");
+
+                    b.HasIndex("ForecastChartId");
+
+                    b.ToTable("ForecastChartsData");
                 });
 
             modelBuilder.Entity("SmartHomeManager.Domain.DeviceDomain.Entities.Device", b =>
@@ -158,12 +253,19 @@ namespace SmartHomeManager.DataSource.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("DevicePassword")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DeviceSerialNumber")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("DeviceTypeName")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("ProfileId")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("DeviceWatts")
+                        .HasColumnType("INTEGER");
 
                     b.Property<Guid?>("RoomId")
                         .HasColumnType("TEXT");
@@ -172,10 +274,12 @@ namespace SmartHomeManager.DataSource.Migrations
 
                     b.HasIndex("AccountId");
 
+                    b.HasIndex("DeviceSerialNumber")
+                        .IsUnique();
+
                     b.HasIndex("DeviceTypeName");
 
-                    b.HasIndex("RoomId")
-                        .IsUnique();
+                    b.HasIndex("RoomId");
 
                     b.ToTable("Devices");
                 });
@@ -251,11 +355,11 @@ namespace SmartHomeManager.DataSource.Migrations
                     b.Property<DateTime>("DateLogged")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("DeviceActivity")
-                        .HasColumnType("INTEGER");
+                    b.Property<double>("DeviceActivity")
+                        .HasColumnType("REAL");
 
-                    b.Property<int>("DeviceEnergyUsage")
-                        .HasColumnType("INTEGER");
+                    b.Property<double>("DeviceEnergyUsage")
+                        .HasColumnType("REAL");
 
                     b.Property<Guid>("DeviceId")
                         .HasColumnType("TEXT");
@@ -266,14 +370,57 @@ namespace SmartHomeManager.DataSource.Migrations
                     b.Property<DateTime?>("EndTime")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("StartTime")
+                    b.Property<Guid>("RoomId")
                         .HasColumnType("TEXT");
 
                     b.HasKey("LogId");
 
                     b.HasIndex("DeviceId");
 
+                    b.HasIndex("RoomId");
+
                     b.ToTable("DeviceLogs");
+                });
+
+            modelBuilder.Entity("SmartHomeManager.Domain.DeviceStoreDomain.Entities.DeviceProduct", b =>
+                {
+                    b.Property<int>("ProductId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("DeviceType")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ProductBrand")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ProductDescription")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ProductImageUrl")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ProductModel")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ProductName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("ProductPrice")
+                        .HasColumnType("REAL");
+
+                    b.Property<int>("ProductQuantity")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ProductId");
+
+                    b.ToTable("DeviceProducts");
                 });
 
             modelBuilder.Entity("SmartHomeManager.Domain.DirectorDomain.Entities.History", b =>
@@ -598,10 +745,6 @@ namespace SmartHomeManager.DataSource.Migrations
                     b.Property<Guid>("ProfileId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("RuleList")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("ScenarioName")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -636,21 +779,6 @@ namespace SmartHomeManager.DataSource.Migrations
                     b.ToTable("Troubleshooters");
                 });
 
-            modelBuilder.Entity("DeviceProfile", b =>
-                {
-                    b.HasOne("SmartHomeManager.Domain.DeviceDomain.Entities.Device", null)
-                        .WithMany()
-                        .HasForeignKey("DevicesDeviceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SmartHomeManager.Domain.AccountDomain.Entities.Profile", null)
-                        .WithMany()
-                        .HasForeignKey("ProfilesProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("SmartHomeManager.Domain.APIDomain.Entities.APIValue", b =>
                 {
                     b.HasOne("SmartHomeManager.Domain.APIDomain.Entities.APIKey", "APIKey")
@@ -662,6 +790,25 @@ namespace SmartHomeManager.DataSource.Migrations
                     b.Navigation("APIKey");
                 });
 
+            modelBuilder.Entity("SmartHomeManager.Domain.AccountDomain.Entities.DeviceProfile", b =>
+                {
+                    b.HasOne("SmartHomeManager.Domain.DeviceDomain.Entities.Device", "Device")
+                        .WithMany()
+                        .HasForeignKey("DeviceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SmartHomeManager.Domain.AccountDomain.Entities.Profile", "Profile")
+                        .WithMany()
+                        .HasForeignKey("ProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Device");
+
+                    b.Navigation("Profile");
+                });
+
             modelBuilder.Entity("SmartHomeManager.Domain.AccountDomain.Entities.Profile", b =>
                 {
                     b.HasOne("SmartHomeManager.Domain.AccountDomain.Entities.Account", "Account")
@@ -671,6 +818,50 @@ namespace SmartHomeManager.DataSource.Migrations
                         .IsRequired();
 
                     b.Navigation("Account");
+                });
+
+            modelBuilder.Entity("SmartHomeManager.Domain.AnalysisDomain.Entities.CarbonFootprint", b =>
+                {
+                    b.HasOne("SmartHomeManager.Domain.AccountDomain.Entities.Account", "Account")
+                        .WithMany()
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+                });
+
+            modelBuilder.Entity("SmartHomeManager.Domain.AnalysisDomain.Entities.EnergyEfficiency", b =>
+                {
+                    b.HasOne("SmartHomeManager.Domain.DeviceDomain.Entities.Device", "Device")
+                        .WithMany()
+                        .HasForeignKey("DeviceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Device");
+                });
+
+            modelBuilder.Entity("SmartHomeManager.Domain.AnalysisDomain.Entities.ForecastChart", b =>
+                {
+                    b.HasOne("SmartHomeManager.Domain.AccountDomain.Entities.Account", "Account")
+                        .WithMany()
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+                });
+
+            modelBuilder.Entity("SmartHomeManager.Domain.AnalysisDomain.Entities.ForecastChartData", b =>
+                {
+                    b.HasOne("SmartHomeManager.Domain.AnalysisDomain.Entities.ForecastChart", "ForecastChart")
+                        .WithMany()
+                        .HasForeignKey("ForecastChartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ForecastChart");
                 });
 
             modelBuilder.Entity("SmartHomeManager.Domain.DeviceDomain.Entities.Device", b =>
@@ -688,8 +879,8 @@ namespace SmartHomeManager.DataSource.Migrations
                         .IsRequired();
 
                     b.HasOne("SmartHomeManager.Domain.RoomDomain.Entities.Room", "Room")
-                        .WithOne("Device")
-                        .HasForeignKey("SmartHomeManager.Domain.DeviceDomain.Entities.Device", "RoomId")
+                        .WithMany("Devices")
+                        .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Account");
@@ -726,7 +917,15 @@ namespace SmartHomeManager.DataSource.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("SmartHomeManager.Domain.RoomDomain.Entities.Room", "Room")
+                        .WithMany()
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Device");
+
+                    b.Navigation("Room");
                 });
 
             modelBuilder.Entity("SmartHomeManager.Domain.DirectorDomain.Entities.History", b =>
@@ -876,8 +1075,7 @@ namespace SmartHomeManager.DataSource.Migrations
 
             modelBuilder.Entity("SmartHomeManager.Domain.RoomDomain.Entities.Room", b =>
                 {
-                    b.Navigation("Device")
-                        .IsRequired();
+                    b.Navigation("Devices");
 
                     b.Navigation("RoomCoordinate")
                         .IsRequired();

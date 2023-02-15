@@ -13,9 +13,6 @@ namespace SmartHomeManager.Domain.SceneDomain.Entities
         public string ScenarioName { get; set; }
 
         [Required]
-        public string RuleList { get; set; }
-
-        [Required]
         public Guid ProfileId { get; set; }
 
         [ForeignKey("ProfileId")]

@@ -1,4 +1,5 @@
 ﻿using SmartHomeManager.Domain.DeviceDomain.Entities;
+using SmartHomeManager.Domain.RoomDomain.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -14,19 +15,16 @@ namespace SmartHomeManager.Domain.DeviceLoggingDomain.Entities
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid LogId { get; set; }
 
-        [Required]
-        public DateTime StartTime { get; set; }
-
         public DateTime? EndTime { get; set; }
 
         [Required]
         public DateTime DateLogged { get; set; }
 
         [Required]
-        public int DeviceEnergyUsage { get; set; }
+        public double DeviceEnergyUsage { get; set; }
 
         [Required]
-        public int DeviceActivity { get; set; }
+        public double DeviceActivity { get; set; }
 
         [Required]
         public bool DeviceState { get; set; }
@@ -34,7 +32,15 @@ namespace SmartHomeManager.Domain.DeviceLoggingDomain.Entities
         [Required]
         public Guid DeviceId { get; set; }
 
+        [Required]
+        public Guid RoomId { get; set; }
+
         [ForeignKey("DeviceId")]
         public Device Device { get; set; }
+
+        [ForeignKey("RoomId")]
+        public Room Room { get; set; }
     }
+
+
 }

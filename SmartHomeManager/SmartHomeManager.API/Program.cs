@@ -36,6 +36,16 @@ using SmartHomeManager.Domain.DeviceDomain.Entities;
 using SmartHomeManager.Domain.DeviceDomain.Interfaces;
 using SmartHomeManager.Domain.RoomDomain.Interfaces;
 using SmartHomeManager.Domain.RoomDomain.Mocks;
+using SmartHomeManager.DataSource.DeviceLogDataSource;
+using SmartHomeManager.DataSource.DeviceLogDataSource.Mocks;
+using SmartHomeManager.Domain.DeviceLoggingDomain.Interfaces;
+using SmartHomeManager.Domain.DeviceLoggingDomain.Mocks;
+using SmartHomeManager.DataSource.AccountDataSource;
+using SmartHomeManager.DataSource.NotificationDataSource;
+using SmartHomeManager.Domain.AccountDomain.Entities;
+using SmartHomeManager.Domain.Common;
+using SmartHomeManager.Domain.NotificationDomain.Entities;
+using SmartHomeManager.Domain.NotificationDomain.Interfaces;
 
 namespace SmartHomeManager.API;
 
@@ -74,11 +84,21 @@ public class Program
         builder.Services.AddScoped<IGenericRepository<HomeSecuritySetting>, HomeSecuritySettingRepository>();
         builder.Services.AddScoped<IHomeSecurityDeviceDefinitionRepository<HomeSecurityDeviceDefinition>, HomeSecurityDeviceDefinitionRepository>();
         
-        builder.Services.AddHostedService<DirectorServices>();
+        // builder.Services.AddHostedService<DirectorServices>();
 
         // DEVICE
         builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();
         builder.Services.AddScoped<IDeviceTypeRepository, DeviceTypeRepository>();
+            
+
+        // DEVICELOG
+        builder.Services.AddScoped<IDeviceLogRepository, DeviceLogRepository>();
+        // builder.Services.AddScoped<IProfileService, ProfileRepositoryMock>();
+
+        // NOTIFICATION
+        // Inject dependencies for Notification Repository, so all implementations of IGenericRepository<Notification> will use the NotificationRepository implementation...
+        builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+        builder.Services.AddScoped<IGenericRepository<Account>, MockAccountRepository>();
 
         // ROOM
         builder.Services.AddScoped<IRoomRepository, RoomRepository>();
@@ -134,5 +154,4 @@ public class Program
 
         app.Run();
     }
-
 }

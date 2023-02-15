@@ -11,8 +11,7 @@ namespace SmartHomeManager.Domain.APIDomain.Entities
     public class APIKey
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid APIKeyType { get; set; }
+        public string APIKeyType { get; set; }
 
         [Required] public string APILabelText { get; set; }
     }

@@ -1,11 +1,15 @@
 ﻿using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.DeviceDomain.Entities;
+using SmartHomeManager.Domain.DeviceLoggingDomain.Entities;
+using SmartHomeManager.Domain.DeviceStoreDomain.Entities;
 using SmartHomeManager.Domain.DirectorDomain.Entities;
+using SmartHomeManager.Domain.NotificationDomain.Entities;
 using SmartHomeManager.Domain.RoomDomain.Entities;
 using SmartHomeManager.Domain.SceneDomain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,12 +19,23 @@ namespace SmartHomeManager.DataSource
     {
         public static async Task Seed(ApplicationDbContext context)
         {
-            // If there is data, don't do anything
-            if (context.Accounts.Any()) return;
-            if (context.Profiles.Any()) return;
-            if (context.DeviceProfiles.Any()) return;
-            if (context.Devices.Any()) return;
-            if (context.DeviceTypes.Any()) return;
+            // Delete all existing database objects
+            context.Accounts.RemoveRange(context.Accounts);
+            await context.SaveChangesAsync();
+
+            context.Profiles.RemoveRange(context.Profiles);
+
+
+            context.Rooms.RemoveRange(context.Rooms);
+            context.RoomCoordinates.RemoveRange(context.RoomCoordinates);
+            context.DeviceTypes.RemoveRange(context.DeviceTypes);
+            context.Devices.RemoveRange(context.Devices);
+            context.DeviceCoordinates.RemoveRange(context.DeviceCoordinates);
+
+
+
+
+            await context.SaveChangesAsync();
 
             // create objects
             var accounts = new List<Account>
@@ -32,7 +47,8 @@ namespace SmartHomeManager.DataSource
                     Username = "username",
                     Password = "P@ssw0rd",
                     Address = "123 abc 456 888888",
-                    Timezone = 8
+                    Timezone = 8,
+                    DevicesOnboarded = 3
                 }
             };
 
@@ -55,12 +71,56 @@ namespace SmartHomeManager.DataSource
             await context.Profiles.AddRangeAsync(profiles);
             await context.SaveChangesAsync();
 
+            var rooms = new List<Room>
+            {
+                new()
+                {
+                    RoomId = Guid.NewGuid(),
+                    Name = "Bedroom",
+                    AccountId = accounts[0].AccountId
+                },
+                new()
+                {
+                    RoomId = Guid.NewGuid(),
+                    Name = "Living room",
+                    AccountId = accounts[0].AccountId
+                },
+            };
+
+            var roomCoordinates = new List<RoomCoordinate>
+            {
+                new()
+                {
+                    XCoordinate = 0,
+                    YCoordinate = 0,
+                    Width = 5,
+                    Height = 5,
+                    RoomId = rooms[0].RoomId
+                },
+                new()
+                {
+                    XCoordinate = 6,
+                    YCoordinate = 6,
+                    Width = 5,
+                    Height = 5,
+                    RoomId = rooms[1].RoomId
+                }
+            };
+
             var deviceTypes = new List<DeviceType>
             {
                 new DeviceType
                 {
                     DeviceTypeName = "Light",
-                }
+                },
+                new DeviceType
+                {
+                    DeviceTypeName = "Aircon",
+                },
+                new DeviceType
+                {
+                    DeviceTypeName = "Fan",
+                },
             };
 
             var devices = new List<Device>
@@ -68,14 +128,39 @@ namespace SmartHomeManager.DataSource
                 new Device
                 {
                     DeviceId = new("33333333-3333-3333-3333-333333333333"),
-                    DeviceName = "name",
+                    DeviceName = "Smart Fan",
                     DeviceBrand = "xiaomi",
                     DeviceModel = "smart fan",
                     DeviceWatts = 100,
+                    DeviceTypeName = "Fan",
+                    DeviceSerialNumber = "123",
+                    AccountId = new ("11111111-1111-1111-1111-111111111111"),
+                    RoomId = rooms[0].RoomId
+                },
+                new Device
+                {
+                    DeviceId = new("44444444-4444-4444-4444-444444444444"),
+                    DeviceName = "Smart bulb",
+                    DeviceBrand = "xiaomi",
+                    DeviceModel = "smart bulb",
+                    DeviceWatts = 100,
                     DeviceTypeName = "Light",
-                    DeviceSerialNumber = "1234",
-                    AccountId = new ("11111111-1111-1111-1111-111111111111")
-                }
+                    DeviceSerialNumber = "456",
+                    AccountId = new ("11111111-1111-1111-1111-111111111111"),
+                    RoomId = rooms[0].RoomId
+                },
+                new Device
+                {
+                    DeviceId = new("55555555-5555-5555-5555-555555555555"),
+                    DeviceName = "Smart aircon",
+                    DeviceBrand = "xiaomi",
+                    DeviceModel = "smart aircon",
+                    DeviceWatts = 100,
+                    DeviceTypeName = "Aircon",
+                    DeviceSerialNumber = "789",
+                    AccountId = new ("11111111-1111-1111-1111-111111111111"),
+                    RoomId = rooms[0].RoomId
+                },
             };
 
             // create objects
@@ -85,36 +170,17 @@ namespace SmartHomeManager.DataSource
                 {
                     DeviceId = devices[0].DeviceId,
                     ProfileId = Guid.Parse("22222222-2222-2222-2222-222222222222"),
-                }
-            };
-
-            // add to repository and commit those changes
-            await context.DeviceTypes.AddRangeAsync(deviceTypes);
-            await context.Devices.AddRangeAsync(devices);
-            await context.DeviceProfiles.AddRangeAsync(deviceProfiles);
-
-            await context.SaveChangesAsync();
-
-            var rooms = new List<Room>
-            {
-                new()
+                },
+                new DeviceProfile()
                 {
-                    RoomId = Guid.NewGuid(),
-                    Name = "Bedroom",
-                    AccountId = accounts[0].AccountId
-                }
-            };
-
-            var roomCoordinates = new List<RoomCoordinate>
-            {
-                new()
+                    DeviceId = devices[1].DeviceId,
+                    ProfileId = Guid.Parse("22222222-2222-2222-2222-222222222222"),
+                },
+                new DeviceProfile()
                 {
-                    XCoordinate = 0,
-                    YCoordinate = 0,
-                    Width = 2,
-                    Height = 1,
-                    RoomId = rooms[0].RoomId
-                }
+                    DeviceId = devices[2].DeviceId,
+                    ProfileId = Guid.Parse("22222222-2222-2222-2222-222222222222"),
+                },
             };
 
             var deviceCoordinates = new List<DeviceCoordinate>
@@ -123,13 +189,39 @@ namespace SmartHomeManager.DataSource
                 {
                     XCoordinate = 0,
                     YCoordinate = 0,
-                    Width = 2,
+                    Width = 1,
                     Height = 1,
                     DeviceId = devices[0].DeviceId
-                }
+                },
+                new()
+                {
+                    XCoordinate = 1,
+                    YCoordinate = 1,
+                    Width = 1,
+                    Height = 1,
+                    DeviceId = devices[1].DeviceId
+                },
+                new()
+                {
+                    XCoordinate = 2,
+                    YCoordinate = 2,
+                    Width = 1,
+                    Height = 1,
+                    DeviceId = devices[2].DeviceId
+                },
             };
 
+            // add to repository and commit those changes
             await context.Rooms.AddRangeAsync(rooms);
+            await context.SaveChangesAsync();
+
+            await context.DeviceTypes.AddRangeAsync(deviceTypes);
+            await context.SaveChangesAsync();
+            
+            await context.Devices.AddRangeAsync(devices);
+            await context.SaveChangesAsync();
+            
+            await context.DeviceProfiles.AddRangeAsync(deviceProfiles);
             await context.SaveChangesAsync();
 
             await context.RoomCoordinates.AddRangeAsync(roomCoordinates);
@@ -143,8 +235,7 @@ namespace SmartHomeManager.DataSource
                 new Scenario
                 {
                     ScenarioId = new("AC38AF14-9A57-4DF3-89F3-78F9CE9F4983"),
-                    ScenarioName = "string",
-                    RuleList = "string",
+                    ScenarioName = "Default",
                     ProfileId = profiles[0].ProfileId
                 }
             };
@@ -158,14 +249,24 @@ namespace SmartHomeManager.DataSource
                 {
                     RuleId = Guid.NewGuid(),
                     ScenarioId = scenarios[0].ScenarioId,
-                    ConfigurationKey = "STATUS",
-                    ConfigurationValue = 0,
-                    ActionTrigger = "string",
-                    RuleName = "string",
+                    ConfigurationKey = "Speed",
+                    ConfigurationValue = 1,
+                    RuleName = "Fan Speed",
                     StartTime = Convert.ToDateTime("2023-02-04T07:21:26.934Z"),
                     EndTime = Convert.ToDateTime("2023-02-04T07:21:26.934Z"),
                     DeviceId = devices[0].DeviceId
-                }                
+                },
+                new Rule
+                {
+                    RuleId = Guid.NewGuid(),
+                    ScenarioId = scenarios[0].ScenarioId,
+                    ConfigurationKey = "Oscillation",
+                    ConfigurationValue = 1,
+                    RuleName = "Fan Oscillation",
+                    StartTime = Convert.ToDateTime("2023-02-04T07:21:26.934Z"),
+                    EndTime = Convert.ToDateTime("2023-02-04T07:21:26.934Z"),
+                    DeviceId = devices[0].DeviceId
+                }
             };
 
             await context.Rules.AddRangeAsync(rules);
@@ -200,10 +301,66 @@ namespace SmartHomeManager.DataSource
                     DeviceAdjustedConfiguration = 1,
                     ProfileId = profiles[0].ProfileId,
                     RuleHistoryId = ruleHistory[0].RuleHistoryId
-        }
+                }
             };
 
             await context.Histories.AddRangeAsync(history);
+            await context.SaveChangesAsync();
+
+            Random rnd = new Random();
+            var DeviceLogs = new List<DeviceLog>();
+            for (int j = 13; j < 13 + 7; j++)
+            {
+                // create objects
+                for (int i = 0; i < 23; i++)
+                {
+                    DeviceLogs.Add(new DeviceLog()
+                    {
+                        LogId = Guid.NewGuid(),
+                        EndTime = DateTime.Parse($"2023-02-{j} {i + 1}:00:00.0000000"),
+                        DateLogged = DateTime.Parse($"2023-02-{j} 00:00:00.0000000"),
+                        DeviceEnergyUsage = rnd.Next(100, 1000),
+                        DeviceActivity = 1,
+                        DeviceState = false,
+                        DeviceId = devices[0].DeviceId,
+                        RoomId = rooms[0].RoomId,
+                    });
+                }
+            }
+
+            await context.DeviceLogs.AddRangeAsync(DeviceLogs);
+            await context.SaveChangesAsync();
+
+            int AmountOfNotificationsToBeSeeded = 20;
+            for (int i = 0; i < AmountOfNotificationsToBeSeeded; i++)
+            {
+                Notification notification = new Notification
+                {
+                    AccountId = accounts[0].AccountId,
+                    NotificationMessage = i + " - test notification",
+                    SentTime = DateTime.Now,
+                };
+
+                // Add to database...
+                await context.Notifications.AddRangeAsync(notification);
+            }
+
+            var deviceProducts = new List<DeviceProduct>
+            {
+                new()
+                {
+                    ProductName = "Xiao Mi Fan",
+                    ProductBrand = "Xiao Mi",
+                    ProductModel = "XM88",
+                    ProductDescription = "Best Smart Fan",
+                    DeviceType = "Fan",
+                    ProductPrice = 250.80,
+                    ProductQuantity = 100,
+                    ProductImageUrl = "https://dynamic.zacdn.com/0D_IA2YBIJba0bZRGmDD2XKZDRc=/fit-in/346x500/filters:quality(95):fill(ffffff)/https://static-sg.zacdn.com/p/xiaomi-1178-9565502-1.jpg"
+                }
+            };
+
+            await context.DeviceProducts.AddRangeAsync(deviceProducts);
             await context.SaveChangesAsync();
         }
     }
