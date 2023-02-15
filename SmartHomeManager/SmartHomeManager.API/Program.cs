@@ -24,72 +24,96 @@ using SmartHomeManager.Domain.HomeSecurityDomain.Interfaces;
 using SmartHomeManager.Domain.SceneDomain.Entities;
 using SmartHomeManager.Domain.SceneDomain.Interfaces;
 using SmartHomeManager.Domain.SceneDomain.Services;
+using SmartHomeManager.DataSource.AccountDataSource;
+using SmartHomeManager.DataSource.DeviceDataSource;
+using SmartHomeManager.DataSource.ProfileDataSource;
+using SmartHomeManager.DataSource.RoomDataSource;
+using SmartHomeManager.DataSource.RoomDataSource.Mocks;
+using SmartHomeManager.Domain.AccountDomain.Interfaces;
+using SmartHomeManager.Domain.AccountDomain.Services;
+using SmartHomeManager.Domain.Common;
+using SmartHomeManager.Domain.DeviceDomain.Entities;
+using SmartHomeManager.Domain.DeviceDomain.Interfaces;
+using SmartHomeManager.Domain.RoomDomain.Interfaces;
+using SmartHomeManager.Domain.RoomDomain.Mocks;
 
-namespace SmartHomeManager.API
+namespace SmartHomeManager.API;
+
+public class Program
 {
-    public class Program
+    public static async Task Main(string[] args)
     {
-        public static void Main(string[] args)
+        var builder = WebApplication.CreateBuilder(args);
+
+        // For allowing React to communicate with API
+        builder.Services.AddCors(options =>
         {
-            var builder = WebApplication.CreateBuilder(args);
-
-            // For allowing React to communicate with API
-            builder.Services.AddCors(options =>
+            options.AddDefaultPolicy(policy =>
             {
-                options.AddDefaultPolicy(policy =>
-                {
-                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");
-                });
+                policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");
             });
+        });
 
-            builder.Services.AddControllers();
+        #region DEPENDENCY INJECTIONS
+        builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        {
+            options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
+        });
 
-            #region DEPENDENCY INJECTIONS
-            builder.Services.AddDbContext<ApplicationDbContext>(options =>
-            {
-                options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
-            });
-            builder.Services.AddScoped<IGenericRepository<History>, DataSource.HistoryDataSource.HistoryRepository>();
-            builder.Services.AddScoped<IRuleHistoryRepository<RuleHistory>, RuleHistoryRepository>();
-            builder.Services.AddScoped<IGenericRepository<Rule>, RuleRepository>();
-            builder.Services.AddScoped<IGenericRepository<Profile>, ProfileRepository>();
-            builder.Services.AddScoped<IGenericRepository<EnergyProfile>, EnergyProfileRepository>();
-            builder.Services.AddScoped<IGenericRepository<Scenario>, ScenarioRepository>();
-            builder.Services.AddScoped<IGetRulesService, GetRulesServices>();
-            builder.Services.AddScoped<IGetScenariosService, GetScenariosService>();
-            builder.Services.AddScoped<IInformDirectorServices, DirectorServices>();
-            builder.Services.AddScoped<IEnergyProfileServices, EnergyProfileServices>();
-            builder.Services.AddScoped<IGenericRepository<HomeSecurity>, HomeSecurityRepository>();
-            builder.Services.AddScoped<IGenericRepository<HomeSecuritySetting>, HomeSecuritySettingRepository>();
-            builder.Services.AddScoped<IHomeSecurityDeviceDefinitionRepository<HomeSecurityDeviceDefinition>, HomeSecurityDeviceDefinitionRepository>();
-            #endregion DEPENDENCY INJECTIONS
+        // MODULE 3
+        builder.Services.AddScoped<IGenericRepository<History>, DataSource.HistoryDataSource.HistoryRepository>();
+        builder.Services.AddScoped<IRuleHistoryRepository<RuleHistory>, RuleHistoryRepository>();
+        builder.Services.AddScoped<IGenericRepository<Rule>, RuleRepository>();
+        builder.Services.AddScoped<IGenericRepository<EnergyProfile>, EnergyProfileRepository>();
+        builder.Services.AddScoped<IGenericRepository<Scenario>, ScenarioRepository>();
+        builder.Services.AddScoped<IGetRulesService, GetRulesServices>();
+        builder.Services.AddScoped<IGetScenariosService, GetScenariosService>();
+        builder.Services.AddScoped<IInformDirectorServices, DirectorServices>();
+        builder.Services.AddScoped<IEnergyProfileServices, EnergyProfileServices>();
+        builder.Services.AddScoped<IGenericRepository<HomeSecurity>, HomeSecurityRepository>();
+        builder.Services.AddScoped<IGenericRepository<HomeSecuritySetting>, HomeSecuritySettingRepository>();
+        builder.Services.AddScoped<IHomeSecurityDeviceDefinitionRepository<HomeSecurityDeviceDefinition>, HomeSecurityDeviceDefinitionRepository>();
+        
+        builder.Services.AddHostedService<DirectorServices>();
 
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+        // DEVICE
+        builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();
+        builder.Services.AddScoped<IDeviceTypeRepository, DeviceTypeRepository>();
 
-            builder.Services.AddHostedService<DirectorServices>();
+        // ROOM
+        builder.Services.AddScoped<IRoomRepository, RoomRepository>();
+        builder.Services.AddScoped<IDeviceInformationServiceMock, DeviceRepositoryMock>();
 
-            var app = builder.Build();
+        // ACCOUNT
+        builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+        builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
+        builder.Services.AddScoped<AccountService>();
+        builder.Services.AddScoped<EmailService>();
+        builder.Services.AddScoped<ProfileService>();
+        #endregion DEPENDENCY INJECTIONS
 
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+        builder.Services.AddControllers();
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
 
-            app.UseHttpsRedirection();
+        var app = builder.Build();
 
-            app.UseCors();
-
-            app.UseAuthorization();
-
-            app.MapControllers();
-
-            app.Run();
+        // Configure the HTTP request pipeline.
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
         }
 
-    }
+        app.UseHttpsRedirection();
 
+        app.UseCors();
+
+        app.UseAuthorization();
+
+        app.MapControllers();
+
+        app.Run();
+    }
 
 }

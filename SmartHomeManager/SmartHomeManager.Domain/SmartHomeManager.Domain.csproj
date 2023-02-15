@@ -27,7 +27,26 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="HomeSecurityDomain\Services\at\" />
+    <Folder Include="AccountDomain\Interfaces\" />
+    <Folder Include="AccountDomain\Services\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Microsoft.AspNetCore.Cryptography.KeyDerivation" />
+    <None Remove="Microsoft.AspNet.WebApi.Core" />
+    <None Remove="Microsoft.EntityFrameworkCore" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="7.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.2" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="RoomDomain\Services\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="DeviceDomain\Interfaces\" />
   </ItemGroup>
 
 </Project>
