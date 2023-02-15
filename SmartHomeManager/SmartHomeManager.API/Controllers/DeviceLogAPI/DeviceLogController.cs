@@ -77,8 +77,11 @@ namespace SmartHomeManager.API.Controllers.DeviceLogAPI
             return Ok(res);
         }
         // date passed shld be start date of the week
-        // GET: api/Analytics/Devices/deviceId?date=xxxxxx
+        // GET: api/Analytics/DeviceLog/deviceId?date=xxxxxx
         [HttpGet("{deviceId}/{date}")]
+        [Consumes("application/json")]
+        [Produces("application/json")]
+
         public ActionResult<IEnumerable<DeviceLog>> GetWeeklyDeviceLog(Guid deviceId, DateTime date)
         {
             var totalUsage = 0;
