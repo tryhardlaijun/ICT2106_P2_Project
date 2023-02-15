@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartHomeManager.DataSource;
 
@@ -10,9 +11,11 @@ using SmartHomeManager.DataSource;
 namespace SmartHomeManager.DataSource.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230213145018_Team1_Tables_Changed")]
+    partial class Team1TablesChanged
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.2");
@@ -313,12 +316,6 @@ namespace SmartHomeManager.DataSource.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("APIKey")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ApiValue")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("DeviceConfiguration")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -353,29 +350,6 @@ namespace SmartHomeManager.DataSource.Migrations
                     b.HasKey("RuleHistoryId");
 
                     b.ToTable("RuleHistories");
-                });
-
-            modelBuilder.Entity("SmartHomeManager.Domain.EnergyProfileDomain.Entities.EnergyProfile", b =>
-                {
-                    b.Property<Guid>("EnergyProfileId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("AccountId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ConfigurationDesc")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("ConfigurationValue")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("EnergyProfileId");
-
-                    b.HasIndex("AccountId");
-
-                    b.ToTable("EnergyProfiles");
                 });
 
             modelBuilder.Entity("SmartHomeManager.Domain.HomeSecurityDomain.Entities.HomeSecurity", b =>
@@ -548,17 +522,7 @@ namespace SmartHomeManager.DataSource.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("APIKey")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("ActionTrigger")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ApiValue")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ConfigurationKey")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("ConfigurationValue")
@@ -604,9 +568,6 @@ namespace SmartHomeManager.DataSource.Migrations
                     b.Property<string>("ScenarioName")
                         .IsRequired()
                         .HasColumnType("TEXT");
-
-                    b.Property<bool>("isActive")
-                        .HasColumnType("INTEGER");
 
                     b.HasKey("ScenarioId");
 
@@ -745,17 +706,6 @@ namespace SmartHomeManager.DataSource.Migrations
                     b.Navigation("Profile");
 
                     b.Navigation("RuleHistory");
-                });
-
-            modelBuilder.Entity("SmartHomeManager.Domain.EnergyProfileDomain.Entities.EnergyProfile", b =>
-                {
-                    b.HasOne("SmartHomeManager.Domain.AccountDomain.Entities.Account", "Account")
-                        .WithMany()
-                        .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Account");
                 });
 
             modelBuilder.Entity("SmartHomeManager.Domain.HomeSecurityDomain.Entities.HomeSecuritySetting", b =>

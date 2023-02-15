@@ -4,7 +4,7 @@ using SmartHomeManager.Domain.Common;
 
 namespace SmartHomeManager.Domain.SceneDomain.Services
 {
-	public class GetRulesServices: IGetRulesServices
+	public class GetRulesServices: IGetRulesService
 	{
         private readonly IGenericRepository<Rule> _ruleRepository;
         public GetRulesServices(IGenericRepository<Rule> ruleRepository)

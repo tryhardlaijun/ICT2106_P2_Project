@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartHomeManager.DataSource;
 
@@ -10,9 +11,11 @@ using SmartHomeManager.DataSource;
 namespace SmartHomeManager.DataSource.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230213090210_Team1_Add_Update_Tables")]
+    partial class Team1AddUpdateTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.2");
@@ -282,8 +285,9 @@ namespace SmartHomeManager.DataSource.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("DeviceAdjustedConfiguration")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("DeviceAdjustedConfiguration")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Message")
                         .IsRequired()
@@ -313,12 +317,6 @@ namespace SmartHomeManager.DataSource.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("APIKey")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ApiValue")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("DeviceConfiguration")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -331,9 +329,6 @@ namespace SmartHomeManager.DataSource.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("RuleEndTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("RuleId")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("RuleIndex")
@@ -355,29 +350,6 @@ namespace SmartHomeManager.DataSource.Migrations
                     b.ToTable("RuleHistories");
                 });
 
-            modelBuilder.Entity("SmartHomeManager.Domain.EnergyProfileDomain.Entities.EnergyProfile", b =>
-                {
-                    b.Property<Guid>("EnergyProfileId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("AccountId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ConfigurationDesc")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("ConfigurationValue")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("EnergyProfileId");
-
-                    b.HasIndex("AccountId");
-
-                    b.ToTable("EnergyProfiles");
-                });
-
             modelBuilder.Entity("SmartHomeManager.Domain.HomeSecurityDomain.Entities.HomeSecurity", b =>
                 {
                     b.Property<Guid>("HomeSecurityId")
@@ -391,6 +363,8 @@ namespace SmartHomeManager.DataSource.Migrations
                         .HasColumnType("INTEGER");
 
                     b.HasKey("HomeSecurityId");
+
+                    b.HasIndex("AccountId");
 
                     b.ToTable("HomeSecurities");
                 });
@@ -548,17 +522,7 @@ namespace SmartHomeManager.DataSource.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("APIKey")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("ActionTrigger")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ApiValue")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ConfigurationKey")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("ConfigurationValue")
@@ -604,9 +568,6 @@ namespace SmartHomeManager.DataSource.Migrations
                     b.Property<string>("ScenarioName")
                         .IsRequired()
                         .HasColumnType("TEXT");
-
-                    b.Property<bool>("isActive")
-                        .HasColumnType("INTEGER");
 
                     b.HasKey("ScenarioId");
 
@@ -747,7 +708,7 @@ namespace SmartHomeManager.DataSource.Migrations
                     b.Navigation("RuleHistory");
                 });
 
-            modelBuilder.Entity("SmartHomeManager.Domain.EnergyProfileDomain.Entities.EnergyProfile", b =>
+            modelBuilder.Entity("SmartHomeManager.Domain.HomeSecurityDomain.Entities.HomeSecurity", b =>
                 {
                     b.HasOne("SmartHomeManager.Domain.AccountDomain.Entities.Account", "Account")
                         .WithMany()

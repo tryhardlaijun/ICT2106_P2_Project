@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartHomeManager.DataSource;
 
@@ -10,9 +11,11 @@ using SmartHomeManager.DataSource;
 namespace SmartHomeManager.DataSource.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230213160231_EnergyProfile_Table")]
+    partial class EnergyProfileTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.2");
@@ -313,12 +316,6 @@ namespace SmartHomeManager.DataSource.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("APIKey")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ApiValue")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("DeviceConfiguration")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -548,17 +545,7 @@ namespace SmartHomeManager.DataSource.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("APIKey")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("ActionTrigger")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ApiValue")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ConfigurationKey")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("ConfigurationValue")
@@ -604,9 +591,6 @@ namespace SmartHomeManager.DataSource.Migrations
                     b.Property<string>("ScenarioName")
                         .IsRequired()
                         .HasColumnType("TEXT");
-
-                    b.Property<bool>("isActive")
-                        .HasColumnType("INTEGER");
 
                     b.HasKey("ScenarioId");
 
