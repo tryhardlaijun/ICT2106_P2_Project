@@ -111,5 +111,17 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
             // account does not exist/account exists but password is wrong
             return null;
 		}
-	}
+
+        public async Task<bool> CheckAccountExists(Guid id)
+        {
+            Account? account = await _accountRepository.GetByIdAsync(id);
+            if (account != null)
+            {
+                Console.WriteLine("account exists");
+                return true;
+            }
+            Console.WriteLine("account noooo  exists");
+            return false;
+        }
+    }
 }

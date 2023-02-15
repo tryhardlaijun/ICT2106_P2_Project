@@ -102,6 +102,16 @@ namespace SmartHomeManager.API.Controllers.ProfileController
             return BadRequest(1);
         }
 
+        // POST: api/Profiles
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpGet("{profileId}")]
+        public async Task<ActionResult<IEnumerable<Guid>>> GetDevicesByProfileId(Guid profileId)
+        {
+            IEnumerable<Guid> listOfDeviceIds = (await _profileService.GetDevicesByProfileId(profileId))!;
+
+            return Ok(listOfDeviceIds);
+        }
+
         /*// DELETE: api/Profiles/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProfile(Guid id) 

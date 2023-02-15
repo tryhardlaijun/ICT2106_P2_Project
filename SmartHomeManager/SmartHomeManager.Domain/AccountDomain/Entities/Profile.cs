@@ -24,8 +24,7 @@ namespace SmartHomeManager.Domain.AccountDomain.Entities
         [ForeignKey("AccountId")]
         public Account Account { get; set; }
 
-        [InverseProperty("Profiles")]
-        public ICollection<Device> Devices { get; set; }
+        /*public ICollection<DeviceProfile> DeviceProfiles { get; set; }*/
 
         [InverseProperty("Profile")]
         public List<Scenario> Scenarios { get; set; }

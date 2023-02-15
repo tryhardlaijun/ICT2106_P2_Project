@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.AccountDomain.DTOs;
+using SmartHomeManager.Domain.DeviceDomain.Entities;
 
 namespace SmartHomeManager.Domain.AccountDomain.Interfaces
 {
@@ -20,5 +21,6 @@ namespace SmartHomeManager.Domain.AccountDomain.Interfaces
         public Task<bool> DeleteAsync(Account account);
         public Task<bool> DeleteByIdAsync(Guid id);
         public Task<int> SaveAsync();
+
     }
 }
