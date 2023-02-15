@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { Button, Select } from "@chakra-ui/react";
 import {
     Chart as ChartJS,
@@ -189,15 +190,11 @@ function DeviceLogging() {
     const fetchWeeklyLog = async (id, date) => {
         try {
             //create the fetch request
-            const res = await fetch(`https://localhost:7140/api/DeviceLog/${id}/${date}`, {
-                method: 'GET',
-                headers: {
-                    accept: 'application/json',
-                },
-            })
+            const res = await axios.get(`https://localhost:7140/api/DeviceLog/${id}/${date}`)
 
+            console.log(res)
             //get the fetch request
-            const data = await res.json()
+            const data = await res.data
             setweeklyDevice1Log(data)
 
         } catch (err) {
