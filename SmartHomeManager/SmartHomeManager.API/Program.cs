@@ -1,5 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.DataSource;
+using SmartHomeManager.DataSource.DeviceLogDataSource;
+using SmartHomeManager.DataSource.DeviceLogDataSource.Mocks;
+using SmartHomeManager.Domain.DeviceLoggingDomain.Interfaces;
+using SmartHomeManager.Domain.DeviceLoggingDomain.Mocks;
 using SmartHomeManager.DataSource.AccountDataSource;
 using SmartHomeManager.DataSource.NotificationDataSource;
 using SmartHomeManager.Domain.AccountDomain.Entities;
@@ -32,6 +36,12 @@ namespace SmartHomeManager.API
                 options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
+            // DEVICELOG
+
+            
+            builder.Services.AddScoped<IDeviceLogRepository, DeviceLogRepository>();
+            builder.Services.AddScoped<IProfileService, ProfileRepositoryMock>();
+            //builder.Services.AddScoped<IDeviceWattsService, DeviceLogRepository>();
             // Inject dependencies for Notification Repository, so all implementations of IGenericRepository<Notification> will use the NotificationRepository implementation...
             builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
             builder.Services.AddScoped<IGenericRepository<Account>, MockAccountRepository>();
@@ -73,6 +83,8 @@ namespace SmartHomeManager.API
 
                 // in order to use await in a method, the caller method must be async as well
                 // await context.Database.MigrateAsync();
+
+                await DeviceLogSeedData.Seed(context);
                 await NotificationRepositorySeeder.Seed(context);
             }
             catch (Exception e)

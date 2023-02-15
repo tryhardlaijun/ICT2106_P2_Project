@@ -19,48 +19,9 @@ namespace SmartHomeManager.DataSource.NotificationDataSource
 
         private readonly ApplicationDbContext _applicationDbContext;
 
-        // tmp variables for testing sake...
-        private readonly List<Notification> _tempData;
-        private readonly Account _tempAccount;
-        private readonly int _tempDataCount = 5;
-        private readonly Guid _tempAccountGuid = Guid.Parse("e19a7e8f-c286-4d17-b567-327a219a4f1e");
-        
-
-
         public NotificationRepository(ApplicationDbContext applicationDbContext)
         {
-
-            // Init Repo with DB Context...
             _applicationDbContext = applicationDbContext;
-            
-
-
-            // Set up tmp account for testing...
-            _tempAccount = new Account
-            {
-                AccountId = _tempAccountGuid,
-                Email = "test@email.com",
-                Username = "test",
-                Address = "Singapore 123456",
-                Timezone = 8,
-                Password = "testpassword"
-            };
-
-            // init new list of notifications....
-            _tempData = new List<Notification>();
-
-            // Seed data cache...
-            for (int i = 0; i < _tempDataCount; i++)
-            {
-                _tempData.Add(new Notification
-                {
-                    NotificationId = Guid.NewGuid(),
-                    AccountId = _tempAccount.AccountId,
-                    NotificationMessage = "Sample Message " + i,
-                    SentTime = DateTime.Now,
-                    Account = _tempAccount
-                });
-            }
         }
 
         public async Task<IEnumerable<Notification>> GetAllByIdAsync(Guid id)

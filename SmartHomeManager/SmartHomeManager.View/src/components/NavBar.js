@@ -184,6 +184,10 @@ const NAV_ITEMS = [
     href: "/profiles",
   },
   {
+    label: "Device Config",
+    href: "/config"
+  },
+  {
     label: "Analytics",
     href: "/analytics",
   },

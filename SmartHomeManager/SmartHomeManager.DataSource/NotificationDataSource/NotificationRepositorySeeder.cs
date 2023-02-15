@@ -1,4 +1,5 @@
-﻿using SmartHomeManager.Domain.AccountDomain.Entities;
+﻿using SmartHomeManager.DataSource.DeviceLogDataSource;
+using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.AccountDomain.Services;
 using SmartHomeManager.Domain.NotificationDomain.Entities;
 using System;
@@ -23,37 +24,25 @@ namespace SmartHomeManager.DataSource.NotificationDataSource
             //if (context.Accounts.Any()) return;
 
             // Only works for <1000 rows...
-            context.Accounts.RemoveRange(context.Accounts);
-            await context.SaveChangesAsync();
+            //context.Accounts.RemoveRange(context.Accounts);
+            //await context.SaveChangesAsync();
 
             context.Notifications.RemoveRange(context.Notifications);
             await context.SaveChangesAsync();
 
-            Guid TempAccountGuid = new Guid("9D2B0228-4D0D-4C23-8B49-01A698857709");
-
-            Account addAccount = new Account
-            {
-                AccountId = TempAccountGuid,
-                Email = "test@email.com",
-                Username = "test123",
-                Address = "Singapore 000000",
-                Timezone = 8,
-                Password = "test123password"
-            };
-
-
-            // Add Account...
-            await context.Accounts.AddRangeAsync(addAccount);
-            await context.SaveChangesAsync();
+            Guid TempAccountGuid = DeviceLogSeedData.TempAccountGuid;
+            
+            // Account to add notifications to...
+            Account? account = await context.Accounts.FindAsync(TempAccountGuid);
 
             for (int i = 0; i < AmountOfNotificationsToBeSeeded; i++)
             {
                 Notification notification = new Notification
                 {
-                    AccountId = addAccount.AccountId,
+                    AccountId = account.AccountId,
                     NotificationMessage = i + " - test notification",
                     SentTime = DateTime.Now,
-                    Account = addAccount
+                    Account = account
                 };
 
                 // Add to database...
