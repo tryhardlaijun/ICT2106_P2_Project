@@ -7,6 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="SceneDomain\Services\" />
+    <None Remove="SceneDomain\Entities\DTOs\" />
+    <None Remove="SceneDomain\Interfaces\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="SceneDomain\Services\" />
+    <Folder Include="SceneDomain\Entities\DTOs\" />
+    <Folder Include="SceneDomain\Interfaces\" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Remove="EnergyProfile\**" />
     <EmbeddedResource Remove="EnergyProfile\**" />
     <None Remove="EnergyProfile\**" />
