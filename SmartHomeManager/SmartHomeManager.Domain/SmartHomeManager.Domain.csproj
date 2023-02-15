@@ -6,4 +6,14 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="SceneDomain\Services\" />
+    <None Remove="SceneDomain\Entities\DTOs\" />
+    <None Remove="SceneDomain\Interfaces\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="SceneDomain\Services\" />
+    <Folder Include="SceneDomain\Entities\DTOs\" />
+    <Folder Include="SceneDomain\Interfaces\" />
+  </ItemGroup>
 </Project>
