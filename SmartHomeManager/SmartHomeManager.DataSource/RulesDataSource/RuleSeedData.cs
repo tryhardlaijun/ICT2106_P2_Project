@@ -129,7 +129,7 @@ public class RuleSeedData
             ScenarioId = scenario[0].ScenarioId,
             ConfigurationValue = 0,
             ActionTrigger = "string",
-            ScheduleName = "string",
+            RuleName = "string",
             StartTime = Convert.ToDateTime("2023-02-04T07:21:26.934Z"),
             EndTime = Convert.ToDateTime("2023-02-04T07:21:26.934Z"),
             DeviceId = devices[0].DeviceId

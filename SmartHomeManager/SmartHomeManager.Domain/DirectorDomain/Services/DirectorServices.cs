@@ -80,7 +80,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
                     var timeDiff = Math.Floor((DateTime.Now - Convert.ToDateTime(rule.StartTime)).TotalMinutes);
                     if (timeDiff == 0)
                     {
-                        Console.WriteLine("Trigger Detected: " + rule.ScheduleName);
+                        Console.WriteLine("Trigger Detected: " + rule.RuleName);
                         var deviceID = rule.DeviceId;
                         var configKey = rule.ConfigurationKey;
                         var configValue = rule.ConfigurationValue;
@@ -131,7 +131,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
                 {
                     RuleId = ruleID,
                     RuleIndex = await _ruleHistoryRepository.CountRuleAsync(),
-                    ScheduleName = rule.ScheduleName ?? "",
+                    RuleName = rule.RuleName,
                     RuleStartTime = rule.StartTime,
                     RuleEndTime = rule.EndTime,
                     RuleActionTrigger = rule.ActionTrigger,
