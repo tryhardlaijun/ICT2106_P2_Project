@@ -31,8 +31,8 @@ namespace SmartHomeManager.DataSource
             context.Devices.RemoveRange(context.Devices);
             context.DeviceCoordinates.RemoveRange(context.DeviceCoordinates);
 
-            context.RuleHistories .RemoveRange (context RuleHistories);
-            context .DeviceProducts. RemoveRange (context. DeviceProducts);
+            context.RuleHistories.RemoveRange(context.RuleHistories);
+            context.DeviceProducts.RemoveRange(context.DeviceProducts);
 
             await context.SaveChangesAsync();
 
