@@ -25,15 +25,14 @@ namespace SmartHomeManager.DataSource
 
             context.Profiles.RemoveRange(context.Profiles);
 
-
             context.Rooms.RemoveRange(context.Rooms);
             context.RoomCoordinates.RemoveRange(context.RoomCoordinates);
             context.DeviceTypes.RemoveRange(context.DeviceTypes);
             context.Devices.RemoveRange(context.Devices);
             context.DeviceCoordinates.RemoveRange(context.DeviceCoordinates);
 
-
-
+            context.RuleHistories .RemoveRange (context RuleHistories);
+            context .DeviceProducts. RemoveRange (context. DeviceProducts);
 
             await context.SaveChangesAsync();
 
