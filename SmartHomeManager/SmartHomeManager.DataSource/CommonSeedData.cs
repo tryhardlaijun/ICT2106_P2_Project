@@ -44,7 +44,7 @@ namespace SmartHomeManager.DataSource
                     AccountId = Guid.Parse("11111111-1111-1111-1111-111111111111"),
                     Email = "abc@xyz.com",
                     Username = "username",
-                    Password = "P@ssw0rd",
+                    Password = "xyZJhqMBMjJ1PGQ6ZiRKCu3RIVDZTKSthTZJ+52voFc=",
                     Address = "123 abc 456 888888",
                     Timezone = 8,
                     DevicesOnboarded = 3
