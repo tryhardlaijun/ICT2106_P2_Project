@@ -25,15 +25,13 @@ export default function Scenarios() {
 				`https://localhost:7140/api/Rules/GetAllRules`
 			)
 			const details = await response.data
-			console.log(details);
 			setAllRules(details)
 			return
 		}
 		getAllRules().then(()=>{
-			console.log("all rules")
 		})
 		.catch((error)=>{
-			console.log(error);
+			console.error(error);
 		})
 	},[])
 	return (
