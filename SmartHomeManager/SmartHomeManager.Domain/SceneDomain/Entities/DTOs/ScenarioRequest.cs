@@ -13,10 +13,10 @@ namespace SmartHomeManager.Domain.SceneDomain.Entities.DTOs
         public string ScenarioName { get; set; }
 
         [Required]
-        public string RuleList { get; set; }
+        public Guid ProfileId { get; set; }
 
         [Required]
-        public Guid ProfileId { get; set; }
+        public Boolean isActive { get; set; }
     }
 }
 

@@ -33,7 +33,8 @@ namespace SmartHomeManager.API.Controllers.ScenariosAPIs
             {
                 ScenarioId = scenario.ScenarioId,
                 ScenarioName = scenario.ScenarioName,
-                ProfileId = scenario.ProfileId,                
+                ProfileId = scenario.ProfileId,
+                isActive = scenario.isActive
             }).ToList();
             return resp;
         }
