@@ -84,7 +84,7 @@ public class Program
         builder.Services.AddScoped<IGenericRepository<HomeSecuritySetting>, HomeSecuritySettingRepository>();
         builder.Services.AddScoped<IHomeSecurityDeviceDefinitionRepository<HomeSecurityDeviceDefinition>, HomeSecurityDeviceDefinitionRepository>();
         
-        // builder.Services.AddHostedService<DirectorServices>();
+        builder.Services.AddHostedService<DirectorServices>();
 
         // DEVICE
         builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();
