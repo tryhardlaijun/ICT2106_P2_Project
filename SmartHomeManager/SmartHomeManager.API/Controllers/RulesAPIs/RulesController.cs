@@ -80,15 +80,29 @@ public class RulesController : ControllerBase
 
     // PUT api/Rules/5
     [HttpPut("EditRule")]
-    public async Task<ActionResult> EditRule(Rule rule)
+    public async Task<ActionResult> EditRule(RuleRequest ruleRequest)
     {
+        var rule = new Rule
+        {
+            RuleId = ruleRequest.RuleId,
+            ScenarioId = ruleRequest.ScenarioId,
+            ConfigurationKey = ruleRequest.ConfigurationKey,
+            ConfigurationValue = ruleRequest.ConfigurationValue,
+            ActionTrigger = ruleRequest.ActionTrigger,
+            RuleName = ruleRequest.RuleName,
+            StartTime = Convert.ToDateTime(ruleRequest.StartTime),
+            EndTime = Convert.ToDateTime(ruleRequest.EndTime),
+            DeviceId = ruleRequest.DeviceId,
+            APIKey = ruleRequest.APIKey,
+            ApiValue = ruleRequest.ApiValue,
+        };
         await _registerRuleService.EditRuleAsync(rule);
         return StatusCode(200, rule);
     }
 
     // DELETE api/Rules/1
     [HttpDelete("{id}")]
-    public async Task<ActionResult> DeleteRule([FromBody] Guid id)
+    public async Task<ActionResult> DeleteRule(Guid id)
     {
         var rule = await _registerRuleService.GetRuleByIdAsync(id);
         if (rule != null)
