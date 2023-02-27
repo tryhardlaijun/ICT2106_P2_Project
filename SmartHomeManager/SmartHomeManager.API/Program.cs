@@ -74,6 +74,7 @@ public class Program
         builder.Services.AddScoped<IGenericRepository<History>, DataSource.HistoryDataSource.HistoryRepository>();
         builder.Services.AddScoped<IRuleHistoryRepository<RuleHistory>, RuleHistoryRepository>();
         builder.Services.AddScoped<IGenericRepository<Rule>, RuleRepository>();
+        builder.Services.AddScoped<IGetRulesRepository, GetRulesRepository>();
         builder.Services.AddScoped<IGenericRepository<EnergyProfile>, EnergyProfileRepository>();
         builder.Services.AddScoped<IGenericRepository<Scenario>, ScenarioRepository>();
         builder.Services.AddScoped<IGetRulesService, GetRulesServices>();

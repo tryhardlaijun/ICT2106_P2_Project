@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SmartHomeManager.Domain.SceneDomain.Entities;
 using SmartHomeManager.Domain.SceneDomain.Services;
+using SmartHomeManager.Domain.SceneDomain.Interfaces;
 using SmartHomeManager.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.DataSource;
@@ -17,16 +18,18 @@ public class RulesController : ControllerBase
     private readonly RuleServices _registerRuleService;
     private readonly GetRulesServices _getRulesServices;
 
-    public RulesController(IGenericRepository<Rule> ruleRepository, IInformDirectorServices informDirectorServices)
+
+    public RulesController(IGenericRepository<Rule> ruleRepository, IInformDirectorServices informDirectorServices,IGetRulesRepository getRulesRepository)
     {
         _registerRuleService = new(ruleRepository, informDirectorServices);
+        _getRulesServices = new(getRulesRepository);
     }
 
     // GET: api/Rules/GetAllRules
     [HttpGet("GetAllRules")]
     public async Task<IEnumerable<RuleRequest>> GetAllRules()
     {
-        var rules = await _registerRuleService.GetAllRulesAsync();
+        var rules = await _getRulesServices.GetAllRules();
         var resp = rules.Select(rule => new RuleRequest
         {
             RuleId = rule.RuleId,
@@ -48,7 +51,7 @@ public class RulesController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<Rule>> GetRule(Guid id)
     {
-        var rule = await _registerRuleService.GetRuleByIdAsync(id);
+        var rule = await _getRulesServices.GetRuleById(id);
         if(rule != null)
         {
             return StatusCode(200, rule);
@@ -112,5 +115,31 @@ public class RulesController : ControllerBase
         }
         return StatusCode(404, "rule not exist");
     }
+
+    // To remove (Provided interface)
+    [HttpGet("rulesByScenarioId/{id}")]
+    public async Task<IEnumerable<RuleRequest?>> GetRulesByScenarioId(Guid id)
+    {
+        var rules = await _getRulesServices.GetAllRulesByScenarioId(id);
+        var resp = rules.Select(rule => new RuleRequest
+        {
+            RuleId = rule.RuleId,
+            ScenarioId = rule.ScenarioId,
+            ConfigurationKey = rule.ConfigurationKey,
+            ConfigurationValue = rule.ConfigurationValue,
+            ActionTrigger = rule.ActionTrigger,
+            RuleName = rule.RuleName,
+            StartTime = Convert.ToDateTime(rule.StartTime),
+            EndTime = Convert.ToDateTime(rule.EndTime),
+            DeviceId = rule.DeviceId,
+            APIKey = rule.APIKey,
+            ApiValue = rule.ApiValue,
+        }).ToList();
+        return resp;
+    }
+
+    // To do : loadRulesBackup(ProfileId, IEnumerable<Rules>)
+
+
 }
 
