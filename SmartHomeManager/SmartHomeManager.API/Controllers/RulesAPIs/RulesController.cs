@@ -29,7 +29,7 @@ public class RulesController : ControllerBase
     [HttpGet("GetAllRules")]
     public async Task<IEnumerable<RuleRequest>> GetAllRules()
     {
-        var rules = await _getRulesServices.GetAllRules();
+        var rules = await _getRulesServices.GetAllRulesAsync();
         var resp = rules.Select(rule => new RuleRequest
         {
             RuleId = rule.RuleId,
@@ -51,7 +51,7 @@ public class RulesController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<Rule>> GetRule(Guid id)
     {
-        var rule = await _getRulesServices.GetRuleById(id);
+        var rule = await _getRulesServices.GetRuleByIdAsync(id);
         if(rule != null)
         {
             return StatusCode(200, rule);
@@ -120,7 +120,7 @@ public class RulesController : ControllerBase
     [HttpGet("rulesByScenarioId/{id}")]
     public async Task<IEnumerable<RuleRequest?>> GetRulesByScenarioId(Guid id)
     {
-        var rules = await _getRulesServices.GetAllRulesByScenarioId(id);
+        var rules = await _getRulesServices.GetAllRulesByScenarioIdAsync(id);
         var resp = rules.Select(rule => new RuleRequest
         {
             RuleId = rule.RuleId,
