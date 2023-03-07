@@ -129,7 +129,7 @@ export default function SchRule() {
 	}
 	async function createRule(e){
 		const newRule = {...ruleDetail}
-		const {data} = await axios.post('https://localhost:7140/api/Rules/CreateRule', newRule, {headers:{
+		const {data} = await axios.post('http://localhost:5186/api/Rules/CreateRule', newRule, {headers:{
 			'Content-Type': 'application/json'
 		}})
 		console.log(data);
