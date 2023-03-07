@@ -5,10 +5,10 @@ import axios from "axios";
 function Buttons(props) {
 	console.log(props);
 	async function deleteRule(ruleID){
-		const {data} = await axios.delete(`http://localhost:5186/api/Rules/${ruleID}`,{headers:{
+		const {data} = await axios.delete(`https://localhost:7140/api/Rules/${ruleID}`,{headers:{
 			'Content-Type': 'application/json'
 		}, data:ruleID})
-		console.log(data);
+		console.log("Data is " + data);
 	}
 	return (
 		<Td>

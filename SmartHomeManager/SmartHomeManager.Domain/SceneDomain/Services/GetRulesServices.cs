@@ -1,30 +1,31 @@
 ﻿using SmartHomeManager.Domain.SceneDomain.Entities;
 using SmartHomeManager.Domain.SceneDomain.Interfaces;
+using SmartHomeManager.Domain.DirectorDomain.Services;
 using SmartHomeManager.Domain.Common;
 
 namespace SmartHomeManager.Domain.SceneDomain.Services
 {
 	public class GetRulesServices: IGetRulesService
 	{
-        private readonly IGenericRepository<Rule> _ruleRepository;
-        public GetRulesServices(IGenericRepository<Rule> ruleRepository)
+        private readonly IGetRulesRepository _getRuleRepository;
+        public GetRulesServices(IGetRulesRepository ruleRepository)
 		{
-            _ruleRepository = ruleRepository;
+            _getRuleRepository = ruleRepository;
 		}
         
-        public async Task<IEnumerable<Rule>> GetAllRules()
+        public async Task<IEnumerable<Rule>> GetAllRulesAsync()
         {
-            return await _ruleRepository.GetAllAsync();
+            return await _getRuleRepository.GetAllRulesAsync();
         }
 
-        public async Task<IEnumerable<Rule>> GetAllRulesByScenarioId(Guid ScenarioId)
+        public async Task<IEnumerable<Rule?>> GetAllRulesByScenarioIdAsync(Guid ScenarioId)
         {
-            throw new NotImplementedException();
+            return await _getRuleRepository.GetAllRulesByScenarioIdAsync(ScenarioId);
         }
 
-        public async Task<Rule?> GetRuleById(Guid id)
+        public async Task<Rule?> GetRuleByIdAsync(Guid id)
         {
-            return await _ruleRepository.GetByIdAsync(id);
+            return await _getRuleRepository.GetRuleByIdAsync(id);
         }
     }
 }

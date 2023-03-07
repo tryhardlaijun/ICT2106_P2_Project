@@ -102,7 +102,7 @@ export default function SchRule() {
 		RuleName: "string1",
 		startTime: "",
 		endTime: "",
-		deviceId: "5CDDF6A7-C3B8-47A7-9DA1-19E1795EBF69",
+		deviceId: "33333333-3333-3333-3333-333333333333",
 		apiKey: "",
 		apiValue: "",
 	});

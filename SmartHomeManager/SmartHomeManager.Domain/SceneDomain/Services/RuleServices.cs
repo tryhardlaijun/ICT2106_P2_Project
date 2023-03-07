@@ -2,6 +2,7 @@
 using SmartHomeManager.Domain.DirectorDomain.Interfaces;
 using SmartHomeManager.Domain.DirectorDomain.Services;
 using SmartHomeManager.Domain.SceneDomain.Entities;
+using SmartHomeManager.Domain.SceneDomain.Interfaces;
 using System.Data;
 using Rule = SmartHomeManager.Domain.SceneDomain.Entities.Rule;
 
