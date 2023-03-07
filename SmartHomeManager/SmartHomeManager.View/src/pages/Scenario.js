@@ -22,7 +22,7 @@ export default function Scenarios() {
 	useEffect(()=>{
 		async function getAllRules(){
 			const response = await axios(
-				`http://localhost:5186/api/Rules/GetAllRules`
+				`https://localhost:7140/api/Rules/GetAllRules`
 			)
 			const details = await response.data
 			setAllRules(details)
@@ -72,12 +72,12 @@ export default function Scenarios() {
 				</Box>
 				<Box width="50%" display="flex" justifyContent="flex-start">
 					<Button ml={2} colorScheme="whatsapp">
-						Export Scenario
+					<Link to="https://localhost:7140/api/Rules/DownloadRules">Export Rules</Link>
 					</Button>
 					<ModalButton
 						title="Import File"
 						text="Room.json"
-						action="Upload"
+						action="Upload"	
 					/>
 					<ModalButton
 						title="Simulate Clash"
