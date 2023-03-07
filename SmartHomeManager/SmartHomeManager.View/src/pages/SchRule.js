@@ -16,16 +16,13 @@ import axios from "axios";
 
 function FormCard({ ruleInfo, updateForm }) {
 	const name = "Scencerio Name";
-	console.log(ruleInfo);
 	let startTime = ruleInfo.startTime==="" ? "00:00:00":new Date(ruleInfo.startTime).toLocaleTimeString("en-SG",{hour12: false});
 	let endTime = ruleInfo.endTime==="" ? "00:00:00":new Date(ruleInfo.endTime).toLocaleTimeString("en-SG",{hour12: false});
 	let originalDevice = ruleInfo.deviceId
 	function makeDate(time){
-		console.log(time);
 		let validDate = new Date();
 		let timeArray = time.split(":")
 		validDate.setHours(timeArray[0], timeArray[1])
-		console.log(validDate);
 		return validDate.toISOString()
 	}
 	return (
@@ -105,24 +102,20 @@ export default function SchRule() {
 		RuleName: "string1",
 		startTime: "",
 		endTime: "",
-		deviceId: "5CDDF6A7-C3B8-47A7-9DA1-19E1795EBF69",
+		deviceId: "33333333-3333-3333-3333-333333333333",
 		apiKey: "",
 		apiValue: "",
 	});
 	useEffect(() => {
 		if (location.state != null) {
 			let ruleinfo = location.state;
-			console.log(location.state);
 			setRuleDetail(ruleinfo);
-			console.log(ruleDetail);
 		} else{
-			console.log("new rule");
 			setNewFlag(true)
 		}
 	}, [location.state]);
 	const toast = useToast();
 	function updateDetails(value) {
-		console.log(ruleDetail);
 		return setRuleDetail((prev) => {
 			return { ...prev, ...value };
 		});
@@ -132,7 +125,6 @@ export default function SchRule() {
 		const {data} = await axios.post('http://localhost:5186/api/Rules/CreateRule', newRule, {headers:{
 			'Content-Type': 'application/json'
 		}})
-		console.log(data);
 	}
 	return (
 		<>

@@ -15,10 +15,12 @@ namespace SmartHomeManager.Domain.SceneDomain.Entities
         [Required]
         public Guid ProfileId { get; set; }
 
+        [Required]
+        public Boolean isActive { get; set; }
+
         [ForeignKey("ProfileId")]
         public Profile Profile { get; set; }
 
-        [Required]
-        public Boolean isActive { get; set; }
+        
     }
 }
