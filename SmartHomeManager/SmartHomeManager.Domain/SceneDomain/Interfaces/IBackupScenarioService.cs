@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SmartHomeManager.Domain.BackupDomain.Interfaces
+namespace SmartHomeManager.Domain.SceneDomain.Interfaces
 {
-    public interface IBackupService
+    public interface IBackupScenarioService
     {
-        void createBackup(List<Rule> rulesList, List<Scenario> scenarioList);
+        void loadScenarioBackup(Guid profileID, IEnumerable<Scenario> scenarios);
     }
 }

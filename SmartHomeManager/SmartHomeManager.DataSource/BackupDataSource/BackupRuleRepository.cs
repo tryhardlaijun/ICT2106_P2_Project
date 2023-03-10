@@ -1,16 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.Domain.BackupDomain.Entities;
+using SmartHomeManager.Domain.BackupDomain.Interfaces;
 using SmartHomeManager.Domain.Common;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SmartHomeManager.DataSource.BackupDataSource
 {
-    public class BackupRuleRepository : IGenericRepository<BackupRule>
+    public class BackupRuleRepository : IBackupRuleRepository
     {
         private readonly ApplicationDbContext _applicationDbContext;
         public BackupRuleRepository(ApplicationDbContext applicationDbContext)
@@ -18,48 +18,13 @@ namespace SmartHomeManager.DataSource.BackupDataSource
             _applicationDbContext = applicationDbContext;
         }
 
-        public async Task<bool> AddAsync(BackupRule backupRule)
-        {
-            return await CreateBackupRule(backupRule);
-        }
-
-        public async Task<bool> DeleteAsync(BackupRule entity)
-        {
-            return await DeleteBackupRule(entity);
-        }
-
-        public async Task<bool> DeleteByIdAsync(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<IEnumerable<BackupRule>> GetAllAsync()
-        {
-            return await GetAllBackupRule();
-        }
-
-        public async Task<BackupRule?> GetByIdAsync(Guid id)
-        {
-            return await GetBackupRuleById(id);
-        }
-
-        public async Task<bool> SaveAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<bool> UpdateAsync(BackupRule entity)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<IEnumerable<BackupRule>> GetAllBackupRule()
         {
             return await _applicationDbContext.BackupRule.ToListAsync();
         }
-        public async Task<BackupRule> GetBackupRuleById(Guid ruleId)
+        public async Task<List<BackupRule>> GetBackupRuleById(Guid scenarioId)
         {
-            return await _applicationDbContext.BackupRule.FindAsync(ruleId);
+            return await _applicationDbContext.BackupRule.Where(r => r.scenarioID == scenarioId).ToListAsync();
         }
         public async Task<bool> CreateBackupRule(BackupRule backupRule)
         {

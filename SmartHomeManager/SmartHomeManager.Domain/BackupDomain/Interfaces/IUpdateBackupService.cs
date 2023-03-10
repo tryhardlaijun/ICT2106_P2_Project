@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace SmartHomeManager.Domain.BackupDomain.Interfaces
 {
-    public class IUpdateBackupService
+    public interface IUpdateBackupService
     {
+        void restoreBackupComplete();
     }
 }

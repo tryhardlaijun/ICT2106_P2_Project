@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.Domain.BackupDomain.Entities;
+using SmartHomeManager.Domain.BackupDomain.Interfaces;
 using SmartHomeManager.Domain.Common;
 using System;
 using System.Collections.Generic;
@@ -9,55 +10,21 @@ using System.Threading.Tasks;
 
 namespace SmartHomeManager.DataSource.BackupDataSource
 {
-    public class BackupScenarioRepository : IGenericRepository<BackupScenario>
+    public class BackupScenarioRepository : IBackupScenarioRepository
     {
         private readonly ApplicationDbContext _applicationDbContext;
         public BackupScenarioRepository(ApplicationDbContext applicationDbContext)
         {
             _applicationDbContext = applicationDbContext;
         }
-        public async Task<bool> AddAsync(BackupScenario backupScenario)
-        {
-            return await CreateBackupScenario(backupScenario);
-        }
-
-        public async Task<bool> DeleteAsync(BackupScenario entity)
-        {
-            return await DeleteBackupScenario(entity);
-        }
-
-        public async Task<bool> DeleteByIdAsync(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<IEnumerable<BackupScenario>> GetAllAsync()
-        {
-            return await GetAllBackupScenario();
-        }
-
-        public async Task<BackupScenario?> GetByIdAsync(Guid id)
-        {
-            return await GetBackupScenarioById(id);
-        }
-
-        public async Task<bool> SaveAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<bool> UpdateAsync(BackupScenario entity)
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<IEnumerable<BackupScenario>> GetAllBackupScenario()
         {
             return await _applicationDbContext.BackupScenario.ToListAsync();
         }
-        public async Task<BackupScenario> GetBackupScenarioById(Guid scenarioId)
+        public async Task<List<BackupScenario>> GetBackupScenarioById(Guid scenarioId)
         {
-            return await _applicationDbContext.BackupScenario.FindAsync(scenarioId);
+            return await _applicationDbContext.BackupScenario.Where(s => s.scenarioID == scenarioId).ToListAsync();
         }
         public async Task<bool> CreateBackupScenario(BackupScenario backupScenario)
         {
