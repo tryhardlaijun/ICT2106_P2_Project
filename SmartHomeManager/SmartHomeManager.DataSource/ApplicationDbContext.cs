@@ -12,6 +12,7 @@ using SmartHomeManager.Domain.HomeSecurityDomain.Entities;
 using SmartHomeManager.Domain.APIDomain.Entities;
 using SmartHomeManager.Domain.EnergyProfileDomain.Entities;
 using SmartHomeManager.Domain.AnalysisDomain.Entities;
+using SmartHomeManager.Domain.BackupDomain.Entities;
 
 namespace SmartHomeManager.DataSource;
 
@@ -48,6 +49,8 @@ public class ApplicationDbContext : DbContext
         ForecastCharts = base.Set<ForecastChart>();
         ForecastChartsData = base.Set<ForecastChartData>();
         EnergyEfficiency = base.Set<EnergyEfficiency>();
+        BackupRules = base.Set<BackupRule>();
+        BackupScenarios = base.Set<BackupScenario>();
     }
 
     public DbSet<Account> Accounts { get; }
@@ -79,6 +82,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<ForecastChart> ForecastCharts { get; }
     public DbSet<ForecastChartData> ForecastChartsData { get; }
     public DbSet<EnergyEfficiency> EnergyEfficiency { get; }
+    public DbSet<BackupRule> BackupRules { get; }
+    public DbSet<BackupScenario> BackupScenarios { get; }
 
 
 
@@ -99,5 +104,11 @@ public class ApplicationDbContext : DbContext
                     .OnDelete(DeleteBehavior.SetNull);
 
         modelBuilder.Entity<DeviceProfile>().HasKey(deviceProfile => new { deviceProfile.DeviceId, deviceProfile.ProfileId });
+
+        modelBuilder.Entity<BackupRule>()
+            .HasKey(br => new { br.RuleId, br.VersionNumber });
+
+        modelBuilder.Entity<BackupScenario>()
+            .HasKey(bs => new { bs.ScenarioId, bs.VersionNumber });
     }
 }
