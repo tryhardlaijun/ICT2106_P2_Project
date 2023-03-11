@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SmartHomeManager.Domain.BackupDomain.Services
 {
-    public class BackupServices : IUpdateBackupService, IBackupService
+    public class BackupServices : IUpdateBackupService
     {
         private readonly IBackupRuleRepository _backupRuleRepository;
         private readonly IBackupScenarioRepository _backupScenarioRepository;
@@ -59,6 +59,16 @@ namespace SmartHomeManager.Domain.BackupDomain.Services
         public async Task<List<BackupScenario>> loadBackupScenario(Guid profileId)
         {
             return await _backupScenarioRepository.GetBackupScenarioById(profileId);
+        }
+
+        public async Task<IEnumerable<BackupScenario>> getAllBackupScenario()
+        {
+            return await _backupScenarioRepository.GetAllBackupScenario();
+        }
+
+        public async Task<IEnumerable<BackupRule>> getAllBackupRule()
+        {
+            return await _backupRuleRepository.GetAllBackupRule();
         }
 
         public async void restoreBackupComplete()

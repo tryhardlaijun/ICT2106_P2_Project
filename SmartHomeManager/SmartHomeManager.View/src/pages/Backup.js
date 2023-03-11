@@ -16,6 +16,46 @@ export default function Backup() {
         document.getElementById("showSelected").style.display = "block";
     }
 
+    function fetchBackup() {
+        //to set profileId(/accountId) in Login.js, using this because it already has rules/scenarios in db
+        //not sure if accountId is the same as the profileId saved in Scenarios
+        localStorage.setItem('profileId', '22222222-2222-2222-2222-222222222222')
+
+        fetch("https://localhost:7140/api/Backup/loadBackupScenario/" + localStorage.getItem('profileId')).then(response =>
+            response.json().then(data => ({
+                data: data,
+                status: response.status
+            })
+            ).then(res => {
+                //console.log(res.data);
+
+                Object.entries(res.data).forEach(([key, value]) => {
+                    console.log(`BackupScenario ${key}: ${value.scenarioID}`);
+
+                    fetch("https://localhost:7140/api/Backup/loadBackupRule/" + value.scenarioID).then(response =>
+                        response.json().then(data => ({
+                            data: data,
+                            status: response.status
+                        })
+                        ).then(res =>
+
+                            Object.entries(res.data).forEach(([key, value]) => {
+                                console.log(`BackupRule ${key}: ${value.rulesID}`);
+                            })
+                        )
+                    )
+                });
+
+                
+            }))
+            
+
+        
+    
+
+    }
+
+    fetchBackup();
 
     return (
         <Container maxW='container.sm'>

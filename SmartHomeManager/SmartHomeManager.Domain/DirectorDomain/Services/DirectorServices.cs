@@ -1,5 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SmartHomeManager.Domain.BackupDomain.Entities;
+using SmartHomeManager.Domain.BackupDomain.Interfaces;
 using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.DirectorDomain.Entities;
 using SmartHomeManager.Domain.DirectorDomain.Interfaces;
@@ -12,7 +14,7 @@ using Rule = SmartHomeManager.Domain.SceneDomain.Entities.Rule;
 
 namespace SmartHomeManager.Domain.DirectorDomain.Services
 {
-    public class DirectorServices : BackgroundService, IInformDirectorServices
+    public class DirectorServices : BackgroundService, IInformDirectorServices, IBackupService
     {
         private readonly IServiceProvider _serviceProvider;
 
@@ -22,6 +24,8 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
 
         private readonly IRuleHistoryRepository<RuleHistory> _ruleHistoryRepository;
         private readonly IGenericRepository<History> _historyRepository;
+        private readonly IBackupRuleRepository _backupRuleRepository;
+        private readonly IBackupScenarioRepository _backupScenarioRepository;
 
         private List<Rule> rules;
         private List<Scenario> scenarios;
@@ -39,6 +43,9 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
             _scenarioInterface = scope.ServiceProvider.GetRequiredService<IGetScenariosService>();
             _energyProfileInterface = scope.ServiceProvider.GetRequiredService<IEnergyProfileServices>();
 
+            _backupRuleRepository = scope.ServiceProvider.GetRequiredService<IBackupRuleRepository>();
+            _backupScenarioRepository = scope.ServiceProvider.GetRequiredService<IBackupScenarioRepository>();
+
             rules = new List<Rule>();
             scenarios= new List<Scenario>();
             timeMark = DateTime.Now.AddMinutes(-1);
@@ -46,9 +53,11 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
 
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-        {            
+        {
             rules = (await _ruleInterface.GetAllRules()).ToList();       
             scenarios = (await _scenarioInterface.GetAllScenarios()).ToList();
+
+            createBackup(rules, scenarios);       
 
             while (!stoppingToken.IsCancellationRequested)
             {             
@@ -158,6 +167,38 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
                     scenarios = scenarios.Where(s => s.ScenarioId != scenarioID).ToList();
                     rules = rules.Where(r => r.ScenarioId != scenarioID).ToList();            
                     break;
+            }
+        }
+
+        public async void createBackup(List<Rule> rulesList, List<Scenario> scenarioList)
+        {
+            foreach (Rule rule in rulesList)
+            {
+                BackupRule backupRule = new BackupRule
+                {
+                    rulesID = rule.RuleId,
+                    scenarioID = rule.ScenarioId,
+                    scheduleName = rule.RuleName,
+                    startTime = (DateTime)rule.StartTime,
+                    endTime = (DateTime)rule.EndTime,
+                    actionTrigger = rule.ActionTrigger,
+                    configurationKey = rule.ConfigurationKey,
+                    configurationValue = rule.ConfigurationValue,
+                    apiKey = rule.APIKey,
+                    apiValue = rule.ApiValue
+                };
+                await _backupRuleRepository.CreateBackupRule(backupRule);
+            }
+
+            foreach (Scenario scenario in scenarioList)
+            {
+                BackupScenario backupScenario = new BackupScenario
+                {
+                    scenarioID = scenario.ScenarioId,
+                    scheduleName = scenario.ScenarioName,
+                    profileID = scenario.ProfileId
+                };
+                await _backupScenarioRepository.CreateBackupScenario(backupScenario);
             }
         }
     }

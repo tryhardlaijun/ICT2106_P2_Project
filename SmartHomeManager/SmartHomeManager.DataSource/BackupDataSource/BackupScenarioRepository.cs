@@ -2,6 +2,7 @@
 using SmartHomeManager.Domain.BackupDomain.Entities;
 using SmartHomeManager.Domain.BackupDomain.Interfaces;
 using SmartHomeManager.Domain.Common;
+using SmartHomeManager.Domain.SceneDomain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,9 +23,9 @@ namespace SmartHomeManager.DataSource.BackupDataSource
         {
             return await _applicationDbContext.BackupScenario.ToListAsync();
         }
-        public async Task<List<BackupScenario>> GetBackupScenarioById(Guid scenarioId)
+        public async Task<List<BackupScenario>> GetBackupScenarioById(Guid profileId)
         {
-            return await _applicationDbContext.BackupScenario.Where(s => s.scenarioID == scenarioId).ToListAsync();
+            return await _applicationDbContext.BackupScenario.Where(s => s.profileID == profileId).ToListAsync();
         }
         public async Task<bool> CreateBackupScenario(BackupScenario backupScenario)
         {
