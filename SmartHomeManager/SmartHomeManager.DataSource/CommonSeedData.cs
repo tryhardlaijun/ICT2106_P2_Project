@@ -20,7 +20,7 @@ namespace SmartHomeManager.DataSource
         public static async Task Seed(ApplicationDbContext context)
         {
             // Delete all existing database objects
-            context.Accounts.RemoveRange(context.Accounts);
+            /*context.Accounts.RemoveRange(context.Accounts);
             await context.SaveChangesAsync();
 
             context.Profiles.RemoveRange(context.Profiles);
@@ -32,7 +32,7 @@ namespace SmartHomeManager.DataSource
             context.DeviceCoordinates.RemoveRange(context.DeviceCoordinates);
 
             context.RuleHistories.RemoveRange(context.RuleHistories);
-            context.DeviceProducts.RemoveRange(context.DeviceProducts);
+            context.DeviceProducts.RemoveRange(context.DeviceProducts);*/
 
             await context.SaveChangesAsync();
 

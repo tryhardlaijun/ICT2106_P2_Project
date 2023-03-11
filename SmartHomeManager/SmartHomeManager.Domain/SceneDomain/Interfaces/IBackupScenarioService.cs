@@ -10,5 +10,6 @@ namespace SmartHomeManager.Domain.SceneDomain.Interfaces
     public interface IBackupScenarioService
     {
         void loadScenarioBackup(Guid profileID, IEnumerable<Scenario> scenarios);
+        //Task<List<Scenario>> loadScenarioBackup(Guid profileID, IEnumerable<Scenario> scenarios);
     }
 }
