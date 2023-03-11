@@ -24,10 +24,10 @@ namespace SmartHomeManager.API.Controllers.BackupAPI
         {
             return await _backupServices.loadBackupRule(scenarioId);
         }
-        
+
         [HttpGet("loadBackupScenario/{profileId}")]
         public async Task<List<BackupScenario>> loadBackupScenario(Guid profileId)
-        {        
+        {
             return await _backupServices.loadBackupScenario(profileId);
         }
 

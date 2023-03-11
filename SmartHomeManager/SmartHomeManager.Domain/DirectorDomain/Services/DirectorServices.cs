@@ -14,13 +14,14 @@ using Rule = SmartHomeManager.Domain.SceneDomain.Entities.Rule;
 
 namespace SmartHomeManager.Domain.DirectorDomain.Services
 {
-    public class DirectorServices : BackgroundService, IInformDirectorServices, IBackupService
+    public class DirectorServices : BackgroundService, IInformDirectorServices
     {
         private readonly IServiceProvider _serviceProvider;
 
         private readonly IGetRulesService _ruleInterface;
         private readonly IGetScenariosService _scenarioInterface;
         private readonly IEnergyProfileServices _energyProfileInterface;
+        private readonly IBackupService _backupInterface;
 
         private readonly IRuleHistoryRepository<RuleHistory> _ruleHistoryRepository;
         private readonly IGenericRepository<History> _historyRepository;
@@ -42,6 +43,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
             _ruleInterface = scope.ServiceProvider.GetRequiredService<IGetRulesService>();
             _scenarioInterface = scope.ServiceProvider.GetRequiredService<IGetScenariosService>();
             _energyProfileInterface = scope.ServiceProvider.GetRequiredService<IEnergyProfileServices>();
+            _backupInterface = scope.ServiceProvider.GetRequiredService<IBackupService>();
 
             _backupRuleRepository = scope.ServiceProvider.GetRequiredService<IBackupRuleRepository>();
             _backupScenarioRepository = scope.ServiceProvider.GetRequiredService<IBackupScenarioRepository>();
@@ -57,7 +59,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
             rules = (await _ruleInterface.GetAllRules()).ToList();       
             scenarios = (await _scenarioInterface.GetAllScenarios()).ToList();
 
-            createBackup(rules, scenarios);       
+            _backupInterface.createBackup(rules, scenarios);
 
             while (!stoppingToken.IsCancellationRequested)
             {             
@@ -167,38 +169,6 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
                     scenarios = scenarios.Where(s => s.ScenarioId != scenarioID).ToList();
                     rules = rules.Where(r => r.ScenarioId != scenarioID).ToList();            
                     break;
-            }
-        }
-
-        public async void createBackup(List<Rule> rulesList, List<Scenario> scenarioList)
-        {
-            foreach (Rule rule in rulesList)
-            {
-                BackupRule backupRule = new BackupRule
-                {
-                    rulesID = rule.RuleId,
-                    scenarioID = rule.ScenarioId,
-                    scheduleName = rule.RuleName,
-                    startTime = (DateTime)rule.StartTime,
-                    endTime = (DateTime)rule.EndTime,
-                    actionTrigger = rule.ActionTrigger,
-                    configurationKey = rule.ConfigurationKey,
-                    configurationValue = rule.ConfigurationValue,
-                    apiKey = rule.APIKey,
-                    apiValue = rule.ApiValue
-                };
-                await _backupRuleRepository.CreateBackupRule(backupRule);
-            }
-
-            foreach (Scenario scenario in scenarioList)
-            {
-                BackupScenario backupScenario = new BackupScenario
-                {
-                    scenarioID = scenario.ScenarioId,
-                    scheduleName = scenario.ScenarioName,
-                    profileID = scenario.ProfileId
-                };
-                await _backupScenarioRepository.CreateBackupScenario(backupScenario);
             }
         }
     }

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SmartHomeManager.Domain.BackupDomain.Services
 {
-    public class BackupServices : IUpdateBackupService
+    public class BackupServices : IUpdateBackupService, IBackupService
     {
         private readonly IBackupRuleRepository _backupRuleRepository;
         private readonly IBackupScenarioRepository _backupScenarioRepository;

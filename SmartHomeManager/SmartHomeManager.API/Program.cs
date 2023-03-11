@@ -49,6 +49,7 @@ using SmartHomeManager.Domain.NotificationDomain.Interfaces;
 using SmartHomeManager.DataSource.BackupDataSource;
 using SmartHomeManager.Domain.BackupDomain.Entities;
 using SmartHomeManager.Domain.BackupDomain.Interfaces;
+using SmartHomeManager.Domain.BackupDomain.Services;
 
 namespace SmartHomeManager.API;
 
@@ -88,6 +89,7 @@ public class Program
         builder.Services.AddScoped<IHomeSecurityDeviceDefinitionRepository<HomeSecurityDeviceDefinition>, HomeSecurityDeviceDefinitionRepository>();
         builder.Services.AddScoped<IBackupRuleRepository, BackupRuleRepository>();
         builder.Services.AddScoped<IBackupScenarioRepository, BackupScenarioRepository>();
+        builder.Services.AddScoped<IBackupService, BackupServices>();
 
         builder.Services.AddHostedService<DirectorServices>();
 
