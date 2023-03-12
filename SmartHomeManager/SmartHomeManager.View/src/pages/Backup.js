@@ -16,7 +16,6 @@ export default function Backup() {
 
     const [backupScenarioList, getBackupScenarioList] = useState([]);
     //const backupRulesList = useState();
-    var profileId;
     var backupId;
 
     const toast = useToast();
@@ -58,7 +57,6 @@ export default function Backup() {
 
         var ts = new Date(scenario.createdAt)
 
-        profileId = scenario.profileId;
         backupId = scenario.backupId;
 
         document.getElementById("showSelected").innerText = "Version selected: " + "v" + versionNo + " - " + ts.toLocaleDateString('en-GB') + ' ' + ts.toLocaleTimeString('en-GB')
@@ -73,7 +71,7 @@ export default function Backup() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ "profileId": profileId, "backupId": backupId })
+            body: JSON.stringify({ "profileId": localStorage.getItem('profileId'), "backupId": backupId })
         }).then(async (response) => {
 
             //console.log(await response.text())
