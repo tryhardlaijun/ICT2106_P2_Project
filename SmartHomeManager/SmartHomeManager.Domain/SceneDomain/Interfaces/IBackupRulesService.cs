@@ -9,7 +9,6 @@ namespace SmartHomeManager.Domain.SceneDomain.Interfaces
 {
     public interface IBackupRulesService
     {
-        void loadRulesBackup(Guid scenarioId, IEnumerable<Rule> rules);
-        //Task<List<Rule>> loadRulesBackup(Guid scenarioId, IEnumerable<Rule> rules);
+        Task<bool> loadRulesBackup(Guid profileId, IEnumerable<Rule> rules);
     }
 }

@@ -10,7 +10,7 @@ namespace SmartHomeManager.Domain.BackupDomain.Interfaces
     public interface IBackupRuleRepository
     {
         public Task<IEnumerable<BackupRule>> GetAllBackupRule();
-        public Task<List<BackupRule>> GetBackupRuleById(Guid scenarioId);
+        public Task<List<BackupRule>> GetBackupRuleById(Guid backupId);
         public Task<bool> CreateBackupRule(BackupRule backupRule);
         public Task<bool> DeleteBackupRule(BackupRule backupRule);
     }

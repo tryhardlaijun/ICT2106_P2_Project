@@ -7,7 +7,8 @@ import {
     Tr,
     Th,
     Td,
-    TableContainer
+    TableContainer,
+    useToast
 } from '@chakra-ui/react'
 import { useEffect, useState } from 'react';
 
@@ -15,6 +16,10 @@ export default function Backup() {
 
     const [backupScenarioList, getBackupScenarioList] = useState([]);
     //const backupRulesList = useState();
+    var profileId;
+    var backupId;
+
+    const toast = useToast();
 
 
     function fetchBackup() {
@@ -24,7 +29,7 @@ export default function Backup() {
         fetch("https://localhost:7140/api/Backup/loadBackupScenario/" + localStorage.getItem('profileId'))
             .then((response) => response.json())
             .then((data) => {
-                console.log(data);
+                //console.log(data);
                 getBackupScenarioList(data);
             });
     }
@@ -35,25 +40,76 @@ export default function Backup() {
 
    
 
-    function buttonClicked(scenario) {
-        console.log(scenario);
+    function buttonClicked(scenario, versionNo) {
+        var buttonClickedId = "button" + versionNo
+        
+        for (var i = 1; i <= backupScenarioList.length; i++) {
+            if (buttonClickedId == "button" + i) {
+                document.getElementById(buttonClickedId).style.backgroundColor = "darkgrey"
+                document.getElementById(buttonClickedId).innerText = "Selected"
+            }
+            else {
+                document.getElementById("button" + i).style.backgroundColor = "#EDF2F7"
+                document.getElementById("button" + i).innerText = "Select"
+            }
+        }
+
+        //console.log(scenario);
 
         var ts = new Date(scenario.createdAt)
 
-        document.getElementById("showSelected").innerText = "Version selected: " + scenario.versionNumber + " - " + ts.toLocaleDateString('en-GB') + ' ' + ts.toLocaleTimeString('en-GB')
+        profileId = scenario.profileId;
+        backupId = scenario.backupId;
+
+        document.getElementById("showSelected").innerText = "Version selected: " + "v" + versionNo + " - " + ts.toLocaleDateString('en-GB') + ' ' + ts.toLocaleTimeString('en-GB')
         document.getElementById("showSelected").style.display = "block";
     }
 
-    //todo: onsubmit function for the restore backup button -- should load backup rules here
-    
+    function onSubmit(e) {
+        //console.log(profileId + " and " + backupId)
+
+        fetch("https://localhost:7140/api/Backup/restoreBackup", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ "profileId": profileId, "backupId": backupId })
+        }).then(async (response) => {
+
+            //console.log(await response.text())
+
+            if (response.ok) {
+                toast({
+                    title: "Success",
+                    description: "Backup has been restored successfully.",
+                    status: "success",
+                    duration: 9000,
+                    isClosable: true,
+                });
+            }
+            else {
+                toast({
+                    title: "Error",
+                    description: "Backup has failed.",
+                    status: "error",
+                    duration: 9000,
+                    isClosable: true,
+                });
+            }
+        });
+                
+
+    }
+
+    let listLength = backupScenarioList.length;    
 
     return (
-        <Container maxW='container.sm'>
+        <Box>
             <Box textAlign='center' h='300px'>
                 <Center h='200px'>
                     <Heading>Backup</Heading>
                 </Center>
-                <Button type="submit">Restore Backup</Button>
+                <Button onClick={onSubmit}>Restore Backup</Button>
 
                 <Text id='showSelected' style={{ display: "none" }} >Version selected: (version number) - (timestamp)</Text>
             </Box>
@@ -64,34 +120,34 @@ export default function Backup() {
                             <Tr>
                                 <Th>Timestamp</Th>
                                 <Th>Version</Th>
+                                <Th></Th>
                             </Tr>
                         </Thead>
                         <Tbody>
                             {
-                                backupScenarioList.map((scenario) => {
+                                backupScenarioList.reverse().map((scenario, count) => {
                                     let ts = new Date(scenario.createdAt)
-
+                                    
                                     return (
-                                        <Tr key={scenario.versionNumber}>
-                                            <Td data-title="createdAt">{ts.toLocaleDateString('en-GB') + ' ' + ts.toLocaleTimeString('en-GB')}</Td>
-                                            <Td data-title="versionNumber">{scenario.versionNumber}</Td>
+                                        <Tr key={listLength - count}>
+                                            <Td>{ts.toLocaleDateString('en-GB') + ' ' + ts.toLocaleTimeString('en-GB')}</Td>
+                                            <Td>v{listLength - count}</Td>
+                                            <Td display="none">{scenario.backupId}</Td>
                                             <Td>
-                                                <Button id="selectButton" onClick={() => buttonClicked(scenario)}>Select</Button>
+                                                <Button id={"button" + (listLength - count).toString()} onClick={() => buttonClicked(scenario, listLength - count)} width="94px">Select</Button>
                                             </Td>
                                         </Tr>
                                     )
                                 })
                             }
                             
-                            
-                            
                         </Tbody>
                     </Table>
                 </TableContainer>
             </Box>
+        </Box>
 
 
-        </Container>
 
 
     )

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Net.Http;
 
 namespace SmartHomeManager.Domain.BackupDomain.Services
 {
@@ -19,8 +20,11 @@ namespace SmartHomeManager.Domain.BackupDomain.Services
         private readonly IBackupRulesService _backupRuleInterface;
         private readonly IBackupScenarioService _backupScenarioInterface;
 
-        private List<Rule> backupRulesList;
-        private List<Scenario> backupScenarioList;
+        private List<BackupRule> backupRulesList = new List<BackupRule>();
+        private List<BackupScenario> backupScenarioList = new List<BackupScenario>();
+
+        private List<Rule> rulesList = new List<Rule>();
+        private List<Scenario> scenarioList = new List<Scenario>();
 
         public BackupServices(IBackupRuleRepository backupRuleRepository, IBackupScenarioRepository backupScenarioRepository)
         {
@@ -31,25 +35,17 @@ namespace SmartHomeManager.Domain.BackupDomain.Services
         public async void createBackup(List<Rule> rulesList, List<Scenario> scenarioList)
         {
             var now = DateTime.Now;
-            float highestVersionNo = 1.0f;
-
-            foreach (var s in _backupScenarioRepository.GetAllBackupScenario().Result)
-            {
-                if (s.versionNumber >= highestVersionNo)
-                {
-                    highestVersionNo = (float)s.versionNumber;
-                }
-            }
+            Guid backupId = Guid.NewGuid();
             
             foreach (var scenario in scenarioList)
             {
                 BackupScenario backupScenario = new BackupScenario
                 {
-                    scenarioID = scenario.ScenarioId,
-                    scheduleName = scenario.ScenarioName,
-                    profileID = scenario.ProfileId,
-                    createdAt = now,
-                    versionNumber = highestVersionNo + 0.1f
+                    ScenarioId = scenario.ScenarioId,
+                    ScenarioName = scenario.ScenarioName,
+                    ProfileId = scenario.ProfileId,
+                    CreatedAt = now,
+                    BackupId = backupId
                 };
                 await _backupScenarioRepository.CreateBackupScenario(backupScenario);
             }
@@ -58,29 +54,74 @@ namespace SmartHomeManager.Domain.BackupDomain.Services
             {
                 BackupRule backupRule = new BackupRule
                 {
-                    rulesID = rule.RuleId,
-                    scenarioID = rule.ScenarioId,
-                    scheduleName = rule.RuleName,
-                    startTime = (DateTime)rule.StartTime,
-                    endTime = (DateTime)rule.EndTime,
-                    actionTrigger = rule.ActionTrigger,
-                    configurationKey = rule.ConfigurationKey,
-                    configurationValue = rule.ConfigurationValue,
-                    apiKey = rule.APIKey,
-                    apiValue = rule.ApiValue,
-                    versionNumber = highestVersionNo + 0.1f
+                    RuleId = rule.RuleId,
+                    ScenarioId = rule.ScenarioId,
+                    RuleName = rule.RuleName,
+                    StartTime = (DateTime)rule.StartTime,
+                    EndTime = (DateTime)rule.EndTime,
+                    ActionTrigger = rule.ActionTrigger,
+                    ConfigurationKey = rule.ConfigurationKey,
+                    ConfigurationValue = rule.ConfigurationValue,
+                    APIKey = rule.APIKey,
+                    ApiValue = rule.ApiValue,
+                    DeviceId = rule.DeviceId,
+                    BackupId = backupId
                 };
                 await _backupRuleRepository.CreateBackupRule(backupRule);
             }
         }
 
-        public async Task<List<BackupRule>> loadBackupRule(Guid scenarioId) //public async Task<List<Rule>> loadBackupRule(Guid scenarioId)
+        public async Task<List<BackupRule>> loadBackupRule(Guid backupId)
         {
-            return await _backupRuleRepository.GetBackupRuleById(scenarioId); //return await _backupRuleInterface.loadRulesBackup(scenarioId, backupRulesList);
+            var tempRulesList = new List<Rule>();
+            backupRulesList = await _backupRuleRepository.GetBackupRuleById(backupId);
+
+            foreach (var backupRule in backupRulesList)
+            {
+                Rule rule = new Rule
+                {
+                    RuleId = backupRule.RuleId,
+                    ScenarioId = backupRule.ScenarioId,
+                    RuleName = backupRule.RuleName,
+                    StartTime = backupRule.StartTime,
+                    EndTime = backupRule.EndTime,
+                    ActionTrigger = backupRule.ActionTrigger,
+                    ConfigurationKey = backupRule.ConfigurationKey,
+                    ConfigurationValue = backupRule.ConfigurationValue,
+                    APIKey = backupRule.APIKey,
+                    ApiValue = backupRule.ApiValue,
+                    DeviceId = backupRule.DeviceId
+                };
+
+                tempRulesList.Add(rule);
+            }
+            rulesList = tempRulesList;
+
+            //call interface methods here to restore backup
+            
+            return backupRulesList;
         }
-        public async Task<List<BackupScenario>> loadBackupScenario(Guid profileId) //public async Task<List<Scenario>> loadBackupScenario(Guid profileId)
+        public async Task<List<BackupScenario>> loadBackupScenario(Guid profileId)
         {
-            return await _backupScenarioRepository.GetBackupScenarioById(profileId); //return await _backupScenarioInterface.loadScenarioBackup(profileId, backupScenarioList);
+            var tempScenarioList = new List<Scenario>();
+            backupScenarioList = await _backupScenarioRepository.GetBackupScenarioById(profileId);
+            foreach (var backupScenario in backupScenarioList)
+            {
+                Scenario scenario = new Scenario { 
+                    isActive = false,
+                    ScenarioName= backupScenario.ScenarioName,
+                    ProfileId = profileId,
+                    ScenarioId = backupScenario.ScenarioId
+                };
+
+                tempScenarioList.Add(scenario);
+            }
+
+            scenarioList = tempScenarioList;
+
+            //call interface methods here to restore backup
+
+            return backupScenarioList;
         }
 
         public async Task<IEnumerable<BackupScenario>> getAllBackupScenario()
