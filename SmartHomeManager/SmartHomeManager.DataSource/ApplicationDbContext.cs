@@ -105,10 +105,8 @@ public class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<DeviceProfile>().HasKey(deviceProfile => new { deviceProfile.DeviceId, deviceProfile.ProfileId });
 
-        modelBuilder.Entity<BackupRule>()
-            .HasKey(br => new { br.RuleId, br.VersionNumber });
+        modelBuilder.Entity<BackupScenario>().HasKey(bs => new { bs.BackupId, bs.ScenarioId });
 
-        modelBuilder.Entity<BackupScenario>()
-            .HasKey(bs => new { bs.ScenarioId, bs.VersionNumber });
+        modelBuilder.Entity<BackupRule>().HasKey(br => new { br.BackupId, br.ScenarioId, br.RuleId });
     }
 }

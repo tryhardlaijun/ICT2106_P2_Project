@@ -12,6 +12,9 @@ namespace SmartHomeManager.Domain.BackupDomain.Entities
     public class BackupScenario
     {
         [Key]
+        public Guid BackupId { get; set; }
+
+        [Key]
         public Guid ScenarioId { get; set; }
 
         [Required]
@@ -21,9 +24,6 @@ namespace SmartHomeManager.Domain.BackupDomain.Entities
         public Guid ProfileId { get; set; }
 
         [Required]
-        public DateTime CreatedAt { get; set; }
-
-        [Key]
-        public float VersionNumber { get; set; }
+        public DateTime CreatedAt { get; set; }        
     }
 }

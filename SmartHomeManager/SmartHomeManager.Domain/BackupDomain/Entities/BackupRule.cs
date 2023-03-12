@@ -13,9 +13,12 @@ namespace SmartHomeManager.Domain.BackupDomain.Entities
     public class BackupRule
     {
         [Key]
+        public Guid BackupId { get; set; }
+
+        [Key]
         public Guid RuleId { get; set; }
 
-        [Required]
+        [Key]
         public Guid ScenarioId { get; set; }
 
         [Required]
@@ -38,8 +41,5 @@ namespace SmartHomeManager.Domain.BackupDomain.Entities
         public string? APIKey { get; set; }
 
         public string? ApiValue { get; set; }
-
-        [Key]
-        public float VersionNumber { get; set; }
     }
 }
