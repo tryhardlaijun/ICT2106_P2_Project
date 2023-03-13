@@ -4,7 +4,7 @@ import axios from 'axios';
 
 export default function EnergyProfile() {
     // Hardcoded accountId 3fa85f64-5717-4562-b3fc-2c963f66afa6
-    const [accountId, setAccountId] = useState("3fa85f64-5717-4562-b3fc-2c963f66afa6");
+    const [accountId, setAccountId] = useState("3FA85F64-5717-4562-B3FC-2C963F66AFA6");
     const [energyProfile, setEnergyProfile] = useState(null);
 
     useEffect(() => {

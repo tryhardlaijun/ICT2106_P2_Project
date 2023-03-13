@@ -85,7 +85,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
                         var configKey = rule.ConfigurationKey;
                         var configValue = rule.ConfigurationValue;
 
-                        int adjustedConfigValue = _energyProfileInterface.getRevisedConfigValue(deviceID, configKey, configValue);
+                        int adjustedConfigValue = await _energyProfileInterface.getRevisedConfigValue(deviceID, configKey, configValue);
 
                         // Set device thru device interface
                         // await setDeviceConfig(deviceID, configKey, configValue);

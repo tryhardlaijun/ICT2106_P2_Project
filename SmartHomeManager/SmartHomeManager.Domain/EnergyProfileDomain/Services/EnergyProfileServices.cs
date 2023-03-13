@@ -40,14 +40,14 @@ namespace SmartHomeManager.Domain.EnergyProfileDomain.Services
             return await _energyProfileRepository.UpdateAsync(energyProfile);
         }
 
-        public int getRevisedConfigValue(Guid deviceID, string configurationKey, int configurationValue)
+        public async Task<int> getRevisedConfigValue(Guid deviceID, string configurationKey, int configurationValue)
         {
             // Simulate using function from EnergyEfficiency Analytics
             double efficiencyIndex = GetDeviceEnergyEfficiency(deviceID);
 
             //Simulate another function from IDeviceInfoService
-
-            /*
+            List<int> configValues = ConfigValueRange();
+            
             // Hardcoded accountId
             Guid accountId = new Guid("3fa85f64-5717-4562-b3fc-2c963f66afa6");
             EnergyProfile energyProfile = await _energyProfileRepository.GetByIdAsync(accountId);
@@ -55,11 +55,11 @@ namespace SmartHomeManager.Domain.EnergyProfileDomain.Services
             {
                 return -1;
             }
-            int newConfigurationValue = calculateNewConfigValue(efficiencyIndex, energyProfile.ConfigurationValue, configurationValue, );
+            int newConfigurationValue = calculateNewConfigValue(efficiencyIndex, energyProfile.ConfigurationValue, configurationValue, configValues);
 
             return newConfigurationValue;
-            */
-            return configurationValue;
+            
+            //return configurationValue;
         }
 
         // Simulate implementation of function from EnergyEfficiency Analytics
@@ -70,9 +70,58 @@ namespace SmartHomeManager.Domain.EnergyProfileDomain.Services
             return randomNumber;
         }
 
+        // Simulate getting List<Int>ConfigValueRange 
+        // values are 1 to 10
+        private List<int>ConfigValueRange()
+        {
+            var range = new List<int>();
+            for (int i = 1; i <= 10; i++)
+            {
+                range.Add(i);
+            }
+            return range;
+        }
+
         private int calculateNewConfigValue(double receivedEnergyEff, int energyProfileValue, int configurationValue, List<int> configurationValueRange)
         {
-            throw new NotImplementedException();
+            var range = configurationValueRange.OrderByDescending(x => x);
+            int max = range.First();
+            int min = range.Last();
+            double targetEnergyEff;
+
+            if (energyProfileValue == 0)
+            {
+                targetEnergyEff = 25.0;
+            } 
+            else if(energyProfileValue == 1)
+            {
+                targetEnergyEff = 50.0;
+            } 
+            else
+            {
+                targetEnergyEff = 75.0;
+            }
+
+
+            if (receivedEnergyEff < targetEnergyEff)
+            {
+                if (configurationValue <= min)
+                {
+                    return configurationValue;
+                }
+
+                return configurationValue - 1;
+            }
+            else
+            {
+                if (configurationValue >= max)
+                {
+                    return configurationValue;
+                }
+
+                return configurationValue + 1;
+            }
+
         }
     }
 }
