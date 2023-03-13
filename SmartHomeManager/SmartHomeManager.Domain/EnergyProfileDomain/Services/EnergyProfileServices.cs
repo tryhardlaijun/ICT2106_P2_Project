@@ -4,6 +4,7 @@ using SmartHomeManager.Domain.DirectorDomain.Entities;
 using SmartHomeManager.Domain.EnergyProfileDomain.Entities;
 using SmartHomeManager.Domain.EnergyProfileDomain.Interfaces;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -47,10 +48,11 @@ namespace SmartHomeManager.Domain.EnergyProfileDomain.Services
 
             //Simulate another function from IDeviceInfoService
             List<int> configValues = ConfigValueRange();
-            
+
             // Hardcoded accountId
-            Guid accountId = new Guid("3fa85f64-5717-4562-b3fc-2c963f66afa6");
+            Guid accountId = new Guid("3FA85F64-5717-4562-B3FC-2C963F66AFA6");
             EnergyProfile energyProfile = await _energyProfileRepository.GetByIdAsync(accountId);
+
             if (energyProfile == null)
             {
                 return -1;
@@ -58,7 +60,7 @@ namespace SmartHomeManager.Domain.EnergyProfileDomain.Services
             int newConfigurationValue = calculateNewConfigValue(efficiencyIndex, energyProfile.ConfigurationValue, configurationValue, configValues);
 
             return newConfigurationValue;
-            
+
             //return configurationValue;
         }
 
@@ -71,11 +73,11 @@ namespace SmartHomeManager.Domain.EnergyProfileDomain.Services
         }
 
         // Simulate getting List<Int>ConfigValueRange 
-        // values are 1 to 10
-        private List<int>ConfigValueRange()
+        // in this case an aircon range of degrees
+        private List<int> ConfigValueRange()
         {
             var range = new List<int>();
-            for (int i = 1; i <= 10; i++)
+            for (int i = 32; i >= 18; i--)
             {
                 range.Add(i);
             }
@@ -84,44 +86,34 @@ namespace SmartHomeManager.Domain.EnergyProfileDomain.Services
 
         private int calculateNewConfigValue(double receivedEnergyEff, int energyProfileValue, int configurationValue, List<int> configurationValueRange)
         {
-            var range = configurationValueRange.OrderByDescending(x => x);
-            int max = range.First();
-            int min = range.Last();
-            double targetEnergyEff;
+            double reductionMultiplier = 0.0;
 
-            if (energyProfileValue == 0)
+            switch (energyProfileValue)
             {
-                targetEnergyEff = 25.0;
-            } 
-            else if(energyProfileValue == 1)
-            {
-                targetEnergyEff = 50.0;
-            } 
-            else
-            {
-                targetEnergyEff = 75.0;
+                case 0:
+                    reductionMultiplier = 0.0;
+                    break;
+                case 1:
+                    reductionMultiplier = 0.5;
+                    break;
+                case 2:
+                    reductionMultiplier = 1.0;
+                    break;
+                default:
+                    break;
             }
 
+            int currentIndex = configurationValueRange.IndexOf(configurationValue);
+            // formula: shifts by 1/(1 + recommended adjustments * energyprofile aggressiveness)
+            // magnitude 0 to 1, 0 is not changing anything, 1 is adjusting across whole range
+            // max shift by magnitude of 1 (received 100, aggressiveness 100), min shift by 0
+            int newIndex = currentIndex - (int)((configurationValueRange.Count - 1) * receivedEnergyEff / 100 * reductionMultiplier);
 
-            if (receivedEnergyEff < targetEnergyEff)
-            {
-                if (configurationValue <= min)
-                {
-                    return configurationValue;
-                }
+            // clamping
+            if (newIndex < 0)
+                newIndex = 0;
 
-                return configurationValue - 1;
-            }
-            else
-            {
-                if (configurationValue >= max)
-                {
-                    return configurationValue;
-                }
-
-                return configurationValue + 1;
-            }
-
+            return configurationValueRange[newIndex];
         }
     }
 }
