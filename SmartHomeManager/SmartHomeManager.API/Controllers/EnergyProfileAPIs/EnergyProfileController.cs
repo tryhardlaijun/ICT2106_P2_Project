@@ -29,11 +29,25 @@ namespace SmartHomeManager.API.Controllers.EnergyProfileAPIs
         [HttpGet("GetAllEnergyProfile")]
         public async Task<IEnumerable<EnergyProfile>> GetEnergyProfiles()
         {
-            /*if (_ruleHistoryService.RuleHistors == null)
-            {
-                return NotFound();
-            }*/
-            return await _energyProfileService.GetAllRulesAsync();
+            return await _energyProfileService.GetAllEnergyProfilesAsync();
+        }
+
+        [HttpGet("GetEnergyProfile")]
+        public async Task<EnergyProfile> GetEnergyProfile(Guid accountId)
+        {
+            return await _energyProfileService.GetEnergyProfileAsync(accountId);
+        }
+
+        [HttpPost("PostEnergyProfile")]
+        public async Task<bool> PostEnergyProfile(EnergyProfile energyProfile)
+        {
+            return await _energyProfileService.PostEnergyProfileAsync(energyProfile);
+        }
+
+        [HttpPut("PutEnergyProfile")]
+        public async Task<bool> PutEnergyProfile(EnergyProfile energyProfile)
+        {
+            return await _energyProfileService.PutEnergyProfileAsync(energyProfile);
         }
 
     }
