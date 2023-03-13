@@ -142,9 +142,9 @@ public class RulesController : ControllerBase
     // To do : loadRulesBackup(ProfileId, IEnumerable<Rules>)
 
     [HttpGet("DownloadRules")]
-    public async Task<IActionResult> DownloadRules()
+    public async Task<IActionResult> DownloadRules(Guid ScenarioId)
     {
-        var ruleBytes = await _registerRuleService.DownloadRules();
+        var ruleBytes = await _getRulesServices.DownloadRules(ScenarioId);
         return File(ruleBytes, "application/json", "rules.json");
     }
 

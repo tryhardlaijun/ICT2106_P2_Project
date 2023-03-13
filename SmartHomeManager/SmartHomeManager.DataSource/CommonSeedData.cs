@@ -236,6 +236,11 @@ namespace SmartHomeManager.DataSource
                     ScenarioId = new("AC38AF14-9A57-4DF3-89F3-78F9CE9F4983"),
                     ScenarioName = "Default",
                     ProfileId = profiles[0].ProfileId
+                }, new Scenario
+                {
+                    ScenarioId = new("AC38AF14-9A57-4DF3-89F3-78F9CE9F4982"),
+                    ScenarioName = "Default2",
+                    ProfileId = profiles[0].ProfileId
                 }
             };
 
@@ -259,6 +264,17 @@ namespace SmartHomeManager.DataSource
                 {
                     RuleId = Guid.NewGuid(),
                     ScenarioId = scenarios[0].ScenarioId,
+                    ConfigurationKey = "Oscillation",
+                    ConfigurationValue = 1,
+                    RuleName = "Fan Oscillation",
+                    StartTime = Convert.ToDateTime("2023-02-04T07:21:26.934Z"),
+                    EndTime = Convert.ToDateTime("2023-02-04T07:21:26.934Z"),
+                    DeviceId = devices[0].DeviceId
+                },
+                new Rule
+                {
+                    RuleId = Guid.NewGuid(),
+                    ScenarioId = scenarios[1].ScenarioId,
                     ConfigurationKey = "Oscillation",
                     ConfigurationValue = 1,
                     RuleName = "Fan Oscillation",
