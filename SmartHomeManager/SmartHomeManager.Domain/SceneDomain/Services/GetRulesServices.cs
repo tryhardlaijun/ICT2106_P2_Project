@@ -4,8 +4,8 @@ using SmartHomeManager.Domain.Common;
 
 namespace SmartHomeManager.Domain.SceneDomain.Services
 {
-	public class GetRulesServices: IGetRulesService
-	{
+	public class GetRulesServices: IGetRulesService, IBackupRulesService
+    {
         private readonly IGenericRepository<Rule> _ruleRepository;
         public GetRulesServices(IGenericRepository<Rule> ruleRepository)
 		{
@@ -25,6 +25,12 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
         public async Task<Rule?> GetRuleById(Guid id)
         {
             return await _ruleRepository.GetByIdAsync(id);
+        }
+
+        public async Task<bool> loadRulesBackup(Guid profileId, IEnumerable<Rule> rules)
+        {
+            Console.WriteLine("Loaded Rules Backup");
+            return true;
         }
     }
 }

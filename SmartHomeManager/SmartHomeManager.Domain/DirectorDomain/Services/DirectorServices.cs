@@ -25,8 +25,6 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
 
         private readonly IRuleHistoryRepository<RuleHistory> _ruleHistoryRepository;
         private readonly IGenericRepository<History> _historyRepository;
-        private readonly IBackupRuleRepository _backupRuleRepository;
-        private readonly IBackupScenarioRepository _backupScenarioRepository;
 
         private List<Rule> rules;
         private List<Scenario> scenarios;
@@ -44,9 +42,6 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
             _scenarioInterface = scope.ServiceProvider.GetRequiredService<IGetScenariosService>();
             _energyProfileInterface = scope.ServiceProvider.GetRequiredService<IEnergyProfileServices>();
             _backupInterface = scope.ServiceProvider.GetRequiredService<IBackupService>();
-
-            _backupRuleRepository = scope.ServiceProvider.GetRequiredService<IBackupRuleRepository>();
-            _backupScenarioRepository = scope.ServiceProvider.GetRequiredService<IBackupScenarioRepository>();
 
             rules = new List<Rule>();
             scenarios= new List<Scenario>();

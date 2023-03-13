@@ -8,7 +8,7 @@ using Rule = SmartHomeManager.Domain.SceneDomain.Entities.Rule;
 
 namespace SmartHomeManager.Domain.SceneDomain.Services
 {
-	public class RuleServices : IBackupRulesService
+	public class RuleServices
     {
 		private readonly IGenericRepository<Rule> _ruleRepository;
 		private readonly IInformDirectorServices _informDirectorServices;
@@ -18,10 +18,10 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
 		{
 			_ruleRepository = ruleRepository;
 			_informDirectorServices = informDirectorServices;
-        }
+        }        
 
-		//Get all
-		public async Task<IEnumerable<Rule>> GetAllRulesAsync()
+        //Get all
+        public async Task<IEnumerable<Rule>> GetAllRulesAsync()
 		{
 			return await _ruleRepository.GetAllAsync();
 		}
@@ -69,10 +69,7 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
 			return false;
         }
 
-        public async Task<bool> loadRulesBackup(Guid profileId, IEnumerable<Rule> rules)
-        {
-			return true;
-        }
+        
 
         
     }

@@ -13,18 +13,13 @@ namespace SmartHomeManager.Domain.BackupDomain.Services
         private readonly IBackupRulesService _backupRuleInterface;
         private readonly IBackupScenariosService _backupScenarioInterface;
 
-        private List<BackupRule> backupRulesList = new List<BackupRule>();
-        private List<BackupScenario> backupScenarioList = new List<BackupScenario>();
-
-        private List<Rule> rulesList = new List<Rule>();
-        private List<Scenario> scenarioList = new List<Scenario>();
-
-        public BackupServices(IBackupRuleRepository backupRuleRepository, IBackupScenarioRepository backupScenarioRepository, IBackupRulesService backupRulesService)
+        public BackupServices(IBackupRuleRepository backupRuleRepository, IBackupScenarioRepository backupScenarioRepository, IBackupRulesService backupRulesService, IBackupScenariosService backupsScenariosService)
         {
             _backupRuleRepository = backupRuleRepository;
             _backupScenarioRepository = backupScenarioRepository;
 
             _backupRuleInterface = backupRulesService;
+            _backupScenarioInterface = backupsScenariosService;
         }
 
 
@@ -32,7 +27,7 @@ namespace SmartHomeManager.Domain.BackupDomain.Services
         {
             var now = DateTime.Now;
             Guid backupId = Guid.NewGuid();
-            
+
             foreach (var scenario in scenarioList)
             {
                 BackupScenario backupScenario = new BackupScenario
@@ -53,8 +48,8 @@ namespace SmartHomeManager.Domain.BackupDomain.Services
                     RuleId = rule.RuleId,
                     ScenarioId = rule.ScenarioId,
                     RuleName = rule.RuleName,
-                    StartTime = (DateTime)rule.StartTime,
-                    EndTime = (DateTime)rule.EndTime,
+                    StartTime = rule.StartTime,
+                    EndTime = rule.EndTime,
                     ActionTrigger = rule.ActionTrigger,
                     ConfigurationKey = rule.ConfigurationKey,
                     ConfigurationValue = rule.ConfigurationValue,
@@ -67,10 +62,10 @@ namespace SmartHomeManager.Domain.BackupDomain.Services
             }
         }
 
-        public async Task<List<BackupRule>> loadBackupRule(Guid backupId)
+        public async Task<List<BackupRule>> loadBackupRule(Guid profileId, Guid backupId)
         {
-            var tempRulesList = new List<Rule>();
-            backupRulesList = await _backupRuleRepository.GetBackupRuleById(backupId);
+            var rulesList = new List<Rule>();
+            var backupRulesList = await _backupRuleRepository.GetBackupRuleById(backupId);
 
             foreach (var backupRule in backupRulesList)
             {
@@ -89,34 +84,30 @@ namespace SmartHomeManager.Domain.BackupDomain.Services
                     DeviceId = backupRule.DeviceId
                 };
 
-                tempRulesList.Add(rule);
+                rulesList.Add(rule);
             }
-            rulesList = tempRulesList;
 
-            //call interface methods here to restore backup
-            
+            await _backupRuleInterface.loadRulesBackup(profileId, rulesList);
             return backupRulesList;
         }
         public async Task<List<BackupScenario>> loadBackupScenario(Guid profileId)
         {
-            var tempScenarioList = new List<Scenario>();
-            backupScenarioList = await _backupScenarioRepository.GetBackupScenarioById(profileId);
+            var scenarioList = new List<Scenario>();
+            var backupScenarioList = await _backupScenarioRepository.GetBackupScenarioById(profileId);
             foreach (var backupScenario in backupScenarioList)
             {
-                Scenario scenario = new Scenario { 
+                Scenario scenario = new Scenario
+                {
                     isActive = false,
-                    ScenarioName= backupScenario.ScenarioName,
+                    ScenarioName = backupScenario.ScenarioName,
                     ProfileId = profileId,
                     ScenarioId = backupScenario.ScenarioId
                 };
 
-                tempScenarioList.Add(scenario);
+                scenarioList.Add(scenario);
             }
 
-            scenarioList = tempScenarioList;
-
-            //call interface methods here to restore backup
-
+            await _backupScenarioInterface.loadScenarioBackup(profileId, scenarioList);
             return backupScenarioList;
         }
 

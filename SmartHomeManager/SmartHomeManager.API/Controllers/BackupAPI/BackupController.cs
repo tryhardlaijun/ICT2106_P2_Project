@@ -18,22 +18,17 @@ namespace SmartHomeManager.API.Controllers.BackupAPI
     {
         private readonly BackupServices _backupServices;
 
-        public BackupController(IBackupRuleRepository backupRuleRepo, IBackupScenarioRepository backupScenarioRepo, IBackupRulesService backupRulesService)
+        public BackupController(IBackupRuleRepository backupRuleRepo, IBackupScenarioRepository backupScenarioRepo, IBackupRulesService backupRulesService, IBackupScenariosService backupScenariosService)
         {
-            _backupServices = new(backupRuleRepo, backupScenarioRepo, backupRulesService);//, backupScenariosService
+            _backupServices = new(backupRuleRepo, backupScenarioRepo, backupRulesService, backupScenariosService);
         }
         
-        [HttpGet("loadBackupRule/backupId={backupId}")]
-        public async Task<List<BackupRule>> loadBackupRuleGet(Guid backupId) //public async Task<List<Rule>> loadBackupRule(Guid scenarioId)
-        { 
-            return await _backupServices.loadBackupRule(backupId);
-        }
         
         [HttpPost("restoreBackup")]
         public async Task<ActionResult> restoreBackup([FromBody]BackupRuleWebRequest backupRuleRequest) //public async Task<List<Rule>> loadBackupRule(Guid scenarioId)
         {
             var scenarios = await _backupServices.loadBackupScenario(backupRuleRequest.profileId);
-            var rules = await _backupServices.loadBackupRule(backupRuleRequest.backupId); //backupRuleRequest.profileId, 
+            var rules = await _backupServices.loadBackupRule(backupRuleRequest.profileId, backupRuleRequest.backupId); //backupRuleRequest.profileId, 
             if (rules != null && scenarios != null) {
                 return Ok(rules);
             }

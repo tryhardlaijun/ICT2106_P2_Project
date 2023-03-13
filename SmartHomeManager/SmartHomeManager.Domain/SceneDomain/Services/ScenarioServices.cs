@@ -4,7 +4,7 @@ using SmartHomeManager.Domain.SceneDomain.Interfaces;
 
 namespace SmartHomeManager.Domain.SceneDomain.Services
 {
-	public class ScenarioServices : IBackupScenariosService
+	public class ScenarioServices 
     {
 		private readonly IGenericRepository<Scenario> _scenarioRepository;
 		public ScenarioServices(IGenericRepository<Scenario> scenarioRepository)
@@ -21,10 +21,7 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
         {
             return await _scenarioRepository.GetByIdAsync(id);
         }
-        public async Task<bool> loadScenarioBackup(Guid profileID, IEnumerable<Scenario> scenarios)
-        {
-            return true;
-        }
+        
     }
 }
 
