@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SmartHomeManager.Domain.BackupDomain.Entities;
@@ -6,6 +7,7 @@ using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.DirectorDomain.Entities;
 using SmartHomeManager.Domain.DirectorDomain.Interfaces;
 using SmartHomeManager.Domain.EnergyProfileDomain.Interfaces;
+using SmartHomeManager.Domain.EnergyProfileDomain.Services;
 using SmartHomeManager.Domain.SceneDomain.Entities;
 using SmartHomeManager.Domain.SceneDomain.Interfaces;
 using System.Data;
@@ -91,7 +93,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
                         var configKey = rule.ConfigurationKey;
                         var configValue = rule.ConfigurationValue;
 
-                        int adjustedConfigValue = _energyProfileInterface.getRevisedConfigValue(deviceID, configKey, configValue);
+                        int adjustedConfigValue = await _energyProfileInterface.getRevisedConfigValue(deviceID, configKey, configValue);
 
                         // Set device thru device interface
                         // await setDeviceConfig(deviceID, configKey, configValue);
