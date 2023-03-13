@@ -3,6 +3,7 @@ using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.DirectorDomain.Entities;
 using SmartHomeManager.Domain.EnergyProfileDomain.Entities;
+using SmartHomeManager.Domain.EnergyProfileDomain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 namespace SmartHomeManager.DataSource.EnergyProfileDataSource
 {
 
-    public class EnergyProfileRepository : IGenericRepository<EnergyProfile>
+    public class EnergyProfileRepository : IEnergyProfileRepository<EnergyProfile>
     {
         private readonly ApplicationDbContext _applicationDbContext;
 
@@ -67,16 +68,62 @@ namespace SmartHomeManager.DataSource.EnergyProfileDataSource
                 return false;
             }
         }
+
+        public async Task<bool> UpdateConfigValueAsync(Guid accountId, int configValue)
+        {
+            try
+            {
+                var existingEnergyProfile = await _applicationDbContext.EnergyProfiles.FirstOrDefaultAsync(p => p.AccountId == accountId);
+
+                // If the entity does not exist, return false.
+                if (existingEnergyProfile == null)
+                {
+                    EnergyProfile ep = new EnergyProfile();
+                    ep.EnergyProfileId = Guid.NewGuid();
+                    ep.ConfigurationValue = configValue;
+                    ep.AccountId = accountId;
+                    ep.ConfigurationDesc = "Test run";
+                    await _applicationDbContext.EnergyProfiles.AddAsync(ep);
+                    await _applicationDbContext.SaveChangesAsync();
+                    return false;
+                }
+
+                // Update the existing entity properties with the new values
+                existingEnergyProfile.ConfigurationValue = configValue;
+
+                _applicationDbContext.EnergyProfiles.Update(existingEnergyProfile);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public async Task<IEnumerable<EnergyProfile>> GetAllAsync()
         {
             return await _applicationDbContext.EnergyProfiles.Include(p => p.Account).ToListAsync();
         }
 
-        public async Task<EnergyProfile> GetByIdAsync(Guid accountId)
+        public async Task<EnergyProfile?> GetByIdAsync(Guid accountId)
         {
+            var exisitingEnergyProfile = await _applicationDbContext.EnergyProfiles.FirstOrDefaultAsync(p => p.AccountId == accountId);
+            // If the entity does not exist, return false.
+            if (exisitingEnergyProfile == null)
+            {
+                EnergyProfile ep = new EnergyProfile();
+                ep.EnergyProfileId = Guid.NewGuid();
+                ep.ConfigurationValue = 0;
+                ep.AccountId = accountId;
+                ep.ConfigurationDesc = "Test run";
+                await _applicationDbContext.EnergyProfiles.AddAsync(ep);
+                await _applicationDbContext.SaveChangesAsync();
+            }
             var energyProfile = await _applicationDbContext.EnergyProfiles.FirstOrDefaultAsync(p => p.AccountId == accountId);
-            
-            return energyProfile;
+
+            return energyProfile!;
         }
 
         public Task<bool> DeleteAsync(EnergyProfile entity)

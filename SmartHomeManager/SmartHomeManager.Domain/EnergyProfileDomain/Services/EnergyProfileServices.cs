@@ -14,9 +14,9 @@ namespace SmartHomeManager.Domain.EnergyProfileDomain.Services
 {
     public class EnergyProfileServices : IEnergyProfileServices
     {
-        private readonly IGenericRepository<EnergyProfile> _energyProfileRepository;
+        private readonly IEnergyProfileRepository<EnergyProfile> _energyProfileRepository;
 
-        public EnergyProfileServices(IGenericRepository<EnergyProfile> energyProfileRepository)
+        public EnergyProfileServices(IEnergyProfileRepository<EnergyProfile> energyProfileRepository)
         {
             _energyProfileRepository = energyProfileRepository;
         }
@@ -26,7 +26,7 @@ namespace SmartHomeManager.Domain.EnergyProfileDomain.Services
             return await _energyProfileRepository.GetAllAsync();
         }
 
-        public async Task<EnergyProfile> GetEnergyProfileAsync(Guid accountId)
+        public async Task<EnergyProfile?> GetEnergyProfileAsync(Guid accountId)
         {
             return await _energyProfileRepository.GetByIdAsync(accountId);
         }
@@ -39,6 +39,11 @@ namespace SmartHomeManager.Domain.EnergyProfileDomain.Services
         public async Task<bool> PutEnergyProfileAsync(EnergyProfile energyProfile)
         {
             return await _energyProfileRepository.UpdateAsync(energyProfile);
+        }
+
+        public async Task<bool> PutEnergyProfileConfigValueAsync(Guid accountId, int configValue)
+        {
+            return await _energyProfileRepository.UpdateConfigValueAsync(accountId, configValue);
         }
 
         public async Task<int> getRevisedConfigValue(Guid deviceID, string configurationKey, int configurationValue)

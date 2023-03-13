@@ -9,6 +9,8 @@ export default function EnergyProfile() {
     const [energyProfile, setEnergyProfile] = useState(null);
     var valueSelected = "";
     var configValue = -1;
+    const [newValue, setNewValue] = useState('EnergyProfile')
+    const [energyProfiles, setEnergyProfiles] = useState([])
 
     useEffect(() => {
         const getEnergyProfile = async () => {
@@ -117,32 +119,8 @@ export default function EnergyProfile() {
         console.log("value selected: ", valueSelected);
 
         if (valueSelected != "") {
-            const newEnergyProfile = {
-                //EnergyProfileId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-                ConfigurationValue: parseInt(valueSelected),
-                AccountId: accountId,
-
-                ConfigurationDesc: "string",
-                Account: {
-                    "accountId": accountId,
-                    "email": "string",
-                    "username": "string",
-                    "address": "string",
-                    "timezone": 0,
-                    "password": "string",
-                    "devicesOnboarded": 0
-
-                }
-
-            };
-            setEnergyProfile(newEnergyProfile);
-            if (energyProfile == null) {
-                postData(newEnergyProfile)
-                console.log(energyProfile);
-            } else {
-                putData(newEnergyProfile)
-                console.log(energyProfile);
-            }
+            console.log()
+            putData("11111111-1111-1111-1111-111111111111", valueSelected)
 
             //setEnergyProfile(newEnergyProfile);
             configValue = parseInt(valueSelected);
@@ -186,31 +164,29 @@ export default function EnergyProfile() {
             });
             document.getElementById("newlySelected").innerText = "";
         }
-
+        };
         
-    }
 
-    const postData = async (energyProfile) => {
+    const putData = async (id, newValue) => {
         try {
-            const response = await axios.post('https://localhost:7140/api/EnergyProfile/PostEnergyProfile', energyProfile, {
+            const response = await fetch(`https://localhost:7140/api/EnergyProfile/PutEnergyProfile/${id}`, {
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
-                }
-            });
-            return response.data;
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    const putData = async (energyProfile) => {
-        try {
-            const response = await axios.put('https://localhost:7140/api/EnergyProfile/PutEnergyProfile', energyProfile, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-            return response.data;
+                },
+                body: JSON.stringify({ configValue: newValue })
+            })
+            if (response.ok) {
+                const updatedEnergyProfile = energyProfiles.map((energyprofile) => {
+                    if (energyprofile.energyprofileId === id) {
+                        return { ...energyprofile, configValue: newValue }
+                    }
+                    return energyprofile
+                })
+                setEnergyProfile(updatedEnergyProfile)
+            } else {
+                console.error(response.statusText)
+            }
         } catch (error) {
             console.error(error);
         }
