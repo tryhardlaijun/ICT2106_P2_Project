@@ -4,7 +4,7 @@ import axios from 'axios';
 
 export default function EnergyProfile() {
     // Hardcoded accountId 3fa85f64-5717-4562-b3fc-2c963f66afa6
-    const [accountId, setAccountId] = useState("3FA85F64-5717-4562-B3FC-2C963F66AFA6");
+    const [accountId, setAccountId] = useState("11111111-1111-1111-1111-111111111111");
     const [energyProfile, setEnergyProfile] = useState(null);
 
     useEffect(() => {
@@ -24,12 +24,14 @@ export default function EnergyProfile() {
     function handleClick(event) {
         // This function handles the click event
         console.log('Box clicked:', event.target.innerText);
-        // All hardcoded except Config Value 
+        // All hardcoded except Config Value
+        
         const newEnergyProfile = {
             //EnergyProfileId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
             ConfigurationValue: parseInt(event.target.innerText),
-            ConfigurationDesc: "string",
             AccountId: accountId,
+            
+            ConfigurationDesc: "string",
             Account: {
                 "accountId": accountId,
                 "email": "string",
@@ -40,6 +42,7 @@ export default function EnergyProfile() {
                 "devicesOnboarded": 0
                 
             }
+            
         };
         setEnergyProfile(newEnergyProfile);
         if (energyProfile == null) {

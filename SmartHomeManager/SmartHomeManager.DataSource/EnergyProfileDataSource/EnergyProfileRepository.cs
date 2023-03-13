@@ -25,7 +25,13 @@ namespace SmartHomeManager.DataSource.EnergyProfileDataSource
         {
             try
             {
-                await _applicationDbContext.EnergyProfiles.AddAsync(energyProfile);
+                EnergyProfile eProfile = new EnergyProfile
+                {
+                    ConfigurationValue = energyProfile.ConfigurationValue,
+                    AccountId = energyProfile.AccountId,
+                    ConfigurationDesc = "Some description"
+                };
+                await _applicationDbContext.EnergyProfiles.AddAsync(eProfile);
                 await _applicationDbContext.SaveChangesAsync();
                 return true;
             }
