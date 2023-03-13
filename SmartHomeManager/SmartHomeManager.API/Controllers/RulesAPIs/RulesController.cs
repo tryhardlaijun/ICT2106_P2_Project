@@ -6,6 +6,7 @@ using SmartHomeManager.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.DataSource;
 using SmartHomeManager.Domain.DirectorDomain.Interfaces;
+using System.Text;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -140,6 +141,21 @@ public class RulesController : ControllerBase
 
     // To do : loadRulesBackup(ProfileId, IEnumerable<Rules>)
 
+    [HttpGet("DownloadRules")]
+    public async Task<IActionResult> DownloadRules()
+    {
+        var ruleBytes = await _registerRuleService.DownloadRules();
+        return File(ruleBytes, "application/json", "rules.json");
+    }
 
+    [HttpPost("UploadRules")]
+    public async Task<IActionResult> Upload(IFormFile file)
+    {
+        var result = await _registerRuleService.UploadRules(file);
+        if (result){
+            return StatusCode(200, file);
+        } else{
+            return StatusCode(500);
+        }
+    }
 }
-

@@ -9,7 +9,7 @@ import {
 	Input,
 	Select,
 } from "@chakra-ui/react";
-import { useLocation } from "react-router-dom";
+import { redirect, useLocation } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
@@ -95,9 +95,9 @@ export default function SchRule() {
 	const [newFlag, setNewFlag] = useState(false)
 	const [ruleDetail, setRuleDetail] = useState({
 		ruleId: uuidv4(),
-		scenarioId: "AC38AF14-9A57-4DF3-89F3-78F9CE9F4983",
-		configurationKey: uuidv4(),
-		configurationValue: 0,
+		scenarioId: "ac38af14-9a57-4df3-89f3-78f9ce9f4983",
+		configurationKey: "Speed",
+		configurationValue: 1,
 		actionTrigger: "string",
 		RuleName: "string1",
 		startTime: "",
@@ -148,16 +148,29 @@ export default function SchRule() {
 						colorScheme="blue"
 						variant="solid"
 						onClick={() => {
-							toast({
-								title: "Rule created.",
-								description:
-									"Rule Successfully added to the DB",
-								status: "success",
-								duration: 3000,
-								isClosable: true,
-							});
 							if(newFlag){
 								createRule()
+								.then(()=>{
+									toast({
+										title: "Rule created.",
+										description:
+											"Rule Successfully added to the DB",
+										status: "success",
+										duration: 3000,
+										isClosable: true,
+									});
+									redirect("/Scenario")
+								})
+								.catch(()=>{
+									toast({
+										title: "Rule created.",
+										description:
+											"Something went wrong",
+										status: "error",
+										duration: 3000,
+										isClosable: true,
+									});
+								})
 							}
 						}}
 					>
