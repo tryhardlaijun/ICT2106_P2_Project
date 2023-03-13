@@ -6,7 +6,6 @@ using SmartHomeManager.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.DataSource;
 using SmartHomeManager.Domain.DirectorDomain.Interfaces;
-using Newtonsoft.Json;
 using System.Text;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -145,65 +144,18 @@ public class RulesController : ControllerBase
     [HttpGet("DownloadRules")]
     public async Task<IActionResult> DownloadRules()
     {
-        var rules = await _registerRuleService.GetAllRulesAsync();
-        var resp = rules.Select(rule => new RuleRequest
-        {
-            RuleId = rule.RuleId,
-            ScenarioId = rule.ScenarioId,
-            ConfigurationKey = rule.ConfigurationKey,
-            ConfigurationValue = rule.ConfigurationValue,
-            ActionTrigger = rule.ActionTrigger,
-            RuleName = rule.RuleName,
-            StartTime = Convert.ToDateTime(rule.StartTime),
-            EndTime = Convert.ToDateTime(rule.EndTime),
-            DeviceId = rule.DeviceId,
-            APIKey = rule.APIKey,
-            ApiValue = rule.ApiValue,
-        }).ToList();
-        var ruleJson = JsonConvert.SerializeObject(resp, Formatting.Indented);
-        return File(Encoding.UTF8.GetBytes(ruleJson), "application/json", "rules.json");
+        var ruleBytes = await _registerRuleService.DownloadRules();
+        return File(ruleBytes, "application/json", "rules.json");
     }
 
     [HttpPost("UploadRules")]
     public async Task<IActionResult> Upload(IFormFile file)
     {
-        try
-        {
-            var rules = await _registerRuleService.GetAllRulesAsync();
-                var rulesList = rules.Select(rule => new RuleRequest
-                {
-                    RuleId = rule.RuleId,
-                    ScenarioId = rule.ScenarioId,
-                    ConfigurationKey = rule.ConfigurationKey,
-                    ConfigurationValue = rule.ConfigurationValue,
-                    ActionTrigger = rule.ActionTrigger,
-                    RuleName = rule.RuleName,
-                    StartTime = Convert.ToDateTime(rule.StartTime),
-                    EndTime = Convert.ToDateTime(rule.EndTime),
-                    DeviceId = rule.DeviceId,
-                    APIKey = rule.APIKey,
-                    ApiValue = rule.ApiValue,
-                }).ToList();
-            using (var stream = new StreamReader(file.OpenReadStream()))
-            {
-                string contents = await stream.ReadToEndAsync();
-                List<Rule>? newRule = JsonConvert.DeserializeObject<List<Rule>>(contents);
-                if(newRule.Any() && rulesList != null){
-                    foreach(var rule in newRule){
-                        var ruleCheck = await _registerRuleService.GetRuleByIdAsync(rule.RuleId);
-                        if(ruleCheck != null){
-                            Console.WriteLine(rule.RuleName + "already in DB");
-                        } else{
-                            await _registerRuleService.CreateRuleAsync(rule);
-                            Console.WriteLine("Uploaded " + rule.RuleName);
-                        }
-                    }
-                }
-            }
-        } catch (Exception ex){
-            Console.WriteLine(ex);
-            return StatusCode(400,"Something Went Wrong");
+        var result = await _registerRuleService.UploadRules(file);
+        if (result){
+            return StatusCode(200, file);
+        } else{
+            return StatusCode(500);
         }
-        return StatusCode(200, file);
     }
 }
