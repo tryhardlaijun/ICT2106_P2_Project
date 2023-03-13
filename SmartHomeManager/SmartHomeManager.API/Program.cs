@@ -89,7 +89,14 @@ public class Program
         builder.Services.AddScoped<IHomeSecurityDeviceDefinitionRepository<HomeSecurityDeviceDefinition>, HomeSecurityDeviceDefinitionRepository>();
         builder.Services.AddScoped<IBackupRuleRepository, BackupRuleRepository>();
         builder.Services.AddScoped<IBackupScenarioRepository, BackupScenarioRepository>();
+        
+        builder.Services.AddScoped<IUpdateBackupService, BackupServices>();
         builder.Services.AddScoped<IBackupService, BackupServices>();
+
+        builder.Services.AddScoped<IBackupRulesService, RuleServices>();
+        //builder.Services.AddScoped<IBackupScenariosService, ScenarioServices>();
+
+
 
         builder.Services.AddHostedService<DirectorServices>();
 

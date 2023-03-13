@@ -21,6 +21,8 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
         {
             return await _scenarioRepository.GetByIdAsync(id);
         }
+
+        
     }
 }
 

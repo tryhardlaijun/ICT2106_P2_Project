@@ -1,14 +1,7 @@
 ﻿using SmartHomeManager.Domain.BackupDomain.Entities;
 using SmartHomeManager.Domain.BackupDomain.Interfaces;
 using SmartHomeManager.Domain.SceneDomain.Interfaces;
-using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.SceneDomain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net.Http;
 
 namespace SmartHomeManager.Domain.BackupDomain.Services
 {
@@ -18,7 +11,7 @@ namespace SmartHomeManager.Domain.BackupDomain.Services
         private readonly IBackupScenarioRepository _backupScenarioRepository;
 
         private readonly IBackupRulesService _backupRuleInterface;
-        private readonly IBackupScenarioService _backupScenarioInterface;
+        private readonly IBackupScenariosService _backupScenarioInterface;
 
         private List<BackupRule> backupRulesList = new List<BackupRule>();
         private List<BackupScenario> backupScenarioList = new List<BackupScenario>();
@@ -26,11 +19,14 @@ namespace SmartHomeManager.Domain.BackupDomain.Services
         private List<Rule> rulesList = new List<Rule>();
         private List<Scenario> scenarioList = new List<Scenario>();
 
-        public BackupServices(IBackupRuleRepository backupRuleRepository, IBackupScenarioRepository backupScenarioRepository)
+        public BackupServices(IBackupRuleRepository backupRuleRepository, IBackupScenarioRepository backupScenarioRepository, IBackupRulesService backupRulesService)
         {
             _backupRuleRepository = backupRuleRepository;
             _backupScenarioRepository = backupScenarioRepository;
+
+            _backupRuleInterface = backupRulesService;
         }
+
 
         public async void createBackup(List<Rule> rulesList, List<Scenario> scenarioList)
         {

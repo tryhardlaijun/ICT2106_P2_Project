@@ -59,7 +59,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
             rules = (await _ruleInterface.GetAllRules()).ToList();       
             scenarios = (await _scenarioInterface.GetAllScenarios()).ToList();
 
-            _backupInterface.createBackup(rules, scenarios);
+            //_backupInterface.createBackup(rules, scenarios);
 
             while (!stoppingToken.IsCancellationRequested)
             {             

@@ -2,13 +2,14 @@
 using SmartHomeManager.Domain.DirectorDomain.Interfaces;
 using SmartHomeManager.Domain.DirectorDomain.Services;
 using SmartHomeManager.Domain.SceneDomain.Entities;
+using SmartHomeManager.Domain.SceneDomain.Interfaces;
 using System.Data;
 using Rule = SmartHomeManager.Domain.SceneDomain.Entities.Rule;
 
 namespace SmartHomeManager.Domain.SceneDomain.Services
 {
-	public class RuleServices
-	{
+	public class RuleServices : IBackupRulesService
+    {
 		private readonly IGenericRepository<Rule> _ruleRepository;
 		private readonly IInformDirectorServices _informDirectorServices;
 
@@ -67,6 +68,13 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
             
 			return false;
         }
-	}
+
+        public async Task<bool> loadRulesBackup(Guid profileId, IEnumerable<Rule> rules)
+        {
+			return true;
+        }
+
+        
+    }
 }
 

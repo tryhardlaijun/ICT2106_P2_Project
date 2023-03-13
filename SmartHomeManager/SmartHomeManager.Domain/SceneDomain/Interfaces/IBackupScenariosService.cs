@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SmartHomeManager.Domain.SceneDomain.Interfaces
 {
-    public interface IBackupScenarioService
+    public interface IBackupScenariosService
     {
         Task<bool> loadScenarioBackup(Guid profileID, IEnumerable<Scenario> scenarios);
     }
