@@ -13,15 +13,14 @@ import {
 import React from "react";
 import Buttons from "./Buttons" 
 
-function jsonToTable({ruleData}) {
-    console.log(ruleData);
+function jsonToTable({ruleData, deleteRule}) {
     const DisplayData = ruleData.map((info) => {
         return (
             <Tr key={info.ruleId}>
                 <Td>{info.ruleName}</Td>
                 <Td>{info.deviceId}</Td>
-                <Td>{info.startTime}</Td>
-                <Buttons props={info} />
+                <Td>{info.configurationKey}</Td>
+                <Buttons props={info} deleteRule= {deleteRule} />
             </Tr>
         );
     });

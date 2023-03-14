@@ -106,12 +106,6 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
 				return false;
             }
         }
-
-		public async Task<byte[]> DownloadRules(){
-			var allRules = await GetAllRulesAsync();
-			var ruleJson = JsonConvert.SerializeObject(allRules.ToList(), Formatting.Indented);
-			return Encoding.UTF8.GetBytes(ruleJson);
-		}
     }
 }
 
