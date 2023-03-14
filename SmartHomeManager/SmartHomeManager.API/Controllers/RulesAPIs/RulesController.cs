@@ -67,10 +67,7 @@ public class RulesController : ControllerBase
     [HttpPost("CreateRule")]
     public async Task<ActionResult> CreateRule([FromBody] RuleRequest ruleRequest)
     {
-        if (await _registerRuleService.RuleClashesAsync(ruleRequest))
-        {
-            return StatusCode(409, "Rule clashes with existing rule.");
-        }
+
         var rule = new Rule
         {
             RuleId = ruleRequest.RuleId,
@@ -94,10 +91,6 @@ public class RulesController : ControllerBase
     [HttpPut("EditRule")]
     public async Task<ActionResult> EditRule(RuleRequest ruleRequest)
     {
-        if (await _registerRuleService.RuleClashesAsync(ruleRequest))
-        {
-            return StatusCode(409, "Rule clashes with existing rule.");
-        }
         var rule = new Rule
         {
             RuleId = ruleRequest.RuleId,
@@ -169,6 +162,19 @@ public class RulesController : ControllerBase
             return StatusCode(200, file);
         } else{
             return StatusCode(500);
+        }
+    }
+    [HttpPost("CheckIfClash")]
+    public async Task<IActionResult> CheckIfClash(RuleRequest ruleRequest)
+    {
+        var result = await _registerRuleService.RuleClashesAsync(ruleRequest);
+        if (!result)
+        {
+            return StatusCode(200, ruleRequest);
+        }
+        else
+        {
+            return StatusCode(409, "Clashing with another rule");
         }
     }
 }

@@ -110,17 +110,29 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
         public async Task<bool> RuleClashesAsync(RuleRequest rule)
         {
             var existingRules = await GetAllRulesAsync();
-            foreach (var existingRule in existingRules)
+            if(rule.StartTime != null)
             {
-                if (existingRule == null) continue;
-                if (existingRule.ScenarioId == rule.ScenarioId && existingRule.ConfigurationKey == rule.ConfigurationKey && existingRule.ScenarioId == rule.ScenarioId && existingRule.DeviceId == rule.DeviceId
-                    && existingRule.StartTime < rule.EndTime && existingRule.EndTime > rule.StartTime && existingRule.RuleId != rule.RuleId)
+                foreach (var existingRule in existingRules)
                 {
-                    return true; // clash found
+                    if (existingRule.StartTime == null || existingRule.EndTime == null)
+                    {
+                        continue;
+                    }
+
+                    bool sameScenario = existingRule.ScenarioId == rule.ScenarioId;
+                    bool sameDevice = existingRule.DeviceId == rule.DeviceId;
+                    bool sameConfigurationKey = existingRule.ConfigurationKey == rule.ConfigurationKey;
+                    bool timeOverlap = existingRule.StartTime?.TimeOfDay < rule.EndTime?.TimeOfDay && existingRule.EndTime?.TimeOfDay > rule.StartTime?.TimeOfDay;
+                    bool differentRule = existingRule.RuleId != rule.RuleId;
+                    if (sameScenario && sameDevice && sameConfigurationKey && timeOverlap && differentRule)
+                    {
+                        return true; // clash found
+                    }
                 }
             }
             return false; // no clash found
         }
+
     }
 
 }
