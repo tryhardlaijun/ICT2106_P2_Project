@@ -26,7 +26,6 @@
     <None Remove="EntityFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="RulesDataSource\" />
 	  <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.3" />
 
   </ItemGroup>

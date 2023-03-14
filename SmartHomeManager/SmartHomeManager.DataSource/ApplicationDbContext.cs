@@ -48,6 +48,7 @@ public class ApplicationDbContext : DbContext
         ForecastCharts = base.Set<ForecastChart>();
         ForecastChartsData = base.Set<ForecastChartData>();
         EnergyEfficiency = base.Set<EnergyEfficiency>();
+        
     }
 
     public DbSet<Account> Accounts { get; }
