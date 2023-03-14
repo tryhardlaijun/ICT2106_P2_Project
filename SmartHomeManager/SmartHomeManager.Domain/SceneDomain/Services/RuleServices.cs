@@ -17,6 +17,7 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
         private readonly IInformDirectorServices _informDirectorServices;
 
         //Initialise the service by passing the repo
+
         public RuleServices(IGenericRepository<Rule> ruleRepository, IInformDirectorServices informDirectorServices)
         {
             _ruleRepository = ruleRepository;
@@ -106,6 +107,21 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
 				return false;
             }
         }
+        public async Task<bool> RuleClashesAsync(RuleRequest rule)
+        {
+            var existingRules = await GetAllRulesAsync();
+            foreach (var existingRule in existingRules)
+            {
+                if (existingRule == null) continue;
+                if (existingRule.ScenarioId == rule.ScenarioId && existingRule.ConfigurationKey == rule.ConfigurationKey && existingRule.ScenarioId == rule.ScenarioId && existingRule.DeviceId == rule.DeviceId
+                    && existingRule.StartTime < rule.EndTime && existingRule.EndTime > rule.StartTime && existingRule.RuleId != rule.RuleId)
+                {
+                    return true; // clash found
+                }
+            }
+            return false; // no clash found
+        }
     }
+
 }
 

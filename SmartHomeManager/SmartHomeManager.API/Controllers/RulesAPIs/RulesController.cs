@@ -17,8 +17,11 @@ namespace SmartHomeManager.API.Controllers.RulesAPIs;
 public class RulesController : ControllerBase
 {
     private readonly RuleServices _registerRuleService;
+    // Factory
+    // Factory choose which ruleService to use.
+    // Parse in something from frontend 
     private readonly GetRulesServices _getRulesServices;
-
+      
 
     public RulesController(IGenericRepository<Rule> ruleRepository, IInformDirectorServices informDirectorServices,IGetRulesRepository getRulesRepository)
     {
@@ -64,6 +67,10 @@ public class RulesController : ControllerBase
     [HttpPost("CreateRule")]
     public async Task<ActionResult> CreateRule([FromBody] RuleRequest ruleRequest)
     {
+        if (await _registerRuleService.RuleClashesAsync(ruleRequest))
+        {
+            return StatusCode(409, "Rule clashes with existing rule.");
+        }
         var rule = new Rule
         {
             RuleId = ruleRequest.RuleId,
@@ -78,14 +85,19 @@ public class RulesController : ControllerBase
             APIKey = ruleRequest.APIKey,
             ApiValue = ruleRequest.ApiValue,
         };
-        await _registerRuleService.CreateRuleAsync(rule);
-        return StatusCode(200, ruleRequest);
+        if(await _registerRuleService.CreateRuleAsync(rule))
+            return StatusCode(200, ruleRequest);
+        return StatusCode(500, ruleRequest);
     }
 
     // PUT api/Rules/5
     [HttpPut("EditRule")]
     public async Task<ActionResult> EditRule(RuleRequest ruleRequest)
     {
+        if (await _registerRuleService.RuleClashesAsync(ruleRequest))
+        {
+            return StatusCode(409, "Rule clashes with existing rule.");
+        }
         var rule = new Rule
         {
             RuleId = ruleRequest.RuleId,
@@ -100,8 +112,9 @@ public class RulesController : ControllerBase
             APIKey = ruleRequest.APIKey,
             ApiValue = ruleRequest.ApiValue,
         };
-        await _registerRuleService.EditRuleAsync(rule);
-        return StatusCode(200, rule);
+        if(await _registerRuleService.EditRuleAsync(rule))
+            return StatusCode(200, rule);
+        return StatusCode(500, rule);
     }
 
     // DELETE api/Rules/1
