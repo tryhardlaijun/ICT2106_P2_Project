@@ -1,9 +1,10 @@
-﻿using SmartHomeManager.Domain.SceneDomain.Entities;
+﻿using System;
+using SmartHomeManager.Domain.SceneDomain.Entities;
 
 namespace SmartHomeManager.Domain.SceneDomain.Interfaces
 {
-    //Provided service
-    public interface IGetRulesService
+    // interface for repo
+	public interface IGetRulesRepository
 	{
         // get all rules on startup
         Task<IEnumerable<Rule>> GetAllRulesAsync();
@@ -11,7 +12,7 @@ namespace SmartHomeManager.Domain.SceneDomain.Interfaces
         Task<Rule> GetRuleByIdAsync(Guid id);
 
         // refresh all rules of a scenario when director is informed of a change
-        Task<IEnumerable<Rule?>> GetAllRulesByScenarioIdAsync(Guid ScenarioId); 
+        Task<IEnumerable<Rule>> GetAllRulesByScenarioIdAsync(Guid ScenarioId);
     }
 }
 
