@@ -55,8 +55,9 @@ namespace SmartHomeManager.Domain.EnergyProfileDomain.Services
             List<int> configValues = ConfigValueRange();
 
             // Hardcoded accountId
-            Guid accountId = new Guid("3FA85F64-5717-4562-B3FC-2C963F66AFA6");
-            EnergyProfile energyProfile = await _energyProfileRepository.GetByIdAsync(accountId);
+            Guid accountId = new Guid("11111111-1111-1111-1111-111111111111");
+            EnergyProfile energyProfile = await GetEnergyProfileAsync(accountId);
+            //Console.WriteLine("value: " + energyProfile.ConfigurationValue);
 
             if (energyProfile == null)
             {

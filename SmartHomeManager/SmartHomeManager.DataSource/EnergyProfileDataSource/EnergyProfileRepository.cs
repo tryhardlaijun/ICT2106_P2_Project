@@ -20,6 +20,7 @@ namespace SmartHomeManager.DataSource.EnergyProfileDataSource
         public EnergyProfileRepository(ApplicationDbContext applicationDbContext)
         {
             _applicationDbContext = applicationDbContext;
+            _applicationDbContext.ChangeTracker.QueryTrackingBehavior = Microsoft.EntityFrameworkCore.QueryTrackingBehavior.NoTracking;
         }
 
         public async Task<bool> AddAsync(EnergyProfile energyProfile)
@@ -109,9 +110,9 @@ namespace SmartHomeManager.DataSource.EnergyProfileDataSource
 
         public async Task<EnergyProfile?> GetByIdAsync(Guid accountId)
         {
-            var exisitingEnergyProfile = await _applicationDbContext.EnergyProfiles.FirstOrDefaultAsync(p => p.AccountId == accountId);
+            var existingEnergyProfile = await _applicationDbContext.EnergyProfiles.FirstOrDefaultAsync(p => p.AccountId == accountId);
             // If the entity does not exist, return false.
-            if (exisitingEnergyProfile == null)
+            if (existingEnergyProfile == null)
             {
                 EnergyProfile ep = new EnergyProfile();
                 ep.EnergyProfileId = Guid.NewGuid();
@@ -120,10 +121,11 @@ namespace SmartHomeManager.DataSource.EnergyProfileDataSource
                 ep.ConfigurationDesc = "Test run";
                 await _applicationDbContext.EnergyProfiles.AddAsync(ep);
                 await _applicationDbContext.SaveChangesAsync();
+                return ep;
             }
-            var energyProfile = await _applicationDbContext.EnergyProfiles.FirstOrDefaultAsync(p => p.AccountId == accountId);
-
-            return energyProfile!;
+            //var energyProfile = await _applicationDbContext.EnergyProfiles.FirstOrDefaultAsync(p => p.AccountId == accountId);
+            
+            return existingEnergyProfile!;
         }
 
         public Task<bool> DeleteAsync(EnergyProfile entity)

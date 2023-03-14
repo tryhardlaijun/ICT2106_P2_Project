@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using SmartHomeManager.Domain.BackupDomain.Entities;
 using SmartHomeManager.Domain.BackupDomain.Interfaces;
 using SmartHomeManager.Domain.Common;
+using SmartHomeManager.Domain.DeviceDomain.Entities;
 using SmartHomeManager.Domain.DirectorDomain.Entities;
 using SmartHomeManager.Domain.DirectorDomain.Interfaces;
 using SmartHomeManager.Domain.EnergyProfileDomain.Interfaces;
@@ -61,6 +62,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
             while (!stoppingToken.IsCancellationRequested)
             {             
                 if(TimeCheck()) CheckIfRuleTriggered();
+                //await _energyProfileInterface.getRevisedConfigValue(Guid.NewGuid(), "temperature", 26);
                 await Task.Delay(10000);
             }
         }
