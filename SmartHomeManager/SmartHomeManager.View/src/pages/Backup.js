@@ -17,6 +17,7 @@ export default function Backup() {
     const [backupScenarioList, getBackupScenarioList] = useState([]);
     //const backupRulesList = useState();
     var backupId;
+    var versionSelected;
 
     const toast = useToast();
 
@@ -41,6 +42,7 @@ export default function Backup() {
 
     function buttonClicked(scenario, versionNo) {
         var buttonClickedId = "button" + versionNo
+        versionSelected = versionNo;
         
         for (var i = 1; i <= backupScenarioList.length; i++) {
             if (buttonClickedId == "button" + i) {
@@ -63,7 +65,7 @@ export default function Backup() {
         document.getElementById("showSelected").style.display = "block";
     }
 
-    function onSubmit(e) {
+    function onSubmit() {
         //console.log(profileId + " and " + backupId)
 
         fetch("https://localhost:7140/api/Backup/restoreBackup", {
@@ -79,7 +81,7 @@ export default function Backup() {
             if (response.ok) {
                 toast({
                     title: "Success",
-                    description: "Backup has been restored successfully.",
+                    description: "Backup v" + versionSelected + " has been restored successfully.",
                     status: "success",
                     duration: 9000,
                     isClosable: true,
@@ -88,7 +90,7 @@ export default function Backup() {
             else {
                 toast({
                     title: "Error",
-                    description: "Backup has failed.",
+                    description: "Backup v" + versionSelected + " has failed.",
                     status: "error",
                     duration: 9000,
                     isClosable: true,
