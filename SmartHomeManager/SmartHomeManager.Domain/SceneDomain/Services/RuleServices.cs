@@ -17,6 +17,7 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
         private readonly IInformDirectorServices _informDirectorServices;
 
         //Initialise the service by passing the repo
+
         public RuleServices(IGenericRepository<Rule> ruleRepository, IInformDirectorServices informDirectorServices)
         {
             _ruleRepository = ruleRepository;
@@ -106,6 +107,33 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
 				return false;
             }
         }
+        public async Task<bool> RuleClashesAsync(RuleRequest rule)
+        {
+            var existingRules = await GetAllRulesAsync();
+            if(rule.StartTime != null)
+            {
+                foreach (var existingRule in existingRules)
+                {
+                    if (existingRule.StartTime == null || existingRule.EndTime == null)
+                    {
+                        continue;
+                    }
+
+                    bool sameScenario = existingRule.ScenarioId == rule.ScenarioId;
+                    bool sameDevice = existingRule.DeviceId == rule.DeviceId;
+                    bool sameConfigurationKey = existingRule.ConfigurationKey == rule.ConfigurationKey;
+                    bool timeOverlap = existingRule.StartTime?.TimeOfDay < rule.EndTime?.TimeOfDay && existingRule.EndTime?.TimeOfDay > rule.StartTime?.TimeOfDay;
+                    bool differentRule = existingRule.RuleId != rule.RuleId;
+                    if (sameScenario && sameDevice && sameConfigurationKey && timeOverlap && differentRule)
+                    {
+                        return true; // clash found
+                    }
+                }
+            }
+            return false; // no clash found
+        }
+
     }
+
 }
 

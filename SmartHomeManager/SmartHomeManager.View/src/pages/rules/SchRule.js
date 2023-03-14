@@ -26,7 +26,6 @@ export default function SchRule() {
 	});
 	
 	function updateDetails(value) {
-		console.log(value);
 		return setRuleDetail((prev) => {
 			return { ...prev, ...value };
 		});
@@ -44,27 +43,68 @@ export default function SchRule() {
 			},
 		});
 	}
+	async function checkIfClash(ruleReq) {
+		await axios.post("https://localhost:7140/api/Rules/CheckIfClash", ruleReq, {
+			headers: {
+				"Content-Type": "application/json",
+			},
+		})
+	}
+
+	/**
+ * Makes a toast notification.
+ * @param {string} title
+ * @param {string} message
+ * @param {import("@chakra-ui/react").UseToastOptions["status"]} status
+ * @param {number} timing
+ */
+	function makeToast(title, message, status, timing) {
+		toast({
+			title: title,
+			description: message,
+			status: status,
+			duration: timing,
+			isClosable: true,
+		});
+	}
 
 	const handleSubmit = async () => {
-		try {
-			const success = await createRule();
-			toast({
-				title: "Rule created.",
-				description: "Rule Successfully added to the DB",
-				status: "success",
-				duration: 3000,
-				isClosable: true,
-			});
-			navigate("/Scenario");
-		} catch (error) {
-			toast({
-				title: "Rule created.",
-				description: "Something went wrong",
-				status: "error",
-				duration: 3000,
-				isClosable: true,
-			});
+		let returnCode = ""
+		await checkIfClash(ruleDetail).then(() => {
+		}).catch((err) => {
+			console.error(err)
+			returnCode = err.response.status
+		})
+		console.log("see this\n" + returnCode)
+		//console.log(typeof(returnCode))
+		if (returnCode == "400") {
+			makeToast("Error Invalid Rule.", "Something went wrong.", "error", 3000);
 		}
+		else if (returnCode == "409") {
+			makeToast("Rule creation failed.", "There is a clash with an existing rule.", "error", 3000);
+		}
+		else {
+			try {
+				const success = await createRule();
+				toast({
+					title: "Rule created.",
+					description: "Rule Successfully added to the DB",
+					status: "success",
+					duration: 3000,
+					isClosable: true,
+				});
+				navigate("/Scenario");
+			} catch (error) {
+				toast({
+					title: "Error Creating Rule.",
+					description: "Something went wrong",
+					status: "error",
+					duration: 3000,
+					isClosable: true,
+				});
+			}
+		}
+
 	};
 
 	useEffect(() => {

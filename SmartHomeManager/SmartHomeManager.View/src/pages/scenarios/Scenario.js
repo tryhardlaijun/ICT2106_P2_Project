@@ -66,7 +66,7 @@ export default function Scenarios() {
 		getAllRules(scenario.scenarioId)
 		.catch((error)=>{
 			console.error(error)
-			makeToast('Error', 'Failed to fetch rules for the scenario. Please try again later.','error',5000)
+			makeToast('Error', 'Failed to fetch rules for the scenario. Please try again later.', 'error', 5000);
 		})
 		updateLocalStore(scenario.scenarioName, scenario.scenarioId)
 	}
@@ -103,7 +103,7 @@ export default function Scenarios() {
 			}
 		  } catch (error) {
 			console.error(error);
-			makeToast('Error', 'Failed to fetch scenarios data. Please try again later.','error',5000)
+			  makeToast('Error', 'Failed to fetch scenarios data. Please try again later.', 'error', 5000);
 		  }
 		};
 		fetchData();

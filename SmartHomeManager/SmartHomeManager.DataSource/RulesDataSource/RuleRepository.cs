@@ -59,7 +59,7 @@ namespace SmartHomeManager.DataSource.RulesDataSource
         public async Task<IEnumerable<Rule>> GetAllAsync()
         {
             //await RuleSeedData.Seed(_applicationDbContext);
-            return await _applicationDbContext.Rules.Include(d => d.Device).Include(s => s.Scenario).ToListAsync();
+            return await _applicationDbContext.Rules.Include(d => d.Device).Include(s => s.Scenario).AsNoTracking().ToListAsync();
         }
 
 
