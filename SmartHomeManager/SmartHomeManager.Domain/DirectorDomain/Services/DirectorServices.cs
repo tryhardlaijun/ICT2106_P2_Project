@@ -29,8 +29,9 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
         private readonly IRuleHistoryRepository<RuleHistory> _ruleHistoryRepository;
         private readonly IGenericRepository<History> _historyRepository;
 
-        private List<Rule> rules;
-        private List<Scenario> scenarios;
+        private RuleList? ruleList;
+        private ScenarioList? scenarioList;
+
         private DateTime timeMark;
 
         public DirectorServices(IServiceProvider serviceProvider)
@@ -45,24 +46,20 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
             _scenarioInterface = scope.ServiceProvider.GetRequiredService<IGetScenariosService>();
             _energyProfileInterface = scope.ServiceProvider.GetRequiredService<IEnergyProfileServices>();
             _backupInterface = scope.ServiceProvider.GetRequiredService<IBackupService>();
-
-            rules = new List<Rule>();
-            scenarios= new List<Scenario>();
             timeMark = DateTime.Now.AddMinutes(-1);
         }
 
-
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            rules = (await _ruleInterface.GetAllRules()).ToList();       
-            scenarios = (await _scenarioInterface.GetAllScenarios()).ToList();
+            scenarioList = new ScenarioList((await _scenarioInterface.GetAllScenarios()).ToList());
+            ruleList = new RuleList((await _ruleInterface.GetAllRules()).ToList());
 
             //_backupInterface.createBackup(rules, scenarios);
 
             while (!stoppingToken.IsCancellationRequested)
-            {             
-                if(TimeCheck()) CheckIfRuleTriggered();
+            {
                 //await _energyProfileInterface.getRevisedConfigValue(Guid.NewGuid(), "temperature", 26);
+                if (TimeCheck()) CheckIfRuleTriggered();
                 await Task.Delay(10000);
             }
         }
@@ -81,11 +78,12 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
         private async void CheckIfRuleTriggered()
         {
             Console.WriteLine(string.Format("System Time: {0}", DateTime.Now.ToString("HH:mm:ss.fff")));
+            var ruleListClone = ruleList!.Clone().getRuleList();
 
-            if (rules.Any())
+            if (ruleListClone.Any())
             {
-                var rLength = rules.Count();
-                foreach (var rule in rules)
+                var rLength = ruleListClone.Count();
+                foreach (var rule in ruleListClone)
                 {
                     var timeDiff = Math.Floor((DateTime.Now - Convert.ToDateTime(rule.StartTime)).TotalMinutes);
                     if (timeDiff == 0)
@@ -121,22 +119,24 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
 
         public async void InformRuleChangesAsync(Guid ruleID, char operation)
         {
+            var ruleListClone = ruleList!.Clone().getRuleList();
             switch (operation)
             {
-                case 'c':                    
-                    await addNewRule(await _ruleInterface.GetRuleById(ruleID));                    
+                case 'c':
+                    await addNewRule(await _ruleInterface.GetRuleById(ruleID));
                     break;
                 case 'u':
-                    rules = rules.Where(r => r.RuleId != ruleID).ToList();
-                    await addNewRule(await _ruleInterface.GetRuleById(ruleID));                                     
+                    ruleListClone = ruleListClone.Where(r => r.RuleId != ruleID).ToList();
+                    await addNewRule(await _ruleInterface.GetRuleById(ruleID));
                     break;
                 case 'd':
-                    rules = rules.Where(r => r.RuleId != ruleID).ToList();
+                    ruleListClone = ruleListClone.Where(r => r.RuleId != ruleID).ToList();
                     break;
             }
 
-            async Task addNewRule(Rule rule){                
-                rules.Add(rule);
+            async Task addNewRule(Rule rule)
+            {
+                ruleListClone.Add(rule);
                 RuleHistory rh = new RuleHistory
                 {
                     RuleId = ruleID,
@@ -151,24 +151,31 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
                 };
                 await _ruleHistoryRepository.AddAsync(rh);
             }
+
+            ruleList.replaceRuleList(ruleListClone);
         }
 
         public async void InformScenarioChangesAsync(Guid scenarioID, char operation)
         {
+            var scenarioListClone = scenarioList!.Clone().getScenarioList();
             switch (operation)
             {
-                case 'c':                    
-                    scenarios.Add(await _scenarioInterface.GetScenarioById(scenarioID));                    
+                case 'c':
+                    scenarioListClone.Add(await _scenarioInterface.GetScenarioById(scenarioID));
                     break;
-                case 'u':                    
-                    scenarios = scenarios.Where(s => s.ScenarioId != scenarioID).ToList();
-                    scenarios.Add(await _scenarioInterface.GetScenarioById(scenarioID));                                     
+                case 'u':
+                    scenarioListClone = scenarioListClone.Where(s => s.ScenarioId != scenarioID).ToList();
+                    scenarioListClone.Add(await _scenarioInterface.GetScenarioById(scenarioID));
                     break;
                 case 'd':
-                    scenarios = scenarios.Where(s => s.ScenarioId != scenarioID).ToList();
-                    rules = rules.Where(r => r.ScenarioId != scenarioID).ToList();            
+                    scenarioListClone = scenarioListClone.Where(s => s.ScenarioId != scenarioID).ToList();
+
+                    var ruleListClone = ruleList!.Clone().getRuleList();
+                    ruleListClone = ruleListClone.Where(r => r.ScenarioId != scenarioID).ToList();
+                    ruleList.replaceRuleList(ruleListClone);
                     break;
             }
+            scenarioList.replaceScenarioList(scenarioListClone);
         }
     }
 }
