@@ -5,6 +5,7 @@ using SmartHomeManager.Domain.BackupDomain.Entities;
 using SmartHomeManager.Domain.BackupDomain.Interfaces;
 using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.DeviceDomain.Entities;
+using SmartHomeManager.Domain.DeviceDomain.Interfaces;
 using SmartHomeManager.Domain.DirectorDomain.Entities;
 using SmartHomeManager.Domain.DirectorDomain.Interfaces;
 using SmartHomeManager.Domain.EnergyProfileDomain.Interfaces;
@@ -34,6 +35,11 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
 
         private DateTime timeMark;
 
+        private RuleTriggerManager ruleTriggerManager;
+
+        private IDirectorControlDeviceService _directorControlDeviceInterface;
+        private ITroubleshooterServices _troubleshooterInterface;
+
         public DirectorServices(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
@@ -46,7 +52,15 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
             _scenarioInterface = scope.ServiceProvider.GetRequiredService<IGetScenariosService>();
             _energyProfileInterface = scope.ServiceProvider.GetRequiredService<IEnergyProfileServices>();
             _backupInterface = scope.ServiceProvider.GetRequiredService<IBackupService>();
+            _directorControlDeviceInterface = scope.ServiceProvider.GetRequiredService<IDirectorControlDeviceService>();
+            _troubleshooterInterface = scope.ServiceProvider.GetRequiredService<ITroubleshooterServices>();
+
             timeMark = DateTime.Now.AddMinutes(-1);
+
+            ruleTriggerManager = new RuleTriggerManager();
+            ruleTriggerManager.Attach(_directorControlDeviceInterface);
+            ruleTriggerManager.Attach(_troubleshooterInterface);
+
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -96,7 +110,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
                         int adjustedConfigValue = await _energyProfileInterface.getRevisedConfigValue(deviceID, configKey, configValue);
 
                         // Set device thru device interface
-                        // await setDeviceConfig(deviceID, configKey, configValue);
+                        ruleTriggerManager.Notify(deviceID, configKey, adjustedConfigValue);
 
                         var configMeaning = string.Format("{0} is set to {1}", configKey, configValue); // await getConfigMeaning(deviceID, configKey, configValue);
                         var storedRule = await _ruleHistoryRepository.GetByRuleIdAsync(rule.RuleId);
@@ -177,5 +191,6 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
             }
             scenarioList.replaceScenarioList(scenarioListClone);
         }
+
     }
 }

@@ -37,6 +37,7 @@ using SmartHomeManager.Domain.NotificationDomain.Interfaces;
 using SmartHomeManager.DataSource.BackupDataSource;
 using SmartHomeManager.Domain.BackupDomain.Interfaces;
 using SmartHomeManager.Domain.BackupDomain.Services;
+using SmartHomeManager.Domain.DeviceDomain.Services;
 
 namespace SmartHomeManager.API;
 
@@ -89,6 +90,9 @@ public class Program
         builder.Services.AddScoped<IGetScenariosService, GetScenariosService>();
         builder.Services.AddScoped<IBackupRulesService, GetRulesServices>();
         builder.Services.AddScoped<IBackupScenariosService, GetScenariosService>();
+
+        builder.Services.AddScoped<IDirectorControlDeviceService, DeviceService>();
+        builder.Services.AddScoped<ITroubleshooterServices, TroubleshooterServices>();
 
         builder.Services.AddHostedService<DirectorServices>();
 
