@@ -21,6 +21,8 @@ export default function Scenarios() {
 	const [ currentScenario, setCurrentScenario ] = useState()
 	const [buttonName, setButtonName] = useState("")
 	const toast = useToast();
+	const deviceTypeFilter = "Fan";
+	const configurationKeyFilter = "Unable to oscillate";
 
 	/**
 	 * @param {string} id
@@ -153,9 +155,14 @@ export default function Scenarios() {
 					/>
 					<ModalButton
 						title="Simulate Troubleshooting"
-						text="Device fan seems to be unable to oscilate"
+						text="Device fan seems to be unable to oscillate"
 						action="Try again"
-
+						redirectTo={{
+							pathname: "/troubleshooters",
+							state: { deviceTypeFilter, configurationKeyFilter },
+						}}
+						deviceType="Fan"
+						configMsg="Unable to oscillate"
 					/>
 				</Box>
 			</Box>

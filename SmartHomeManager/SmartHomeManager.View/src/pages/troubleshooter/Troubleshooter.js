@@ -14,14 +14,19 @@ import MenuItems from "components/Rules/MenuItems";
 import axios from "axios";
 import UploadModalButton from "components/Rules/UploadModal";
 import TroublershooterToTable from "components/Rules/TroublershooterToTable";
+import { useLocation } from "react-router-dom";
+
 
 export default function Troubleshooter() {
 	const [allTroubleshooters, setAllTroubleshooters] = useState([])
+	const location = useLocation();
+	const params = new URLSearchParams(location.search);
+	const [deviceTypeFilter, setDeviceTypeFilter] = useState(params.get("deviceType") || "");
+	const [configurationKeyFilter, setConfigurationKeyFilter] = useState(params.get("configMsg") || "");
 	const [filteredData, setFilteredData] = useState([]);
-	const [deviceTypeFilter, setDeviceTypeFilter] = useState("");
-	const [configurationKeyFilter, setConfigurationKeyFilter] = useState("");
 
 	const toast = useToast();
+	let timeoutId; // keep track of timeout id
 
 	async function getAllTroubleshooters() {
 		try {
@@ -43,24 +48,58 @@ export default function Troubleshooter() {
 		getAllTroubleshooters();
 	}, []);
 
-	// Filter data based on deviceTypeFilter and configurationKeyFilter
-	function applyFilters() {
-		const filtered = allTroubleshooters.filter(
-			(info) =>
-				info.deviceType.toLowerCase().includes(deviceTypeFilter.toLowerCase()) &&
-				info.configurationKey.toLowerCase().includes(configurationKeyFilter.toLowerCase())
-		);
-		setFilteredData(filtered);
+	const debouncedApplyFilters = () => {
+		clearTimeout(timeoutId);
+		timeoutId = setTimeout(() => {
+			applyFilters();
+		}, 500); // delay execution of applyFilters for 500ms after user stops typing
 	}
 
+	const applyFilters = () => {
+		let filtered = allTroubleshooters;
+		if (deviceTypeFilter && configurationKeyFilter) {
+			filtered = filtered.filter(
+				(item) =>
+					item.deviceType.toLowerCase().includes(deviceTypeFilter.toLowerCase()) &&
+					item.configurationKey.toLowerCase().includes(configurationKeyFilter.toLowerCase())
+			);
+		} else if (deviceTypeFilter) {
+			filtered = filtered.filter(
+				(item) =>
+					item.deviceType.toLowerCase().includes(deviceTypeFilter.toLowerCase())
+			);
+		} else if (configurationKeyFilter) {
+			filtered = filtered.filter(
+				(item) =>
+					item.configurationKey.toLowerCase().includes(configurationKeyFilter.toLowerCase())
+			);
+		}
 
-	// Reset filters and display all data
-	function clearFilters() {
+		setFilteredData(filtered);
+
+		if (filtered.length === 0) {
+			toast({
+				title: "No results found",
+				status: "warning",
+				duration: 5000,
+				isClosable: true,
+			});
+		} else {
+			toast({
+				title: "Filters applied",
+				status: "success",
+				duration: 5000,
+				isClosable: true,
+			});
+		}
+	};
+
+
+
+	const clearFilters = () => {
 		setDeviceTypeFilter("");
 		setConfigurationKeyFilter("");
-		setFilteredData(allTroubleshooters);
-	}
-	
+	};
 
 	return (
 		<Box padding="16">

@@ -3,7 +3,11 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 function ModalButton(props) {
-    const { isOpen, onOpen, onClose } = useDisclosure()
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const redirectTo = {
+        pathname: "/troubleshooters",
+        search: `?deviceType=${props.deviceType}&configMsg=${props.configMsg}`,
+    };
     return (
         <>
             <Button onClick={onOpen} ml={2} colorScheme="whatsapp">{props.title}</Button>
@@ -12,18 +16,18 @@ function ModalButton(props) {
                 <ModalOverlay />
                 <ModalContent>
                     <ModalHeader>{props.title}</ModalHeader>
-                    
+
                     <ModalCloseButton />
                     <ModalBody>
                         {props.text}
-                        
+
                     </ModalBody>
                     <ModalFooter>
                         <Button colorScheme='blue' mr={3} onClick={onClose}>
                             Close
                         </Button>
-                        <Button variant='solid' colorScheme="orange"><Link to="/troubleshooters">Troubleshoot</Link></Button>
-                        
+                        <Button variant='solid' colorScheme="orange"><Link to={redirectTo}>Troubleshoot</Link></Button>
+
                     </ModalFooter>
                 </ModalContent>
             </Modal>
