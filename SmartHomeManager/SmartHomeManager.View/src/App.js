@@ -13,7 +13,7 @@ import Scenario from "./pages/Scenario";
 import SchRule from "pages/SchRule";
 import ActionRule from "pages/ActionRule";
 import Rooms from "./pages/Rooms";
-import { Container } from "@chakra-ui/react";
+import { Container, useToast } from "@chakra-ui/react";
 import Register from "./pages/account/Register";
 import ForgetPassword from "./pages/account/ForgetPassword";
 import Login from "./pages/account/Login";
@@ -26,7 +26,21 @@ import SelectNearbyDevice from "pages/SelectNearbyDevice";
 import DeviceConfig from "./pages/DeviceConfig";
 import Report from "pages/Analytics";
 
+import { useEffect } from 'react';
+
 export function App() {
+    const toast = useToast();
+    useEffect(() => {
+        toast({
+            title: "Error",
+            description: "This is for intrusion",
+            status: "error",
+            duration: 9000,
+            isClosable: true,
+        });
+    }, []);
+    
+
   return (
     <>
       <Router>
@@ -71,7 +85,7 @@ export function App() {
           </Routes>
         </Container>
       </Router>
-    </>
+      </>
   );
 }
 export default App;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
     Heading, Center, Container, Button, Box, Text, VStack,
     Modal,
@@ -7,7 +7,8 @@ import {
     ModalFooter,
     ModalHeader,
     ModalCloseButton,
-    useDisclosure
+    useDisclosure,
+    useToast
 } from '@chakra-ui/react'
 
 export default function Intruder() {
@@ -43,7 +44,6 @@ export default function Intruder() {
                 </ModalContent>
             </Modal>
         </Container>
-
 
     )
 }
