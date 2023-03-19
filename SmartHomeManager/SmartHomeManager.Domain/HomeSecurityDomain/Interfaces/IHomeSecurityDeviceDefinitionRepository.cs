@@ -9,6 +9,6 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Interfaces
     /// <typeparam name="T">The entity that the repository will handle.</typeparam>
     public interface IHomeSecurityDeviceDefinitionRepository<T> where T : class
     {
-        public Task<T?> GetByDeviceGroup(string deviceGroup);
+        public Task<IEnumerable<T>?> GetAllAsync();
     }
 }

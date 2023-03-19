@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.HomeSecurityDomain.Entities;
+using SmartHomeManager.Domain.HomeSecurityDomain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SmartHomeManager.DataSource.HomeSecuritySettingsDataSource
 {
-    public class HomeSecuritySettingRepository : IGenericRepository<HomeSecuritySetting>
+    public class HomeSecuritySettingRepository : IHomeSecuritySettingRepository<HomeSecuritySetting>
     {
         private readonly ApplicationDbContext _applicationDbContext;
 
@@ -32,24 +33,14 @@ namespace SmartHomeManager.DataSource.HomeSecuritySettingsDataSource
             }
         }
 
-        public async Task<bool> DeleteAsync(HomeSecuritySetting entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<bool> DeleteByIdAsync(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<IEnumerable<HomeSecuritySetting>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _applicationDbContext.HomeSecuritySettings.ToListAsync(); ;
         }
 
-        public async Task<HomeSecuritySetting?> GetByIdAsync(Guid homeSecuritySettingId)
+        public async Task<HomeSecuritySetting?> GetByHomeSecurityIdAsync(Guid homeSecurityId)
         {
-            return await _applicationDbContext.HomeSecuritySettings.Where(r => r.HomeSecuritySettingId == homeSecuritySettingId).LastAsync();
+            return await _applicationDbContext.HomeSecuritySettings.Where(r => r.HomeSecurityId == homeSecurityId).LastAsync();
         }
 
         public async Task<bool> SaveAsync()
