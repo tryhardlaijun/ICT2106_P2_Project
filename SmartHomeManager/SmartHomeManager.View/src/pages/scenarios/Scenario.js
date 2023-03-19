@@ -153,8 +153,9 @@ export default function Scenarios() {
 					/>
 					<ModalButton
 						title="Simulate Troubleshooting"
-						text="You fan seems to be unable to oscilate, please check if something is blocking it."
+						text="Device fan seems to be unable to oscilate"
 						action="Try again"
+
 					/>
 				</Box>
 			</Box>
