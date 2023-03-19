@@ -1,9 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.DirectorDomain.Entities;
 using SmartHomeManager.Domain.DirectorDomain.Interfaces;
+using SmartHomeManager.Domain.DirectorDomain.Services;
 using SmartHomeManager.Domain.HomeSecurityDomain.Entities;
 using SmartHomeManager.Domain.HomeSecurityDomain.Interfaces;
+using SmartHomeManager.Domain.SceneDomain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,69 +18,168 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
     public class HomeSecurityServices : IHomeSecurityServices
     {
         private readonly IServiceProvider _serviceProvider;
-        private List<Guid>? alertedAccounts;
-        private List<Guid>? lockedDownAccounts;
+        private List<Guid> alertedAccounts = new List<Guid>();
+        private List<Guid> lockedDownAccounts = new List<Guid>();
+        private IEnumerable<HomeSecurityDeviceDefinition>? homeSecurityDeviceDefinitions;
+        List<string> detectorDeviceGroups = new List<string>() { 
+            "Camera", "Microphone" 
+        };
 
-        private IGenericRepository<HomeSecurity> _homeSecurityRepository;
-        private IGenericRepository<HomeSecuritySetting> _homeSecuritySettingRepository;
+        private IHomeSecurityRepository<HomeSecurity> _homeSecurityRepository;
+        private IHomeSecuritySettingRepository<HomeSecuritySetting> _homeSecuritySettingRepository;
         private IHomeSecurityDeviceDefinitionRepository<HomeSecurityDeviceDefinition> _homeSecurityDeviceDefinitionRepository;
+
+        private readonly IDirectorServices _directorInterface;
 
         public HomeSecurityServices(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
 
             var scope = _serviceProvider.CreateScope();
-            _homeSecurityRepository = scope.ServiceProvider.GetRequiredService<IRuleHistoryRepository<HomeSecurity>>();
-            _homeSecuritySettingRepository = scope.ServiceProvider.GetRequiredService<IGenericRepository<HomeSecuritySetting>>();
+            _homeSecurityRepository = scope.ServiceProvider.GetRequiredService<IHomeSecurityRepository<HomeSecurity>>();
+            _homeSecuritySettingRepository = scope.ServiceProvider.GetRequiredService<IHomeSecuritySettingRepository<HomeSecuritySetting>>();
             _homeSecurityDeviceDefinitionRepository = scope.ServiceProvider.GetRequiredService<IHomeSecurityDeviceDefinitionRepository<HomeSecurityDeviceDefinition>>();
+            _directorInterface = scope.ServiceProvider.GetRequiredService<IDirectorServices>();
+            initialiseCompatibleDevicesList();
         }
 
-        public List<string> getHomeSecurityCompatibleDevices()
+        private async void initialiseCompatibleDevicesList()
         {
-            // gives all devices director should ask us to process
-            throw new NotImplementedException();
+            homeSecurityDeviceDefinitions = await _homeSecurityDeviceDefinitionRepository.GetAllAsync();
         }
 
-        public void processEvent(Guid accountID)
+        public async void processEventAsync(Guid accountID, String deviceGroup, String configurationKey, int configurationValue)
         {
-            // if accountid securitymodestate true
-            // update list of alertedaccounts
-            throw new NotImplementedException();
+            // Checks if device is a detector
+            if (!detectorDeviceGroups.Contains(deviceGroup))
+                return;
+
+            HomeSecurity homeSecurityObj = await getSecurityMode(accountID);
+            // Security Mode for this account is not enabled
+            if (!homeSecurityObj.SecurityModeState)
+                return;
+
+            // Check if deviceGroup, configurationKey, configurationValue match a valid detectorDeviceGroup item
+            foreach (HomeSecurityDeviceDefinition homeSecurityDeviceDefinition in homeSecurityDeviceDefinitions!)
+            {
+                if (homeSecurityDeviceDefinition.DeviceGroup == deviceGroup &&
+                    homeSecurityDeviceDefinition.ConfigurationKey == configurationKey &&
+                    homeSecurityDeviceDefinition.ConfigurationOnValue == configurationValue)
+                {
+                    alertedAccounts.Add(accountID);
+                    break;
+                }
+            }
         }
 
+        /*
+         * polled by frontend
+         */
         public bool isAccountAlerted(Guid accountID)
         {
-            // polled by frontend
-            // check list of alertedaccounts if contain accid
-            throw new NotImplementedException();
+            return alertedAccounts.Contains(accountID);
         }
 
-        void getSecurityMode(Guid accountID)
+        /*
+         * polled by frontend
+         */
+        public bool isAccountLockedDown(Guid accountID)
+        {
+            return lockedDownAccounts.Contains(accountID);
+        }
+
+        public async Task<HomeSecurity> getSecurityMode(Guid accountID)
         {
             // getter of homesecurity : securitymodestate
-            // for front end
-            throw new NotImplementedException();
+            // for front end & back end
+            HomeSecurity? homeSecurityObj = await _homeSecurityRepository.GetByAccountIdAsync(accountID);
+
+            if (homeSecurityObj != null)
+            {
+                return homeSecurityObj;
+            }
+            else
+            {
+                HomeSecurity newHomeSecurityObj = new HomeSecurity();
+                newHomeSecurityObj.HomeSecurityId = Guid.NewGuid();
+                newHomeSecurityObj.AccountId = accountID;
+                newHomeSecurityObj.SecurityModeState = false;
+                await _homeSecurityRepository.AddAsync(newHomeSecurityObj);
+
+                foreach(HomeSecurityDeviceDefinition homeSecurityDeviceDefinition in homeSecurityDeviceDefinitions!)
+                {
+                    if (detectorDeviceGroups.Contains(homeSecurityDeviceDefinition.DeviceGroup))
+                        continue;
+
+                    HomeSecuritySetting newHomeSecuritySetting = new HomeSecuritySetting();
+                    newHomeSecuritySetting.HomeSecuritySettingId = Guid.NewGuid();
+                    newHomeSecuritySetting.HomeSecurityId = newHomeSecurityObj.HomeSecurityId;
+                    newHomeSecuritySetting.DeviceGroup = homeSecurityDeviceDefinition.DeviceGroup;
+                    newHomeSecuritySetting.Enabled = false;
+                    await _homeSecuritySettingRepository.AddAsync(newHomeSecuritySetting);
+                }
+
+                return newHomeSecurityObj;
+            }
         }
 
-        void setSecurityMode(Guid accountID, bool state)
+        // frontend calls
+        public async void setSecurityMode(Guid accountID, bool securityModeState)
         {
-            // setter of homesecurity : securitymodestate
-            throw new NotImplementedException();
+            HomeSecurity? homeSecurityObj = await _homeSecurityRepository.GetByAccountIdAsync(accountID);
+            if (homeSecurityObj != null)
+            {
+                homeSecurityObj.SecurityModeState = securityModeState;
+                await _homeSecurityRepository.UpdateAsync(homeSecurityObj);
+            }
         }
 
-        void updateHomeSecuritySettings(HomeSecurity homeSecurity)
+        // frontend calls
+        public async Task<IEnumerable<HomeSecuritySetting>> getHomeSecuritySettings(Guid homeSecurityId)
+        {
+            return (await _homeSecuritySettingRepository.GetByHomeSecurityIdAsync(homeSecurityId))!;
+        }
+
+        // frontend calls
+        async void setHomeSecuritySettings(Guid homeSecurityId, string deviceGroup, bool enabled)
         {
             // setter of homesecuritysettings
-            throw new NotImplementedException();
+            IEnumerable<HomeSecuritySetting> homeSecuritySettingObjEnum = await getHomeSecuritySettings(homeSecurityId);
+
+            foreach (HomeSecuritySetting homeSecuritySettingObj in homeSecuritySettingObjEnum)
+            {
+                if (homeSecuritySettingObj.DeviceGroup == deviceGroup)
+                {
+                    if (homeSecuritySettingObj.Enabled != enabled)
+                    {
+                        homeSecuritySettingObj.Enabled = enabled;
+                        await _homeSecuritySettingRepository.UpdateAsync(homeSecuritySettingObj);
+                    }
+                    break;
+                }
+            }
         }
 
-        void setLockdownState(Guid accountID, bool state)
+        // frontend calls
+        void setLockdownState(Guid accountID, bool securityModeState)
         {
             // called by front end
             // after user selects state when lockdown prompt
             // or when turning off lockdown
             // calls director's executeSecurityProtocol(boolean, HomeSecurityDeviceDefinitions)
-            // setter of list of lockeddownaccounts
+
+
+            if (securityModeState)
+            {
+                lockedDownAccounts.Add(accountID);
+            }
+            else
+            {
+                lockedDownAccounts.Remove(accountID);
+            }
+
+
+            //_directorInterface.executeSecurityProtocol(accountID, securityModeState, );
         }
     }
 }

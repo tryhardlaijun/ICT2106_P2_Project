@@ -67,17 +67,15 @@ public class Program
         builder.Services.AddScoped<IGenericRepository<Rule>, RuleRepository>();
         builder.Services.AddScoped<IEnergyProfileRepository<EnergyProfile>, EnergyProfileRepository>();
         builder.Services.AddScoped<IGenericRepository<Scenario>, ScenarioRepository>();
-        builder.Services.AddScoped<IGetRulesService, GetRulesServices>();
-        builder.Services.AddScoped<IGetScenariosService, GetScenariosService>();
         builder.Services.AddScoped<IInformDirectorServices, DirectorServices>();
+        builder.Services.AddScoped<IDirectorServices, DirectorServices>();
         builder.Services.AddScoped<IEnergyProfileServices, EnergyProfileServices>();
         builder.Services.AddScoped<IHomeSecurityRepository<HomeSecurity>, HomeSecurityRepository>();
         builder.Services.AddScoped<IHomeSecuritySettingRepository<HomeSecuritySetting>, HomeSecuritySettingRepository>();
         builder.Services.AddScoped<IHomeSecurityDeviceDefinitionRepository<HomeSecurityDeviceDefinition>, HomeSecurityDeviceDefinitionRepository>();
         builder.Services.AddScoped<IBackupRuleRepository, BackupRuleRepository>();
         builder.Services.AddScoped<IBackupScenarioRepository, BackupScenarioRepository>();
-
-        builder.Services.AddScoped<IInformDirectorServices, DirectorServices>();
+        
         builder.Services.AddScoped<IEnergyProfileServices, EnergyProfileServices>();        
         builder.Services.AddScoped<IUpdateBackupService, BackupServices>();
         builder.Services.AddScoped<IBackupService, BackupServices>();

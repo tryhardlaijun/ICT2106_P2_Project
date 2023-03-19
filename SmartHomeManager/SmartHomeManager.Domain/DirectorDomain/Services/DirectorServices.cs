@@ -9,6 +9,7 @@ using SmartHomeManager.Domain.DirectorDomain.Entities;
 using SmartHomeManager.Domain.DirectorDomain.Interfaces;
 using SmartHomeManager.Domain.EnergyProfileDomain.Interfaces;
 using SmartHomeManager.Domain.EnergyProfileDomain.Services;
+using SmartHomeManager.Domain.HomeSecurityDomain.Entities;
 using SmartHomeManager.Domain.SceneDomain.Entities;
 using SmartHomeManager.Domain.SceneDomain.Interfaces;
 using System.Data;
@@ -17,7 +18,7 @@ using Rule = SmartHomeManager.Domain.SceneDomain.Entities.Rule;
 
 namespace SmartHomeManager.Domain.DirectorDomain.Services
 {
-    public class DirectorServices : BackgroundService, IInformDirectorServices
+    public class DirectorServices : BackgroundService, IInformDirectorServices, IDirectorServices
     {
         private readonly IServiceProvider _serviceProvider;
 
@@ -169,6 +170,11 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
                     rules = rules.Where(r => r.ScenarioId != scenarioID).ToList();            
                     break;
             }
+        }
+
+        public void executeSecurityProtocol(Guid accountId, bool target, HomeSecurityDeviceDefinition homeSecurityDeviceDefinition)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -35,12 +35,12 @@ namespace SmartHomeManager.DataSource.HomeSecuritySettingsDataSource
 
         public async Task<IEnumerable<HomeSecuritySetting>> GetAllAsync()
         {
-            return await _applicationDbContext.HomeSecuritySettings.ToListAsync(); ;
+            return await _applicationDbContext.HomeSecuritySettings.ToListAsync();
         }
 
-        public async Task<HomeSecuritySetting?> GetByHomeSecurityIdAsync(Guid homeSecurityId)
+        public async Task<IEnumerable<HomeSecuritySetting?>> GetByHomeSecurityIdAsync(Guid homeSecurityId)
         {
-            return await _applicationDbContext.HomeSecuritySettings.Where(r => r.HomeSecurityId == homeSecurityId).LastAsync();
+            return await _applicationDbContext.HomeSecuritySettings.Where(r => r.HomeSecurityId == homeSecurityId).ToListAsync();
         }
 
         public async Task<bool> SaveAsync()
