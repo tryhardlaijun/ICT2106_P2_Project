@@ -62,49 +62,56 @@ namespace SmartHomeManager.Domain.BackupDomain.Services
             }
         }
 
-        public async Task<List<BackupRule>> loadBackupRule(Guid profileId, Guid backupId)
+        public async Task<List<BackupRule>> loadBackupRule(Guid profileId, Guid backupId, List<Guid> scenarioIdList)
         {
             var rulesList = new List<Rule>();
             var backupRulesList = await _backupRuleRepository.GetBackupRuleById(backupId);
 
             foreach (var backupRule in backupRulesList)
             {
-                Rule rule = new Rule
+                if (!scenarioIdList.Any() && scenarioIdList.Contains(backupRule.ScenarioId))
                 {
-                    RuleId = backupRule.RuleId,
-                    ScenarioId = backupRule.ScenarioId,
-                    RuleName = backupRule.RuleName,
-                    StartTime = backupRule.StartTime,
-                    EndTime = backupRule.EndTime,
-                    ActionTrigger = backupRule.ActionTrigger,
-                    ConfigurationKey = backupRule.ConfigurationKey,
-                    ConfigurationValue = backupRule.ConfigurationValue,
-                    APIKey = backupRule.APIKey,
-                    ApiValue = backupRule.ApiValue,
-                    DeviceId = backupRule.DeviceId
-                };
+                    Rule rule = new Rule
+                    {
+                        RuleId = backupRule.RuleId,
+                        ScenarioId = backupRule.ScenarioId,
+                        RuleName = backupRule.RuleName,
+                        StartTime = backupRule.StartTime,
+                        EndTime = backupRule.EndTime,
+                        ActionTrigger = backupRule.ActionTrigger,
+                        ConfigurationKey = backupRule.ConfigurationKey,
+                        ConfigurationValue = backupRule.ConfigurationValue,
+                        APIKey = backupRule.APIKey,
+                        ApiValue = backupRule.ApiValue,
+                        DeviceId = backupRule.DeviceId
+                    };
 
-                rulesList.Add(rule);
+                    rulesList.Add(rule);
+                }
+                
             }
 
             await _backupRuleInterface.loadRulesBackup(profileId, rulesList);
             return backupRulesList;
         }
-        public async Task<List<BackupScenario>> loadBackupScenario(Guid profileId)
+        public async Task<List<BackupScenario>> loadBackupScenario(Guid profileId, List<Guid> scenarioIdList)
         {
             var scenarioList = new List<Scenario>();
             var backupScenarioList = await _backupScenarioRepository.GetBackupScenarioById(profileId);
             foreach (var backupScenario in backupScenarioList)
-            {
-                Scenario scenario = new Scenario
+            {           
+                if (!scenarioIdList.Any() && scenarioIdList.Contains(backupScenario.ScenarioId))
                 {
-                    isActive = false,
-                    ScenarioName = backupScenario.ScenarioName,
-                    ProfileId = profileId,
-                    ScenarioId = backupScenario.ScenarioId
-                };
+                    Scenario scenario = new Scenario
+                    {
+                        isActive = false,
+                        ScenarioName = backupScenario.ScenarioName,
+                        ProfileId = profileId,
+                        ScenarioId = backupScenario.ScenarioId
+                    };
 
-                scenarioList.Add(scenario);
+                    scenarioList.Add(scenario);
+                }
             }
 
             await _backupScenarioInterface.loadScenarioBackup(profileId, scenarioList);
