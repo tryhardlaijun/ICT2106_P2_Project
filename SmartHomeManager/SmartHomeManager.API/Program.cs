@@ -46,6 +46,9 @@ using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.NotificationDomain.Entities;
 using SmartHomeManager.Domain.NotificationDomain.Interfaces;
+using SmartHomeManager.DataSource.APIDataSource;
+using SmartHomeManager.Domain.APIDomain.Interface;
+using SmartHomeManager.Domain.APIDomain.Service;
 
 namespace SmartHomeManager.API;
 
@@ -86,11 +89,14 @@ public class Program
         builder.Services.AddScoped<IGenericRepository<HomeSecurity>, HomeSecurityRepository>();
         builder.Services.AddScoped<IGenericRepository<HomeSecuritySetting>, HomeSecuritySettingRepository>();
         builder.Services.AddScoped<IHomeSecurityDeviceDefinitionRepository<HomeSecurityDeviceDefinition>, HomeSecurityDeviceDefinitionRepository>();
-        
-        // builder.Services.AddHostedService<DirectorServices>();
 
-        // DEVICE
-        builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();
+		// builder.Services.AddHostedService<DirectorServices>();
+		//API service
+		builder.Services.AddScoped<IAPIDataRepository, APIDataRepository>();
+		builder.Services.AddScoped<IAPIDataService, APIDataServices>();
+
+		// DEVICE
+		builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();
         builder.Services.AddScoped<IDeviceTypeRepository, DeviceTypeRepository>();
             
 
