@@ -19,9 +19,9 @@ namespace SmartHomeManager.API.Controllers.WeatherAPI
 
 
 		[HttpGet("getAPIData")]
-		public async void GetAlltest()
+		public async Task GetAlltest()
 		{
-			 _apiServices.getAPIData();
+			await _apiServices.getAPIData();
 		}
 
 

@@ -55,17 +55,17 @@ namespace SmartHomeManager.Domain.APIDomain.Service
 				}
 				else
 				{
-					if (test[-2].Type == "Temperature")
+					if (test[0].Type == "Temperature")
 					{
-						if (int.Parse(test[-2].Value) == int.Parse(temperature.high))
+						if (int.Parse(test[0].Value) == int.Parse(temperature.high))
 						{
 							spec = "same";
 						}
-						else if (int.Parse(test[-2].Value) < int.Parse(temperature.high))
+						else if (int.Parse(test[0].Value) < int.Parse(temperature.high))
 						{
 							spec = "increase";
 						}
-						else if (int.Parse(test[-2].Value) > int.Parse(temperature.high))
+						else if (int.Parse(test[0].Value) > int.Parse(temperature.high))
 						{
 							spec = "decrease";
 						}
