@@ -48,7 +48,7 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
             homeSecurityDeviceDefinitions = await _homeSecurityDeviceDefinitionRepository.GetAllAsync();
         }
 
-        public async void processEventAsync(Guid accountID, String deviceGroup, String configurationKey, int configurationValue)
+        public async void processEventAsync(Guid accountID, string deviceGroup, string configurationKey, int configurationValue)
         {
             // Checks if device is a detector
             if (!detectorDeviceGroups.Contains(deviceGroup))
@@ -175,9 +175,9 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
             }
             else
             {
+                alertedAccounts.Remove(accountID);
                 lockedDownAccounts.Remove(accountID);
             }
-
 
             //_directorInterface.executeSecurityProtocol(accountID, securityModeState, );
         }

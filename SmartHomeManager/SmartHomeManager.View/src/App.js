@@ -6,6 +6,7 @@ import Devices from "./pages/Devices";
 import Profiles from "./pages/Profiles";
 import Director from "./pages/Director";
 import Backup from "./pages/Backup";
+import HomeSecuritySettings from "./pages/HomeSecuritySettings";
 import Intruder from "./pages/Intruder";
 import Configuration from "./pages/Configuration";
 import EnergyProfile from "./pages/EnergyProfile";
@@ -39,53 +40,52 @@ export function App() {
             isClosable: true,
         });
     }, []);
-    
 
-  return (
-    <>
-      <Router>
-        <NavBar />
-        <Container maxW={"6xl"} py={4}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/devices" element={<Devices />} />
-            <Route path="/rooms" element={<Rooms />} />
-            <Route path="/profiles" element={<Profiles />} />
-            <Route path="/forgetpw" element={<ForgetPassword />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/myaccount" element={<MyAccount />} />
-            <Route path="/account-created" element={<RegisterOK />} />
-            <Route path="/edit-profile" element={<UserProfileEdit />} />
-            <Route path="/profile-landing" element={<ProfileLanding />} />
-            <Route path="/register" element={<Register />} />
 
-            <Route path="/selectnearbydevice" element={<SelectNearbyDevice />} />
-            <Route path="/registerdevice" element={<RegisterDevice />} />
-
-            <Route path="/director" element={<Director />} />
-            <Route path="/backup" element={<Backup />} />
-            <Route path="/intruder" element={<Intruder />} />
-            <Route path="/configuration" element={<Configuration />} />
-            <Route path="/energyProfile" element={<EnergyProfile />} />
-            <Route path="/scenario" element={<Scenario />} />
-            <Route
-              path="/scenario/create/action-rule"
-              element={<ActionRule />}
-            />
-            <Route
-              path="/scenario/create/time-rule"
-              element={<SchRule />}
-            />
-            <Route
-              path="/scenario/edit/:id"
-              element={<SchRule />}
-            />
-            <Route path="/config" element={<DeviceConfig />} />
-            <Route path="/analytics" element={<Report />} />
-          </Routes>
-        </Container>
-      </Router>
-      </>
-  );
+    return (
+        <>
+            <Router>
+                <NavBar />
+                <Container maxW={"6xl"} py={4}>
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/devices" element={<Devices />} />
+                        <Route path="/rooms" element={<Rooms />} />
+                        <Route path="/profiles" element={<Profiles />} />
+                        <Route path="/forgetpw" element={<ForgetPassword />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/myaccount" element={<MyAccount />} />
+                        <Route path="/account-created" element={<RegisterOK />} />
+                        <Route path="/edit-profile" element={<UserProfileEdit />} />
+                        <Route path="/profile-landing" element={<ProfileLanding />} />
+                        <Route path="/register" element={<Register />} />
+                        <Route path="/selectnearbydevice" element={<SelectNearbyDevice />} />
+                        <Route path="/registerdevice" element={<RegisterDevice />} />
+                        <Route path="/director" element={<Director />} />
+                        <Route path="/backup" element={<Backup />} />
+                        <Route path="/homesecuritysettings" element={<HomeSecuritySettings />} />
+                        <Route path="/intruder" element={<Intruder />} />
+                        <Route path="/configuration" element={<Configuration />} />
+                        <Route path="/energyProfile" element={<EnergyProfile />} />
+                        <Route path="/scenario" element={<Scenario />} />
+                        <Route
+                            path="/scenario/create/action-rule"
+                            element={<ActionRule />}
+                        />
+                        <Route
+                            path="/scenario/create/time-rule"
+                            element={<SchRule />}
+                        />
+                        <Route
+                            path="/scenario/edit/:id"
+                            element={<SchRule />}
+                        />
+                        <Route path="/config" element={<DeviceConfig />} />
+                        <Route path="/analytics" element={<Report />} />
+                    </Routes>
+                </Container>
+            </Router>
+        </>
+    );
 }
 export default App;

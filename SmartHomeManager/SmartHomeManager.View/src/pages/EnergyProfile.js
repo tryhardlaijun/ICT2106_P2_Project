@@ -16,14 +16,14 @@ export default function EnergyProfile() {
         const getEnergyProfile = async () => {
             const response = await fetch(`https://localhost:7140/api/EnergyProfile/GetEnergyProfile?AccountId=${accountId}`);
             console.log(response)
-            
+
             if (response.status == 200) {
-              const data = await response.json();
-              setEnergyProfile(data);
+                const data = await response.json();
+                setEnergyProfile(data);
 
                 console.log(data.configurationValue);
                 document.getElementById("previouslySelected").innerText = data.configurationValue;
-                
+
 
                 //set currently selected button to grey
                 if (data != null) {
@@ -37,13 +37,13 @@ export default function EnergyProfile() {
                         document.getElementById("button2").style.backgroundColor = "#E2E8F0";
                     }
                 }
-            } 
-            
+            }
+
         };
         getEnergyProfile();
     }, []);
 
-    
+
 
     function handleClick(event) {
         // This function handles the click event
@@ -53,18 +53,18 @@ export default function EnergyProfile() {
         configValue = parseInt(document.getElementById("previouslySelected").innerText);
         console.log("HELLO: ", configValue);
 
-        //set text of newlySelected
+        // set text of newlySelected
         document.getElementById("newlySelected").innerText = "Newly selected: " + event.target.innerText;
 
         console.log("WHY", configValue);
-            
-        //"highlight" box when clicked
+
+        // "highlight" box when clicked
         if (event.target.innerText == "0") {
             valueSelected = "0";
             document.getElementById("button0").style.backgroundColor = "yellow";
             if (configValue == 0) {
-                    document.getElementById("button1").style.backgroundColor = "white";
-                    document.getElementById("button2").style.backgroundColor = "white";
+                document.getElementById("button1").style.backgroundColor = "white";
+                document.getElementById("button2").style.backgroundColor = "white";
             }
             else if (configValue == 1) {
                 document.getElementById("button1").style.backgroundColor = "#E2E8F0";
@@ -74,7 +74,7 @@ export default function EnergyProfile() {
                 document.getElementById("button2").style.backgroundColor = "#E2E8F0";
                 document.getElementById("button1").style.backgroundColor = "white";
             }
-            
+
         }
         else if (event.target.innerText == "1") {
             valueSelected = "1";
@@ -91,7 +91,7 @@ export default function EnergyProfile() {
                 document.getElementById("button0").style.backgroundColor = "white";
                 document.getElementById("button2").style.backgroundColor = "#E2E8F0";
             }
-            
+
         }
         else if (event.target.innerText == "2") {
             valueSelected = "2";
@@ -108,11 +108,11 @@ export default function EnergyProfile() {
                 document.getElementById("button0").style.backgroundColor = "white";
                 document.getElementById("button1").style.backgroundColor = "white";
             }
-            
+
         }
-        
-        
-        
+
+
+
     }
 
     function submit() {
@@ -164,8 +164,8 @@ export default function EnergyProfile() {
             });
             document.getElementById("newlySelected").innerText = "";
         }
-        };
-        
+    };
+
 
     const putData = async (id, newValue) => {
         try {
@@ -195,7 +195,7 @@ export default function EnergyProfile() {
     return (
         <Container mt="3%">
             <Heading>Energy Profile Manager</Heading>
-            <Box maxW='sm' borderWidth='1px' borderRadius='lg' overflow='hidden' mt="3%"> 
+            <Box maxW='sm' borderWidth='1px' borderRadius='lg' overflow='hidden' mt="3%">
                 <Box p='6'>
                     <Box display='flex' alignItems='center' justifyContent='center'>
                         Choose Energy Profile
@@ -214,7 +214,7 @@ export default function EnergyProfile() {
                     <Box as='span' ml='2' color='gray.500' fontSize='xs' display='flex' alignItems='center' justifyContent='center'>
                         Selecting the above options might help you manage your home&apos;s energy use
                     </Box>
-                    
+
                     <Box alignItems="center" display='flex' justifyContent='center' id="newlySelected"></Box>
                     <Box alignItems="center" display='flex' justifyContent='center'>
                         <Button onClick={submit}>Confirm changes to energy profile</Button>
@@ -222,6 +222,6 @@ export default function EnergyProfile() {
                 </Box>
             </Box>
         </Container>
-        
+
     )
 }
