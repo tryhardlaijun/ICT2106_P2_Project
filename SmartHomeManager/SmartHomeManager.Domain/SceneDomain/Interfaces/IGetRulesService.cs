@@ -5,7 +5,7 @@ namespace SmartHomeManager.Domain.SceneDomain.Interfaces
     //Provided service
     public interface IGetRulesService
 	{
-        // get all rules on startup
+        //// get all rules on startup
         Task<IEnumerable<Rule>> GetAllRulesAsync();
 
         Task<Rule> GetRuleByIdAsync(Guid id);
