@@ -35,12 +35,19 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
             _homeSecuritySettingRepository = homeSecuritySettingRepo;
             _homeSecurityDeviceDefinitionRepository = homeSecurityDeviceDefinitionRepo;
             _directorInterface = directorServices;
+            initialiseCompatibleDevicesList();
         }
 
 
         private async void initialiseCompatibleDevicesList()
         {
             homeSecurityDeviceDefinitions = await _homeSecurityDeviceDefinitionRepository.GetAllAsync();
+        }
+
+        // helper function to translate accountID to HomeSecurityID
+        private async Task<HomeSecurity> getHomeSecurityId(Guid accountID)
+        {
+            return (await _homeSecurityRepository.GetByAccountIdAsync(accountID))!;
         }
 
         public async void processEventAsync(Guid accountID, string deviceGroup, string configurationKey, int configurationValue)
@@ -87,7 +94,7 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
         {
             // getter of homesecurity : securitymodestate
             // for front end & back end
-            HomeSecurity? homeSecurityObj = await _homeSecurityRepository.GetByAccountIdAsync(accountID);
+            HomeSecurity? homeSecurityObj = await getHomeSecurityId(accountID);
 
             if (homeSecurityObj != null)
             {
@@ -121,7 +128,7 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
         // frontend calls
         public async Task<bool> setSecurityMode(Guid accountID, bool securityModeState)
         {
-            HomeSecurity? homeSecurityObj = await _homeSecurityRepository.GetByAccountIdAsync(accountID);
+            HomeSecurity? homeSecurityObj = await getHomeSecurityId(accountID);
             if (homeSecurityObj != null)
             {
                 homeSecurityObj.SecurityModeState = securityModeState;
@@ -131,9 +138,16 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
         }
 
         // frontend calls
-        public async Task<IEnumerable<HomeSecuritySetting>> getHomeSecuritySettings(Guid homeSecurityId)
+        public async Task<IEnumerable<HomeSecuritySetting>> getHomeSecuritySettings(Guid accountID)
         {
-            return (await _homeSecuritySettingRepository.GetByHomeSecurityIdAsync(homeSecurityId))!;
+            HomeSecurity? homeSecurityObj = await getHomeSecurityId(accountID);
+            if (homeSecurityObj != null)
+            {
+                Guid homeSecurityID = homeSecurityObj.HomeSecurityId;
+                return (await _homeSecuritySettingRepository.GetByHomeSecurityIdAsync(homeSecurityID))!;
+            }
+
+            return Enumerable.Empty<HomeSecuritySetting>();
         }
 
         // frontend calls

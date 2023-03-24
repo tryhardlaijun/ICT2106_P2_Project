@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
 using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.AccountDomain.Services;
 using SmartHomeManager.Domain.Common;
@@ -10,6 +11,7 @@ using SmartHomeManager.Domain.HomeSecurityDomain.DTOs.Requests;
 using SmartHomeManager.Domain.HomeSecurityDomain.Entities;
 using SmartHomeManager.Domain.HomeSecurityDomain.Interfaces;
 using SmartHomeManager.Domain.HomeSecurityDomain.Services;
+using SmartHomeManager.Domain.SceneDomain.Entities;
 
 namespace SmartHomeManager.API.Controllers.HomeSecurityAPI
 {
@@ -53,11 +55,18 @@ namespace SmartHomeManager.API.Controllers.HomeSecurityAPI
             return await _homeSecurityService.setSecurityMode(accountId, securityModeWebRequest.SecurityMode);
         }
 
+        // GET: api/HomeSecurity
+        [HttpGet("GetHomeSecuritySettings")]
+        public async Task<IEnumerable<HomeSecuritySetting>> GetHomeSecuritySettings(Guid accountId)
+        {
+            return await _homeSecurityService.getHomeSecuritySettings(accountId);
+        }
+
         // PUT: api/HomeSecurity
         [HttpPut("PutHomeSecuritySettings")]
-        public async Task<bool> PutHomeSecuritySettings(Guid homeSecurityId, PutSecuritySettingsEnabledRequest securitySettingsEnabledWebRequest)
+        public async Task<bool> PutHomeSecuritySettings(Guid accountId, PutSecuritySettingsEnabledRequest securitySettingsEnabledWebRequest)
         {
-            return await _homeSecurityService.setHomeSecuritySettings(homeSecurityId, securitySettingsEnabledWebRequest.DeviceGroup, securitySettingsEnabledWebRequest.Enabled);
+            return await _homeSecurityService.setHomeSecuritySettings(accountId, securitySettingsEnabledWebRequest.DeviceGroup, securitySettingsEnabledWebRequest.Enabled);
         }
     }
 }
