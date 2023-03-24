@@ -50,30 +50,7 @@ namespace SmartHomeManager.DataSource.RulesDataSource
         //Get by Id
         public async Task<Rule?> GetByIdAsync(Guid id)
         {
-            try
-            {
-                var rule = await _applicationDbContext.Rules.Include(d => d.Device).Include(s => s.Scenario).FirstOrDefaultAsync(r => r.RuleId == id);
-                return rule;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return null;
-            }
-        }
-
-        public async Task<Rule> GetRuleByIdAsync(Guid id)
-        {
-            try
-            {
-                var rule = await _applicationDbContext.Rules.Include(d => d.Device).Include(s => s.Scenario).FirstOrDefaultAsync(r => r.RuleId == id);
-                return rule;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return null;
-            }
+            return await _applicationDbContext.Rules.Include(d => d.Device).Include(s => s.Scenario).FirstOrDefaultAsync(r => r.RuleId == id);
         }
 
         //Update
@@ -131,23 +108,15 @@ namespace SmartHomeManager.DataSource.RulesDataSource
         {
             throw new NotImplementedException();
         }
-
         #endregion
 
         #region Provided Inteface
         public async Task<IEnumerable<Rule>> GetAllRulesByScenarioIdAsync(Guid ScenarioId)
         {
-            try
-            {
-                return await _applicationDbContext.Rules.Where(r => r.ScenarioId == ScenarioId).ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return null;
-            }
-            
+            return await _applicationDbContext.Rules.Where(r => r.ScenarioId == ScenarioId).ToListAsync();
         }
         #endregion
+
+        
     }
 }

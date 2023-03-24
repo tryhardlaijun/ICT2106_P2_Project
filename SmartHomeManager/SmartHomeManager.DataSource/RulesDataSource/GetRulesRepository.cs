@@ -16,6 +16,20 @@ namespace SmartHomeManager.DataSource.RulesDataSource
         {
             return await _applicationDbContext.Rules.Where(r => r.ScenarioId == ScenarioId).ToListAsync();
         }
+        public async Task<IEnumerable<Rule>> GetSchedulesByScenarioIdAsync(Guid ScenarioId)
+        {
+            return await _applicationDbContext.Rules.Where(r => r.ScenarioId == ScenarioId && r.StartTime != null).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Rule>> GetApiByScenarioIdAsync(Guid ScenarioId)
+        {
+            return await _applicationDbContext.Rules.Where(r => r.ScenarioId == ScenarioId && r.APIKey != null).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Rule>> GetEventsByScenarioIdAsync(Guid ScenarioId)
+        {
+            return await _applicationDbContext.Rules.Where(r => r.ScenarioId == ScenarioId && r.ActionTrigger != null).ToListAsync();
+        }        
     }
 }
 

@@ -14,45 +14,56 @@ import { useToast } from "@chakra-ui/react";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 
-const FormCard = ({ruleInfo, updateForm, updateOption}) => {
-	// Should change to the scenario name
-	const name = "Scencerio Name";
-	let originalDevice = ruleInfo.deviceId
+
+const FormCard = ({ ruleInfo, updateForm, updateOption }) => {
+	const name = "API Rule";
+    let originalDevice = ruleInfo.deviceId
 	return (
 		<>
 			<Heading w="100%" textAlign={"center"} fontWeight="normal" mb="2%">
 				{name}
 			</Heading>
-			<Input variant="unstyled" placeholder="ENTER NAME" size="lg" 
-			value={ruleInfo.RuleName}
-			onChange={(e) => {
-				updateForm({ RuleName: e.target.value });
-			}}/>
-			<Flex mt="2%">
-				<FormControl mr="5%">
-					<FormLabel>Triggering Action</FormLabel>
-					<Select placeholder="Select option"
-					onChange={(e)=>{
-						updateForm({actionTrigger: e.target.value})
-					}}>
-						<option value="waveHands">Wave Hands</option>
-						<option value="clap">Clap</option>
-						<option value="sayHello">Say Hello</option>
-					</Select>
-				</FormControl>
-			</Flex>
+			<Input variant="unstyled" placeholder="ENTER NAME" size="lg"
+            value={ruleInfo.RuleName}
+            onChange={(e) => {
+                updateForm({ RuleName: e.target.value });
+            }} />
 			<Flex mt="2%">
 				<FormControl mr="5%">
 					<FormLabel>Device</FormLabel>
 					<Select placeholder="Select option"
-					onChange={(e)=>{
+                    onChange={(e)=>{
 						updateForm({deviceId: e.target.value})
 					}}>
-						<option value={originalDevice}>{originalDevice}</option>
+                    <option value={originalDevice}>{originalDevice}</option>
 					</Select>
-				</FormControl>				
+				</FormControl>
 			</Flex>
-			<Flex mt="2%">
+            <Flex mt="2%">
+				<FormControl mr="5%">
+					<FormLabel>API Key</FormLabel>
+					<Select placeholder="Select option"
+                    onChange={(e)=>{
+						updateForm({apiKey: e.target.value})
+					}}>
+						<option value="option1">API 1</option>
+						<option value="option2">API 2</option>
+						<option value="option3">API 3</option>
+					</Select>
+				</FormControl>
+				<FormControl>
+					<FormLabel>API Value</FormLabel>
+					<Select placeholder="Select option"
+                    onChange={(e)=>{
+						updateForm({apiValue: e.target.value})
+					}}>
+						<option value="option1">Value 1</option>
+						<option value="option2">Value 2</option>
+						<option value="option3">Value 3</option>
+					</Select>
+				</FormControl>
+			</Flex>
+            <Flex mt="2%">
 				<FormControl mr="5%">
 					<FormLabel>Action</FormLabel>
 					<Select placeholder="Select option"
@@ -77,22 +88,23 @@ const FormCard = ({ruleInfo, updateForm, updateOption}) => {
 	);
 };
 
-export default function ActionRule() {
-	const [ruleDetail, setRuleDetail] = useState({
+export default function ApiRule() {
+	const toast = useToast();
+    const [ruleDetail, setRuleDetail] = useState({
 		ruleId: uuidv4(),
 		scenarioId: "ac38af14-9a57-4df3-89f3-78f9ce9f4983",
-		configurationKey: "",
-		configurationValue: 0,
-		actionTrigger: "",
+		configurationKey: null,
+		configurationValue: null,
+		actionTrigger: null,
 		RuleName: "",
 		startTime: null,
 		endTime: null,
 		deviceId: "33333333-3333-3333-3333-333333333333",
-		apiKey: null,
-		apiValue: null
+		apiKey: "",
+		apiValue: "",
 	});
 
-	function updateDetails(value) {
+    function updateDetails(value) {
 		return setRuleDetail((prev) => {
 			return { ...prev, ...value };
 		});
@@ -120,13 +132,12 @@ export default function ActionRule() {
 		return null;
 	}
 
-	async function createRule(e){
+    async function createRule(e){
 		const newRule = {...ruleDetail}
 		const {data} = await axios.post('https://localhost:7140/api/Rules/CreateRule', newRule, {headers:{
 			'Content-Type': 'application/json'
 		}})
 	}
-	const toast = useToast();
 	return (
 		<>
 			<Box
@@ -139,17 +150,15 @@ export default function ActionRule() {
 				as="form"
 			>
 				<form>
-					<FormCard ruleInfo={ruleDetail} updateForm={updateDetails} updateOption={renderOptions}/>
+					<FormCard ruleInfo={ruleDetail} updateForm={updateDetails} updateOption={renderOptions} />
 					<Button
 						mt="2%"
 						w="7rem"
 						colorScheme="blue"
 						variant="solid"
 						onClick={() => {
-							// check the content of the rule before submit
-							console.log(ruleDetail)
-							// Need to submit a api request to create
-							createRule().then(()=>{
+                            console.log(ruleDetail)
+                            createRule().then(()=>{
 								toast({
 									title: "Rule created.",
 									description:
@@ -167,7 +176,7 @@ export default function ActionRule() {
 									duration: 3000,
 									isClosable: true,
 								});
-							})						
+							})				
 						}}
 					>
 						Create

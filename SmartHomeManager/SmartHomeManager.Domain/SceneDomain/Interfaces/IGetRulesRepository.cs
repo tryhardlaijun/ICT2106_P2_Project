@@ -7,6 +7,10 @@ namespace SmartHomeManager.Domain.SceneDomain.Interfaces
 	public interface IGetRulesRepository
 	{
         Task<IEnumerable<Rule>> GetAllRulesByScenarioIdAsync(Guid ScenarioId);
+
+        Task<IEnumerable<Rule>> GetSchedulesByScenarioIdAsync(Guid ScenarioId);
+        Task<IEnumerable<Rule>> GetEventsByScenarioIdAsync(Guid ScenarioId);
+        Task<IEnumerable<Rule>> GetApiByScenarioIdAsync(Guid ScenarioId);
     }
 }
 

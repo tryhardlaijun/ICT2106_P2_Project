@@ -64,34 +64,35 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
         // Get all rules associated with scenario
         public async Task<IEnumerable<Rule?>> GetAllRulesByScenarioIdAsync(Guid ScenarioId)
         {
-            var result = await _getRuleRepository.GetAllRulesByScenarioIdAsync(ScenarioId);
-            if(result != null)
-            {
-                return result;
-            }
-            return null;
+            return await _getRuleRepository.GetAllRulesByScenarioIdAsync(ScenarioId);
         }
+
+        public async Task<IEnumerable<Rule?>> GetEventsByScenarioIdAsync(Guid ScenarioId)
+        {
+            return await _getRuleRepository.GetEventsByScenarioIdAsync(ScenarioId);
+        }
+
+        public async Task<IEnumerable<Rule?>> GetApisByScenarioIdAsync(Guid ScenarioId)
+        {
+            return await _getRuleRepository.GetApiByScenarioIdAsync(ScenarioId);
+        }
+
+        public async Task<IEnumerable<Rule?>> GetSchedulesByScenarioIdAsync(Guid ScenarioId)
+        {
+            return await _getRuleRepository.GetSchedulesByScenarioIdAsync(ScenarioId);
+        }
+
 
         //Get using id
         public async Task<Rule?> GetRuleByIdAsync(Guid id)
         {
-            var result = await _ruleRepository.GetByIdAsync(id);
-            if (result != null)
-            {
-                return result;
-            }
-            return null;
+            return await _ruleRepository.GetByIdAsync(id);
         }
 
         //Get all the rules 
         public async Task<IEnumerable<Rule>> GetAllRulesAsync()
         {
-            var result = await _ruleRepository.GetAllAsync();
-            if (result != null)
-            {
-                return result;
-            }
-            return null;
+            return await _ruleRepository.GetAllAsync();
         }
         #endregion
 

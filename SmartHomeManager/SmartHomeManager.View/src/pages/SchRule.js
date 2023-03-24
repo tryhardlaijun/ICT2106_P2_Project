@@ -175,7 +175,7 @@ export default function SchRule() {
 							}
 						}}
 					>
-						Submit
+						Create
 					</Button>
 				</form>
 			</Box>
