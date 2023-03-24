@@ -10,7 +10,8 @@ namespace SmartHomeManager.Domain.APIDomain.Interface
 	public interface IAPIConfigurationInformationService
 	{
 		public Task<IEnumerable<APIKey>> GetAllAPIKey();
-		public Task createKeyDetails();
+		public Task createKeyDetails(); //to populate the db
+		public Task createValuesDetails(); //to populate the db
 		public Task<IEnumerable<APIValue>> getAllAPIValue(String APIKey);
 	}
 }

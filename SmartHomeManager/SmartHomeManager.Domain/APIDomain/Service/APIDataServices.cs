@@ -29,6 +29,8 @@ namespace SmartHomeManager.Domain.APIDomain.Service
 			_APIKeyRepository = APIKeyRepository;
 			_APIValueRepository = APIValueRepository;
 		}
+
+		//creating the keyvalues in the APIKey database
 		public async Task createKeyDetails() {
 
 			IEnumerable<APIKey> test = await _APIKeyRepository.GetAllAPIKey();
@@ -117,12 +119,13 @@ namespace SmartHomeManager.Domain.APIDomain.Service
 			}
 
 		}
-
+		//getting all the Key 
 		public async Task<IEnumerable<APIKey>> GetAllAPIKey()
 		{
 			return await _APIKeyRepository.GetAllAPIKey();
 		}
 
+		//Creating the values of the keys 
 		public async Task createValuesDetails()
 		{
 			IEnumerable<APIValue> test = await _APIValueRepository.GetallValue();
@@ -214,12 +217,13 @@ namespace SmartHomeManager.Domain.APIDomain.Service
 
 
 		}
-
+		//getting all the values based on key
 		public async Task<IEnumerable<APIValue>> getAllAPIValue(string APIKey)
 		{
 			return await _APIValueRepository.GetAPIValueByKey(APIKey);
 		}
 
+		//Sending dictionary to director for rule checking
 		public async Task<IDictionary<string, string>> getAPIData()
 		{
 			IDictionary<string, string> sendKeyValue = new Dictionary<string, string>();
@@ -279,10 +283,10 @@ namespace SmartHomeManager.Domain.APIDomain.Service
 				dynamic temperature = day.general.temperature;
 
 				int temp = temperature.high;
-				IEnumerable<APIData> test = await _APIDataRepository.GetAPIType("Temperature");
+				IEnumerable<APIData> temp_data = await _APIDataRepository.GetAPIType("Temperature");
 				IEnumerable<APIData> weather_data = await _APIDataRepository.GetAPIType("Weather");
 				var spec = "";
-				if (test.Count() == 0)
+				if (temp_data.Count() == 0)
 				{
 					spec = "same";
 					APIData TempData = new APIData
@@ -310,29 +314,29 @@ namespace SmartHomeManager.Domain.APIDomain.Service
 				}
 				else 
 				{
-					foreach (APIData test1 in test) {
+					foreach (APIData temp_item in temp_data) {
 						
-						if (Int32.Parse(test1.Value) == temp)
+						if (Int32.Parse(temp_item.Value) == temp)
 						{
-							test1.Value = temp.ToString();
-							test1.Specification = "same";
-							test1.TimeStamp = DateTime.Now;
+							temp_item.Value = temp.ToString();
+							temp_item.Specification = "same";
+							temp_item.TimeStamp = DateTime.Now;
 						}
-						else if (Int32.Parse(test1.Value) < temp)
+						else if (Int32.Parse(temp_item.Value) < temp)
 						{
-							test1.Value = temp.ToString();
-							test1.Specification = "increase";
-							test1.TimeStamp = DateTime.Now;
+							temp_item.Value = temp.ToString();
+							temp_item.Specification = "increase";
+							temp_item.TimeStamp = DateTime.Now;
 						}
-						else if (Int32.Parse(test1.Value) > temp)
+						else if (Int32.Parse(temp_item.Value) > temp)
 						{
-							test1.Value = temp.ToString();
-							test1.Specification = "decrease";
-							test1.TimeStamp = DateTime.Now;
+							temp_item.Value = temp.ToString();
+							temp_item.Specification = "decrease";
+							temp_item.TimeStamp = DateTime.Now;
 						}
 						
 						
-					await _APIDataRepository.UpdateAPIData(test1);
+					await _APIDataRepository.UpdateAPIData(temp_item);
 
 					}
 					string forecast = weather_1.forecast;
