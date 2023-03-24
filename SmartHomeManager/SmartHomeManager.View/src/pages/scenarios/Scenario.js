@@ -135,7 +135,7 @@ export default function Scenarios() {
 			const { data: scenarioData } = await axios.get(`https://localhost:7140/api/Scenarios/GetAllScenarios`);
 			setAllScenario(scenarioData);
 			if (scenarioData.length > 0) {
-			  const currentScenario = scenarioData[0];
+			  const currentScenario = scenarioData[scenarioData.length-1];
 			  setCurrentScenario(currentScenario);
 			  setButtonName(currentScenario.scenarioName);
 			  getAllRules(currentScenario.scenarioId)
