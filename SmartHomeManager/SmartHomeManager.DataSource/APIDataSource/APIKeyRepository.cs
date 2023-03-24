@@ -17,6 +17,21 @@ namespace SmartHomeManager.DataSource.APIDataSource
 			_applicationDbContext = applicationDbContext;
 		}
 
+		public async Task<bool> CreateAPIKey(APIKey apiKey)
+		{
+
+			try
+			{
+				await _applicationDbContext.APIKeys.AddAsync(apiKey);
+				await _applicationDbContext.SaveChangesAsync();
+				return true;
+			}
+			catch { 
+				return false;
+			}
+
+		}
+
 		public async Task<IEnumerable<APIKey>> GetAllAPIKey()
 		{
 			return await _applicationDbContext.APIKeys.ToListAsync();

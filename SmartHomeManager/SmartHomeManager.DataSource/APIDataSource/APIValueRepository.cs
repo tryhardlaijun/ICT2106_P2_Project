@@ -1,8 +1,11 @@
-﻿using SmartHomeManager.Domain.AccountDomain.Entities;
+﻿using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.APIDomain.Entities;
 using SmartHomeManager.Domain.APIDomain.Service;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,14 +20,30 @@ namespace SmartHomeManager.DataSource.APIDataSource
 			_applicationDbContext = applicationDbContext;
 		}
 
-		public Task<List<APIValue>> GetAPIValueById(Guid APIDataId)
+		public async Task<bool> CreateAPIValue(APIValue apiValue)
 		{
-			throw new NotImplementedException();
+			try
+			{
+				await _applicationDbContext.APIValues.AddAsync(apiValue);
+				await _applicationDbContext.SaveChangesAsync();
+				return true;
+			}
+			catch { 
+				return false;
+			}
 		}
-		/*
-public async Task<List<APIValue>> GetAPIValueById(Guid APIDataId)
-{
-	return await _applicationDbContext.APIValues.Where(s => s.APIKeyType == APIDataId).ToListAsync();
-}*/
+
+		public async Task<IEnumerable<APIValue>> GetAPIValueByKey(String key)
+		{
+			return await _applicationDbContext.APIValues.Where(s => s.APIKey.Equals(key)).ToListAsync();
+			
+		}
+
+		public async Task<IEnumerable<APIValue>> GetallValue()
+		{
+			return await _applicationDbContext.APIValues.ToListAsync();
+
+		}
+
 	}
 }

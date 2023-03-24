@@ -9,6 +9,8 @@ namespace SmartHomeManager.Domain.APIDomain.Service
 {
 	public interface IAPIValueRepository
 	{
-		public Task<List<APIValue>> GetAPIValueById(Guid APIDataId);
+		public Task<IEnumerable<APIValue>> GetAPIValueByKey(String key);
+		public Task<IEnumerable<APIValue>> GetallValue();
+		public Task<bool> CreateAPIValue(APIValue apiValue);
 	}
 }

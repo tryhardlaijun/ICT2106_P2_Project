@@ -12,9 +12,9 @@ namespace SmartHomeManager.API.Controllers.WeatherAPI
 	public class APIController : ControllerBase { 
 		public readonly APIDataServices _apiServices;
 		
-		public APIController(IAPIDataRepository dataRepository)
+		public APIController(IAPIDataRepository dataRepository, IAPIKeyRepository keyRepository, IAPIValueRepository valueRepository)
 		{
-			_apiServices = new(dataRepository);
+			_apiServices = new(dataRepository,keyRepository, valueRepository);
 		}
 
 

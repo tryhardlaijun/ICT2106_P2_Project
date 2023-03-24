@@ -5,10 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SmartHomeManager.Domain.APIDomain.Service
+namespace SmartHomeManager.Domain.APIDomain.Interface
 {
-	public interface IAPIKeyRepository {
+	public interface IAPIConfigurationInformationService
+	{
 		public Task<IEnumerable<APIKey>> GetAllAPIKey();
-		public Task<bool> CreateAPIKey(APIKey apiKey);
+		public Task createKeyDetails();
+		public Task<IEnumerable<APIValue>> getAllAPIValue(String APIKey);
 	}
 }

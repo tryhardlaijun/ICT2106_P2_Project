@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using SmartHomeManager.Domain.APIDomain.Entities;
 using SmartHomeManager.Domain.APIDomain.Service;
+using SmartHomeManager.Domain.HomeSecurityDomain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,9 +34,9 @@ namespace SmartHomeManager.DataSource.APIDataSource
 
 		}
 
-		public async Task<List<APIData>> GetAllAPI()
+		public async Task<IEnumerable<APIData>> GetAPIType(String Type)
 		{
-			return await _applicationDbContext.APIDatas.ToListAsync();
+			return await _applicationDbContext.APIDatas.Where(s => s.Type == Type).ToListAsync();
 		}
 
 		public async Task<List<APIData>> GetAPIDataById(Guid APIDataId)

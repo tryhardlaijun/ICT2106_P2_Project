@@ -93,6 +93,8 @@ public class Program
 		// builder.Services.AddHostedService<DirectorServices>();
 		//API service
 		builder.Services.AddScoped<IAPIDataRepository, APIDataRepository>();
+		builder.Services.AddScoped<IAPIKeyRepository, APIKeyRepository>();
+		builder.Services.AddScoped<IAPIValueRepository, APIValueRepository>();
 		builder.Services.AddScoped<IAPIDataService, APIDataServices>();
 
 		// DEVICE

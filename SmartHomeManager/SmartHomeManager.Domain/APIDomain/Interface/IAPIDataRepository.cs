@@ -1,4 +1,5 @@
 ﻿using SmartHomeManager.Domain.APIDomain.Entities;
+using SmartHomeManager.Domain.HomeSecurityDomain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace SmartHomeManager.Domain.APIDomain.Service
 	public interface IAPIDataRepository {
 		
 		public Task<List<APIData>> GetAPIDataById(Guid APIDataId);
-		public Task<List<APIData>> GetAllAPI();
+		public Task<IEnumerable<APIData>> GetAPIType(String Type);
 		public Task<bool> CreateAPIData(APIData apiData);
 		public Task<bool> UpdateAPIData(APIData apiData);
 

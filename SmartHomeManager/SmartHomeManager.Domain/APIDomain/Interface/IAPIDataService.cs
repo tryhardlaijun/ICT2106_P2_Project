@@ -8,6 +8,6 @@ namespace SmartHomeManager.Domain.APIDomain.Interface
 {
 	public interface IAPIDataService
 	{
-		public Task getAPIData();
+		public Task<IDictionary<string, string>> getAPIData();
 	}
 }
