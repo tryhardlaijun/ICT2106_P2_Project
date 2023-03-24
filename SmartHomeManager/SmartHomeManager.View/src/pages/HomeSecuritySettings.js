@@ -23,9 +23,57 @@ import {
 } from '@chakra-ui/react'
 
 import { ExternalLinkIcon } from '@chakra-ui/icons'
+import axios from "axios";
 
 export default function HomeSecuritySettings() {
     const { isOpen, onOpen, onClose } = useDisclosure()
+    const [accountId, setAccountId] = useState("11111111-1111-1111-1111-111111111111")
+    const [securityMode, setSecurityMode] = useState(null);
+    var currentSecurityMode = false
+
+    useEffect(() => {
+        const getHomeSecurity = async () => {
+            const response = await fetch(`https://localhost:7140/api/HomeSecurity/GetSecurityMode?AccountId=${accountId}`)
+
+            if (response.status == 200) {
+                currentSecurityMode = await response.json();
+                if (currentSecurityMode) {
+                    setSwitch('switchMasterActivation')
+                }
+                console.log(currentSecurityMode)
+            }
+        };
+        getHomeSecurity();
+    }, []);
+
+    function setSwitch(id) {
+        const switchActivation = document.getElementById(id)
+        switchActivation.parentElement.setAttribute('data-checked', '')
+        switchActivation.nextSibling.setAttribute('data-checked', '')
+        switchActivation.nextSibling.children[0].setAttribute('data-checked', '')
+    }
+
+
+    const PutSecurityMode = async (accountId, newSecurityMode) => {
+        console.log(currentSecurityMode)
+        try {
+            const response = await fetch(`https://localhost:7140/api/HomeSecurity/PutSecurityMode/${accountId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ securityMode: newSecurityMode })
+            })
+            if (response.ok) {
+                currentSecurityMode = !currentSecurityMode
+            } else {
+                console.error(response.statusText)
+            }
+        } catch (error) {
+            console.error(error);
+        }
+        console.log(currentSecurityMode)
+    };
 
     return (
 
@@ -36,7 +84,7 @@ export default function HomeSecuritySettings() {
             <Box border='2px' borderRadius='16px'>
                 <SimpleGrid columns={2} spacingX='40px' spacingY='20px' padding='4px'>
                     <Text fontSize='lg' textAlign='center'>Activate HomeSecurity</Text>
-                    <Switch id='switchMasterActivation' />
+                    <Switch id='switchMasterActivation' onChange={(e) => PutSecurityMode(accountId, currentSecurityMode)} />
                 </SimpleGrid>
             </Box>
             <br></br>
@@ -106,4 +154,5 @@ export default function HomeSecuritySettings() {
             </Link>
         </Container>
     )
+
 }

@@ -64,9 +64,9 @@ namespace SmartHomeManager.API.Controllers.HomeSecurityAPI
 
         // PUT: api/HomeSecurity
         [HttpPut("PutHomeSecuritySettings")]
-        public async Task<bool> PutHomeSecuritySettings(Guid accountId, PutSecuritySettingsEnabledRequest securitySettingsEnabledWebRequest)
+        public async Task<bool> PutHomeSecuritySettings(Guid HomeSecurityId, PutSecuritySettingsEnabledRequest securitySettingsEnabledWebRequest)
         {
-            return await _homeSecurityService.setHomeSecuritySettings(accountId, securitySettingsEnabledWebRequest.DeviceGroup, securitySettingsEnabledWebRequest.Enabled);
+            return await _homeSecurityService.setHomeSecuritySettings(HomeSecurityId, securitySettingsEnabledWebRequest.DeviceGroup, securitySettingsEnabledWebRequest.Enabled);
         }
     }
 }
