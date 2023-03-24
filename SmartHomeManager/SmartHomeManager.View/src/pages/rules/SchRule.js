@@ -15,7 +15,7 @@ export default function SchRule() {
 		ruleId: uuidv4(),
 		scenarioId: localStorage.getItem("currentScenarioId"),
 		configurationKey: "",
-		configurationValue: 1,
+		configurationValue: "",
 		actionTrigger: "",
 		ruleName: "",
 		startTime: "",
