@@ -17,7 +17,6 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
 {
     public class HomeSecurityServices : IHomeSecurityServices
     {
-        private readonly IServiceProvider _serviceProvider;
         private List<Guid> alertedAccounts = new List<Guid>();
         private List<Guid> lockedDownAccounts = new List<Guid>();
         private IEnumerable<HomeSecurityDeviceDefinition>? homeSecurityDeviceDefinitions;
@@ -30,18 +29,14 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
         private IHomeSecurityDeviceDefinitionRepository<HomeSecurityDeviceDefinition> _homeSecurityDeviceDefinitionRepository;
 
         private readonly IDirectorServices _directorInterface;
-
-        public HomeSecurityServices(IServiceProvider serviceProvider)
+        public HomeSecurityServices(IHomeSecurityRepository<HomeSecurity> homeSecurityRepo, IHomeSecuritySettingRepository<HomeSecuritySetting> homeSecuritySettingRepo, IHomeSecurityDeviceDefinitionRepository<HomeSecurityDeviceDefinition> homeSecurityDeviceDefinitionRepo, IDirectorServices directorServices)
         {
-            _serviceProvider = serviceProvider;
-
-            var scope = _serviceProvider.CreateScope();
-            _homeSecurityRepository = scope.ServiceProvider.GetRequiredService<IHomeSecurityRepository<HomeSecurity>>();
-            _homeSecuritySettingRepository = scope.ServiceProvider.GetRequiredService<IHomeSecuritySettingRepository<HomeSecuritySetting>>();
-            _homeSecurityDeviceDefinitionRepository = scope.ServiceProvider.GetRequiredService<IHomeSecurityDeviceDefinitionRepository<HomeSecurityDeviceDefinition>>();
-            _directorInterface = scope.ServiceProvider.GetRequiredService<IDirectorServices>();
-            initialiseCompatibleDevicesList();
+            _homeSecurityRepository = homeSecurityRepo;
+            _homeSecuritySettingRepository = homeSecuritySettingRepo;
+            _homeSecurityDeviceDefinitionRepository = homeSecurityDeviceDefinitionRepo;
+            _directorInterface = directorServices;
         }
+
 
         private async void initialiseCompatibleDevicesList()
         {
@@ -124,14 +119,15 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
         }
 
         // frontend calls
-        public async void setSecurityMode(Guid accountID, bool securityModeState)
+        public async Task<bool> setSecurityMode(Guid accountID, bool securityModeState)
         {
             HomeSecurity? homeSecurityObj = await _homeSecurityRepository.GetByAccountIdAsync(accountID);
             if (homeSecurityObj != null)
             {
                 homeSecurityObj.SecurityModeState = securityModeState;
-                await _homeSecurityRepository.UpdateAsync(homeSecurityObj);
+                return await _homeSecurityRepository.UpdateAsync(homeSecurityObj);
             }
+            return false;
         }
 
         // frontend calls
@@ -141,11 +137,10 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
         }
 
         // frontend calls
-        async void setHomeSecuritySettings(Guid homeSecurityId, string deviceGroup, bool enabled)
+        public async Task<bool> setHomeSecuritySettings(Guid homeSecurityId, string deviceGroup, bool enabled)
         {
             // setter of homesecuritysettings
             IEnumerable<HomeSecuritySetting> homeSecuritySettingObjEnum = await getHomeSecuritySettings(homeSecurityId);
-
             foreach (HomeSecuritySetting homeSecuritySettingObj in homeSecuritySettingObjEnum)
             {
                 if (homeSecuritySettingObj.DeviceGroup == deviceGroup)
@@ -153,15 +148,16 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
                     if (homeSecuritySettingObj.Enabled != enabled)
                     {
                         homeSecuritySettingObj.Enabled = enabled;
-                        await _homeSecuritySettingRepository.UpdateAsync(homeSecuritySettingObj);
+                        return await _homeSecuritySettingRepository.UpdateAsync(homeSecuritySettingObj);
                     }
                     break;
                 }
             }
+            return false;
         }
 
         // frontend calls
-        void setLockdownState(Guid accountID, bool securityModeState)
+        public void setLockdownState(Guid accountID, bool securityModeState)
         {
             // called by front end
             // after user selects state when lockdown prompt
@@ -179,7 +175,7 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
             }
 
 
-            //_directorInterface.executeSecurityProtocol(accountID, securityModeState, );
+            // _directorInterface.executeSecurityProtocol(accountID, securityModeState, );
         }
     }
 }
