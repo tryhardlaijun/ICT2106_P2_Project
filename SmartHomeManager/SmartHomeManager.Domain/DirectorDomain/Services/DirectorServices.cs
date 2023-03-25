@@ -62,7 +62,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
             while (!stoppingToken.IsCancellationRequested)
             {             
                 if(TimeCheck()) CheckIfRuleTriggered();
-                //await _energyProfileInterface.getRevisedConfigValue(Guid.NewGuid(), "temperature", 26);
+                //await _energyProfileInterface.getRevisedConfigValue(Guid.NewGuid(), "Fan", 10);
                 await Task.Delay(10000);
             }
         }

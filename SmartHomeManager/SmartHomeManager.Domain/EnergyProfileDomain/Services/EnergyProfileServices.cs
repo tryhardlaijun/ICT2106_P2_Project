@@ -48,11 +48,24 @@ namespace SmartHomeManager.Domain.EnergyProfileDomain.Services
 
         public async Task<int> getRevisedConfigValue(Guid deviceID, string configurationKey, int configurationValue)
         {
+            //blacklisted config keys
+            string[] blackListedConfigKeys = new string[] { "Color", "Light" };
+            if (blackListedConfigKeys.Contains(configurationKey))
+            {
+                return configurationValue;
+            }
+
             // Simulate using function from EnergyEfficiency Analytics
             double efficiencyIndex = GetDeviceEnergyEfficiency(deviceID);
 
+            // whitelisted config keys. values are min, max, direction
+            Dictionary<string, List<string>> allConfigValues = new Dictionary<string, List<string>>();
+            allConfigValues.Add("AC", new List<string> { "16", "32", "negative" });
+            allConfigValues.Add("Fan", new List<string> { "1", "10", "positive" });
+            allConfigValues.Add("Heater", new List<string> { "32", "40", "positive" });
+
             //Simulate another function from IDeviceInfoService
-            List<int> configValues = ConfigValueRange();
+            List<int> configValues = ConfigValueRange(allConfigValues[configurationKey]);
 
             // Hardcoded accountId
             Guid accountId = new Guid("11111111-1111-1111-1111-111111111111");
@@ -65,6 +78,7 @@ namespace SmartHomeManager.Domain.EnergyProfileDomain.Services
             }
             int newConfigurationValue = calculateNewConfigValue(efficiencyIndex, energyProfile.ConfigurationValue, configurationValue, configValues);
 
+            Console.WriteLine(newConfigurationValue);
             return newConfigurationValue;
 
             //return configurationValue;
@@ -80,13 +94,24 @@ namespace SmartHomeManager.Domain.EnergyProfileDomain.Services
 
         // Simulate getting List<Int>ConfigValueRange 
         // in this case an aircon range of degrees
-        private List<int> ConfigValueRange()
+        private List<int> ConfigValueRange(List<string> configInfo)
         {
             var range = new List<int>();
-            for (int i = 32; i >= 18; i--)
+            if (configInfo[2] == "positive")
             {
-                range.Add(i);
+                for (int i = int.Parse(configInfo[0]); i <= int.Parse(configInfo[1]); i++)
+                {
+                    range.Add(i);
+                }
             }
+            else if (configInfo[2] == "negative")
+            {
+                for (int i = int.Parse(configInfo[1]); i >= int.Parse(configInfo[0]); i--)
+                {
+                    range.Add(i);
+                }
+            }
+
             return range;
         }
 
