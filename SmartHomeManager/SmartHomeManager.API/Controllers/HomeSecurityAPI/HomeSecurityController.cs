@@ -67,5 +67,13 @@ namespace SmartHomeManager.API.Controllers.HomeSecurityAPI
         {
             return await _homeSecurityService.setHomeSecuritySettings(accountId, securitySettingsEnabledWebRequest.DeviceGroup, securitySettingsEnabledWebRequest.Enabled);
         }
+
+        // PUT: api/HomeSecurity
+        [HttpPut("PutHomeSecurityTrigger/{accountId}")]
+        public void PutHomeSecurityTrigger(Guid accountId, PutHomeSecurityTriggerRequest homeSecurityTriggeredWebRequest)
+        {
+            _homeSecurityService.processEventAsync(accountId, homeSecurityTriggeredWebRequest.DeviceGroup, homeSecurityTriggeredWebRequest.ConfigurationKey, homeSecurityTriggeredWebRequest.ConfigurationValue);
+            isAccountAlerted(accountId);
+        }
     }
 }
