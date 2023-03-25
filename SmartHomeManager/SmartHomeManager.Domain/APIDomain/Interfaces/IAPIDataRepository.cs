@@ -15,6 +15,7 @@ namespace SmartHomeManager.Domain.APIDomain.Service
 		public Task<IEnumerable<APIData>> GetAPIType(String Type);
 		public Task<bool> CreateAPIData(APIData apiData);
 		public Task<bool> UpdateAPIData(APIData apiData);
+		public Task<IEnumerable<APIData>> GetAllAPIData();
 
 	}
 	

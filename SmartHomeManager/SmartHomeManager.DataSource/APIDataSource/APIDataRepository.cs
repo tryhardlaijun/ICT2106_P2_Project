@@ -43,6 +43,10 @@ namespace SmartHomeManager.DataSource.APIDataSource
 		{
 			return await _applicationDbContext.APIDatas.Where(s => s.APIDataId == APIDataId).ToListAsync();
 		}
+		public async Task<IEnumerable<APIData>> GetAllAPIData()
+		{
+			return await _applicationDbContext.APIDatas.ToListAsync();
+		}
 
 		public async Task<bool> UpdateAPIData(APIData apiData)
 		{

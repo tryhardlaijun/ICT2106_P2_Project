@@ -124,6 +124,11 @@ namespace SmartHomeManager.Domain.APIDomain.Service
 		{
 			return await _APIKeyRepository.GetAllAPIKey();
 		}
+		//getting all the data 
+		public async Task<IEnumerable<APIData>> GetAllAPIData()
+		{
+			return await _APIDataRepository.GetAllAPIData();
+		}
 
 		//Creating the values of the keys 
 		public async Task createValuesDetails()

@@ -2,6 +2,13 @@ import React from "react";
 import {
     Heading, Center, Container, Button, Box, Text,
     useToast,
+    Table,
+    Thead,
+    Tbody,
+    Tr,
+    Th,
+    Td,
+    TableContainer,
     Accordion,
     AccordionItem,
     AccordionButton,
@@ -11,11 +18,11 @@ import {
 } from '@chakra-ui/react'
 import { useEffect, useState } from 'react';
 
-export default function Backup() {
+export default function WeatherAPI() {
 
-    const [getDataList] = useState([]);
+    const [APIList, getApiData] = useState([]);
     //const backupRulesList = useState();
-   
+
 
     const toast = useToast();
 
@@ -23,7 +30,7 @@ export default function Backup() {
     function fetchAPI() {
         fetch("https://localhost:7140/api/API/getAPIData/")
             .then((response) => response.json())
-            .then((data) => getHistory(data));
+            .then((data) => getApiData(data));
     }
 
 
@@ -35,23 +42,39 @@ export default function Backup() {
         <Box>
             <Box textAlign='center' marginBottom={6} >
                 <Center h='200px'>
-                    <Heading>Backup</Heading>
+                    <Heading>APIData</Heading>
                 </Center>
-                <Button onClick={onSubmit}>Restore Backup</Button>
+                <Box>
+                <TableContainer>
+                    <Table>
+                        <Thead>
+                            <Tr>
+                                <Th>Timestamp</Th>
+                                <Th>Version</Th>
+                                <Th></Th>
+                            </Tr>
+                        </Thead>
+                        <Tbody>
+                                {
+                                    APIList.map((item_type, count) => {
+                                        let ts = new Date(item_type.TimeStamp)
 
-                <Box minH='20'>
-                    <Box id="showSelected" style={{ display: "none" }} >
-                        <Text id='versionSelected'>Version selected: (version number) - (timestamp)</Text>
-                        <Text>Scenarios selected:</Text>
-                    </Box>
-
-                    <Box id="showScenariosSelected" style={{ display: "none" }}>
-                        <Container id='scenariosSelected' maxW='xl'></Container>
-                    </Box>
+                                    return (
+                                        <Tr key={count+1}>
+                                            <Td>{ts.toLocaleDateString('en-GB') + ' ' + ts.toLocaleTimeString('en-GB')}</Td>
+                                            <Td>v{count}</Td>
+                                            <Td display="none">{item_type.APIDataId}</Td>
+                                            
+                                        </Tr>
+                                    )
+                                })}
+                            </Tbody>
+                    </Table>
+                    </TableContainer>
                 </Box>
             </Box>
-            
-          )
+        </Box>
+    )
 
 
 
