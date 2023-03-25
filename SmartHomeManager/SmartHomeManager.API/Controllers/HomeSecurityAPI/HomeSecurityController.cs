@@ -47,18 +47,25 @@ namespace SmartHomeManager.API.Controllers.HomeSecurityAPI
             return _homeSecurityService.isAccountLockedDown(accountId);
         }
 
-        // PUT: api/HomeSecurity
-        [HttpPut("PutSecurityMode/{accountId}")]
-        public async Task<bool> PutSecurityMode(Guid accountId, PutSecurityModeRequest securityModeWebRequest)
-        {
-            return await _homeSecurityService.setSecurityMode(accountId, securityModeWebRequest.SecurityMode);
-        }
-
         // GET: api/HomeSecurity
         [HttpGet("GetHomeSecuritySettings")]
         public async Task<IEnumerable<HomeSecuritySetting>> GetHomeSecuritySettings(Guid accountId)
         {
             return await _homeSecurityService.getHomeSecuritySettings(accountId);
+        }
+
+        // GET: api/HomeSecurity
+        [HttpGet("GetAllTriggeredDeviceLogs")]
+        public IEnumerable<string> getTriggeredDeviceLogs(Guid accountId)
+        {
+            return _homeSecurityService.getTriggeredDeviceLogs(accountId);
+        }
+
+        // PUT: api/HomeSecurity
+        [HttpPut("PutSecurityMode/{accountId}")]
+        public async Task<bool> PutSecurityMode(Guid accountId, PutSecurityModeRequest securityModeWebRequest)
+        {
+            return await _homeSecurityService.setSecurityMode(accountId, securityModeWebRequest.SecurityMode);
         }
 
         // PUT: api/HomeSecurity
@@ -74,6 +81,13 @@ namespace SmartHomeManager.API.Controllers.HomeSecurityAPI
         {
             _homeSecurityService.processEventAsync(accountId, homeSecurityTriggeredWebRequest.DeviceGroup, homeSecurityTriggeredWebRequest.ConfigurationKey, homeSecurityTriggeredWebRequest.ConfigurationValue);
             isAccountAlerted(accountId);
+        }
+
+        // PUT: api/HomeSecurity
+        [HttpPut("PutLockDownState/{accountId}")]
+        public void PutLockDownState(Guid accountId, PutSecurityModeRequest securityModeWebRequest)
+        {
+            _homeSecurityService.setLockdownState(accountId, securityModeWebRequest.SecurityMode);
         }
     }
 }

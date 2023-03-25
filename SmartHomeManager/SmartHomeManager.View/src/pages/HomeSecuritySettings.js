@@ -38,6 +38,7 @@ export default function HomeSecuritySettings() {
     const [alertedState, setAlertedState] = useState(false)
     const [currentSecurityMode, setCurrentSecurityMode] = useState(false)
     const [homeSecuritySettings, setHomeSecuritySettings] = useState([])
+    const [deviceLog, setDeviceLog] = useState([])
     const [dataLoaded, setDataLoaded] = useState(false);
 
     async function getAlertedState() {
@@ -78,6 +79,24 @@ export default function HomeSecuritySettings() {
             setDataLoaded(true)
         }
     }
+
+    async function getAllDeviceLogs() {
+        try {
+            const response = await fetch(`https://localhost:7140/api/HomeSecurity/GetAllTriggeredDeviceLogs?AccountId=${accountId}`)
+            if (response.status == 200) {
+                setDeviceLog(await response.json())
+            }
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        setInterval(async () => {
+            getAllDeviceLogs()
+        }, 5000);
+    }, []);
 
     useEffect(() => {
         getAlertedState()
@@ -159,6 +178,23 @@ export default function HomeSecuritySettings() {
                     onChange={(e) => PutHomeSecuritySettings(accountId, obj.deviceGroup, obj.enabled)} />
                 </Td>
             </Tr>)
+        })
+
+        return tableRows
+    }
+
+    function renderSomeList() {
+        const tableRows = []
+        deviceLog.forEach(function (obj, index) {
+            console.log(obj)
+            tableRows.push(
+                <Tbody>
+                <Tr>
+                    <Td>{index + 1}</Td>
+                    <Td>{obj}</Td>
+                </Tr>
+                </Tbody>
+            )
         })
 
         return tableRows
@@ -253,26 +289,7 @@ export default function HomeSecuritySettings() {
                 <Box overflowY="auto" minHeight="300px" maxHeight="300px" >
                     <TableContainer>
                         <Table variant='simple'>
-                            <Tbody>
-                                <Tr>
-                                    <Td>1</Td>
-                                </Tr>
-                            </Tbody>
-                            <Tbody>
-                                <Tr>
-                                    <Td>2</Td>
-                                </Tr>
-                            </Tbody>
-                            <Tbody>
-                                <Tr>
-                                    <Td>3</Td>
-                                </Tr>
-                            </Tbody>
-                            <Tbody>
-                                <Tr>
-                                    <Td>4</Td>
-                                </Tr>
-                            </Tbody>
+                            { renderSomeList() }
                         </Table>
                     </TableContainer>
                 </Box>

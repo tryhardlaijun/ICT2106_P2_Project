@@ -47,7 +47,7 @@ export function App() {
     }
 
     const toast = useToast();
-    useEffect(() => {
+    /*useEffect(() => {
     }, []);
 
     setInterval(async () => {         
@@ -61,6 +61,8 @@ export function App() {
             });
         }
     }, 5000);
+*/
+
 
     return (
         <>

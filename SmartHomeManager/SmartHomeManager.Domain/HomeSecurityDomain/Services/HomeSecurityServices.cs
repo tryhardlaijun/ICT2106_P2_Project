@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
 {
@@ -19,6 +20,7 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
     {
         private List<Guid> alertedAccounts = new List<Guid>();
         private List<Guid> lockedDownAccounts = new List<Guid>();
+        private List<KeyValuePair<Guid, string>> triggeredDeviceLog = new List<KeyValuePair<Guid, string>>();
         private IEnumerable<HomeSecurityDeviceDefinition>? homeSecurityDeviceDefinitions;
         List<string> detectorDeviceGroups = new List<string>() {
             "camera", "microphone"
@@ -32,6 +34,8 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
         public HomeSecurityServices(IHomeSecurityRepository<HomeSecurity> homeSecurityRepo, IHomeSecuritySettingRepository<HomeSecuritySetting> homeSecuritySettingRepo, IHomeSecurityDeviceDefinitionRepository<HomeSecurityDeviceDefinition> homeSecurityDeviceDefinitionRepo, IDirectorServices directorServices)
         {
             alertedAccounts.Add(new Guid("11111111-1111-1111-1111-111111111111"));
+            triggeredDeviceLog.Add(new KeyValuePair<Guid, string>(new Guid("11111111-1111-1111-1111-111111111111"), "Camera has detected Motion!!"));
+            triggeredDeviceLog.Add(new KeyValuePair<Guid, string>(new Guid("11111111-1111-1111-1111-111111111111"), "Microphone has detected Sound!!"));
             _homeSecurityRepository = homeSecurityRepo;
             _homeSecuritySettingRepository = homeSecuritySettingRepo;
             _homeSecurityDeviceDefinitionRepository = homeSecurityDeviceDefinitionRepo;
@@ -108,6 +112,9 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
          */
         public async void processEventAsync(Guid accountID, string deviceGroup, string configurationKey, int configurationValue)
         {
+            string triggeredDevice = "";
+            string correspondingKey = "";
+            string finalString = "";
             // Checks if device is a detector
             if (!detectorDeviceGroups.Contains(deviceGroup))
                 return;
@@ -125,6 +132,18 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
                     homeSecurityDeviceDefinition.ConfigurationOnValue == configurationValue)
                 {
                     alertedAccounts.Add(accountID);
+
+                    triggeredDevice = deviceGroup.Substring(0, 1).ToUpper() + deviceGroup.Substring(1);
+                    correspondingKey = configurationKey.Substring(0, 1).ToUpper() + configurationKey.Substring(1);
+                    if (deviceGroup == "microphone")
+                        correspondingKey = "Sound";
+
+                    finalString = triggeredDevice + " has detected " + correspondingKey + "!";
+                    triggeredDeviceLog.Add(new KeyValuePair<Guid, string>(accountID, finalString));
+                    foreach(KeyValuePair<Guid, string> devicelog in triggeredDeviceLog)
+                    {
+                        Console.WriteLine(devicelog.Value);
+                    }
                     break;
                 }
             }
@@ -193,6 +212,19 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
             }
 
             return false;
+        }
+
+        public List<string> getTriggeredDeviceLogs(Guid accountID)
+        {
+            List<string> deviceLogs = new List<string>();
+            foreach(KeyValuePair<Guid, string> triggeredlog in triggeredDeviceLog)
+            {
+                if(triggeredlog.Key == accountID)
+                {
+                    deviceLogs.Add(triggeredlog.Value);
+                }
+            }
+            return deviceLogs;
         }
 
         /*
