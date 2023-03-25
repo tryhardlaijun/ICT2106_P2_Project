@@ -30,95 +30,6 @@ namespace SmartHomeManager.Domain.APIDomain.Service
 			_APIValueRepository = APIValueRepository;
 		}
 
-		/*
-		public async Task createKeyDetails() {
-
-			IEnumerable<APIKey> test = await _APIKeyRepository.GetAllAPIKey();
-
-			if (test.Count() != 0)
-			{
-				foreach (APIKey testKey in test)
-				{
-					if (testKey.APIKeyType != "temperature_less_than")
-					{
-						APIKey TempLessKey = new APIKey
-						{
-							APIKeyType = "temperature_less_than",
-							APILabelText = "Temperature less than"
-						};
-						await _APIKeyRepository.CreateAPIKey(TempLessKey);
-					}
-					if (testKey.APIKeyType != "temperature_equals_to")
-					{
-						APIKey TempSameKey = new APIKey
-						{
-							APIKeyType = "temperature_equals_to",
-							APILabelText = "Temperature Equals to"
-						};
-
-						await _APIKeyRepository.CreateAPIKey(TempSameKey);
-					}
-
-					if (testKey.APIKeyType != "temperature_more_than")
-					{
-						APIKey TempMoreKey = new APIKey
-						{
-							APIKeyType = "temperature_more_than",
-							APILabelText = "Temperature More than"
-						};
-
-						await _APIKeyRepository.CreateAPIKey(TempMoreKey);
-					}
-					if (testKey.APIKeyType != "weather")
-					{
-
-						APIKey WeatherKey = new APIKey
-						{
-							APIKeyType = "weather",
-							APILabelText = "Weather"
-						};
-
-						await _APIKeyRepository.CreateAPIKey(WeatherKey);
-					}
-				}
-			}
-			else
-			{
-				APIKey TempLessKey = new APIKey
-				{
-					APIKeyType = "temperature_less_than",
-					APILabelText = "Temperature less than"
-				};
-				await _APIKeyRepository.CreateAPIKey(TempLessKey);
-
-				APIKey TempSameKey = new APIKey
-				{
-					APIKeyType = "temperature_equals_to",
-					APILabelText = "Temperature Equals to"
-				};
-
-				await _APIKeyRepository.CreateAPIKey(TempSameKey);
-
-
-				APIKey TempMoreKey = new APIKey
-				{
-					APIKeyType = "temperature_more_than",
-					APILabelText = "Temperature More than"
-				};
-
-				await _APIKeyRepository.CreateAPIKey(TempMoreKey);
-
-				APIKey WeatherKey = new APIKey
-				{
-					APIKeyType = "weather",
-					APILabelText = "Weather"
-				};
-
-				await _APIKeyRepository.CreateAPIKey(WeatherKey);
-
-			}
-
-		}*/
 		//getting all the Key 
 		public async Task<IEnumerable<APIKey>> GetAllAPIKey()
 		{
@@ -130,98 +41,6 @@ namespace SmartHomeManager.Domain.APIDomain.Service
 			return await _APIDataRepository.GetAllAPIData();
 		}
 
-		/* 
-		public async Task createValuesDetails()
-		{
-			IEnumerable<APIValue> test = await _APIValueRepository.GetAllValue();
-
-			if (test.Count() == 0)
-			{
-				APIValue TempLessKey = new APIValue
-				{
-					APIKeyType = "temperature_less_than",
-					APIValues = string.Empty
-				};
-				await _APIValueRepository.CreateAPIValue(TempLessKey);
-
-				APIValue TempSameKey = new APIValue
-				{
-					APIKeyType = "temperature_equals_to",
-					APIValues = string.Empty
-				};
-
-				await _APIValueRepository.CreateAPIValue(TempSameKey);
-
-
-				APIValue TempMoreKey = new APIValue
-				{
-					APIKeyType = "temperature_more_than",
-					APIValues = string.Empty
-				};
-
-				await _APIValueRepository.CreateAPIValue(TempMoreKey);
-
-				APIValue SunnyValue = new APIValue
-				{
-					APIKeyType = "weather",
-					APIValues = "Sunny"
-				};
-
-				await _APIValueRepository.CreateAPIValue(SunnyValue);
-
-				APIValue ShowersValue = new APIValue
-				{
-					APIKeyType = "weather",
-					APIValues = "Showers"
-				};
-
-				await _APIValueRepository.CreateAPIValue(ShowersValue);
-
-				APIValue TShowerValue = new APIValue
-				{
-					APIKeyType = "weather",
-					APIValues = "Thundery Showers"
-				};
-
-				await _APIValueRepository.CreateAPIValue(TShowerValue);
-
-				APIValue CloudyValue = new APIValue
-				{
-					APIKeyType = "weather",
-					APIValues = "Cloudy"
-				};
-
-				await _APIValueRepository.CreateAPIValue(CloudyValue);
-
-				APIValue PCloudyValue = new APIValue
-				{
-					APIKeyType = "weather",
-					APIValues = "Partly Cloudy"
-				};
-
-				await _APIValueRepository.CreateAPIValue(PCloudyValue);
-
-				APIValue LRainValue = new APIValue
-				{
-					APIKeyType = "weather",
-					APIValues = "Light Rain"
-				};
-
-				await _APIValueRepository.CreateAPIValue(LRainValue);
-
-				APIValue MRainValue = new APIValue
-				{
-					APIKeyType = "weather",
-					APIValues = "Moderate Rain"
-				};
-
-				await _APIValueRepository.CreateAPIValue(MRainValue);
-
-
-			}
-
-
-		}*/
 		//getting all the values based on key
 		public async Task<IEnumerable<APIValue>> getAllAPIValue(string APIKey)
 		{
@@ -232,7 +51,7 @@ namespace SmartHomeManager.Domain.APIDomain.Service
 		public async Task<IDictionary<string, string>> getAPIData()
 		{
 			IDictionary<string, string> sendKeyValue = new Dictionary<string, string>();
-			await updateAPIDetails();
+			//await updateAPIDetails();
 			IEnumerable<APIData> test = await _APIDataRepository.GetAPIType("Temperature");
 			foreach (APIData testItem in test)
 			{
@@ -255,10 +74,10 @@ namespace SmartHomeManager.Domain.APIDomain.Service
 				{
 					sendKeyValue.Add("weather", testItem.Value);
 				}
-				if (testItem.Specification.Equals("same"))
-				{
-					sendKeyValue.Add("weather", testItem.Value);
-				}
+				//if (testItem.Specification.Equals("same"))
+				//{
+				//	sendKeyValue.Add("weather", testItem.Value);
+				//}
 				
 			}
 			return sendKeyValue;

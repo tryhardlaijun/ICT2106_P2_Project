@@ -25,7 +25,7 @@ import RegisterDevice from "./pages/RegisterDevice";
 import SelectNearbyDevice from "pages/SelectNearbyDevice";
 import DeviceConfig from "./pages/DeviceConfig";
 import Report from "pages/Analytics";
-import WeatherAPI from "pages/weatherAPI";
+import API from "./pages/API";
 
 export function App() {
   return (
@@ -55,7 +55,7 @@ export function App() {
             <Route path="/configuration" element={<Configuration />} />
             <Route path="/energyProfile" element={<EnergyProfile />} />
             <Route path="/scenario" element={<Scenario />} />
-            <Route path="/API" element={<WeatherAPI />} />
+            <Route path="/API" element={<API />} />
             <Route
               path="/scenario/create/action-rule"
               element={<ActionRule />}

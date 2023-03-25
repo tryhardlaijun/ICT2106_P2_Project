@@ -18,7 +18,7 @@ import {
 } from '@chakra-ui/react'
 import { useEffect, useState } from 'react';
 
-export default function WeatherAPI() {
+export default function API() {
 
     const [APIList, getApiData] = useState([]);
     //const backupRulesList = useState();
@@ -30,7 +30,10 @@ export default function WeatherAPI() {
     function fetchAPI() {
         fetch("https://localhost:7140/api/API/getAPIData/")
             .then((response) => response.json())
-            .then((data) => getApiData(data));
+            .then((data) => {
+                getApiData(data)
+                console.log(data)
+            });
     }
 
 
@@ -52,7 +55,6 @@ export default function WeatherAPI() {
                                 <Th>Timestamp</Th>
                                 <Th>Type</Th>
                                 <Th>Value</Th>
-                                <Th>Specification</Th>
                             </Tr>
                         </Thead>
                         <Tbody>
@@ -66,7 +68,6 @@ export default function WeatherAPI() {
                                             <Td display="none">{item_type.apiDataId}</Td>
                                             <Td>{item_type.type}</Td>
                                             <Td >{item_type.value}</Td>
-                                            <Td>{item_type.specification}</Td>
                                             
                                         </Tr>
                                     )

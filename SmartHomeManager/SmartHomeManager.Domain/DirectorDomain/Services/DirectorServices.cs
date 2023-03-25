@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SmartHomeManager.Domain.APIDomain.Interface;
 using SmartHomeManager.Domain.BackupDomain.Entities;
 using SmartHomeManager.Domain.BackupDomain.Interfaces;
 using SmartHomeManager.Domain.Common;
@@ -12,6 +13,7 @@ using SmartHomeManager.Domain.EnergyProfileDomain.Interfaces;
 using SmartHomeManager.Domain.EnergyProfileDomain.Services;
 using SmartHomeManager.Domain.SceneDomain.Entities;
 using SmartHomeManager.Domain.SceneDomain.Interfaces;
+using System;
 using System.Data;
 using System.Text;
 using Rule = SmartHomeManager.Domain.SceneDomain.Entities.Rule;
@@ -26,6 +28,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
         private readonly IGetScenariosService _scenarioInterface;
         private readonly IEnergyProfileServices _energyProfileInterface;
         private readonly IBackupService _backupInterface;
+        private readonly IAPIDataService _apiInterface;
 
         private readonly IRuleHistoryRepository<RuleHistory> _ruleHistoryRepository;
         private readonly IGenericRepository<History> _historyRepository;
@@ -54,6 +57,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
             _backupInterface = scope.ServiceProvider.GetRequiredService<IBackupService>();
             _directorControlDeviceInterface = scope.ServiceProvider.GetRequiredService<IDirectorControlDeviceService>();
             _troubleshooterInterface = scope.ServiceProvider.GetRequiredService<ITroubleshooterServices>();
+            _apiInterface = scope.ServiceProvider.GetRequiredService<IAPIDataService>();
 
             timeMark = DateTime.Now.AddMinutes(-1);
 
@@ -70,10 +74,11 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
 
             //_backupInterface.createBackup(rules, scenarios);
 
+            await Task.Delay(1000);
+
             while (!stoppingToken.IsCancellationRequested)
             {
-                //await _energyProfileInterface.getRevisedConfigValue(Guid.NewGuid(), "temperature", 26);
-                if (TimeCheck()) CheckIfRuleTriggered();
+                //if (TimeCheck()) CheckIfRuleTriggered();
                 await Task.Delay(10000);
             }
         }
@@ -93,40 +98,57 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
         {
             Console.WriteLine(string.Format("System Time: {0}", DateTime.Now.ToString("HH:mm:ss.fff")));
             var ruleListClone = ruleList!.Clone().getRuleList();
+            var apiData = await _apiInterface.getAPIData();
 
             if (ruleListClone.Any())
             {
                 var rLength = ruleListClone.Count();
                 foreach (var rule in ruleListClone)
                 {
-                    var timeDiff = Math.Floor((DateTime.Now - Convert.ToDateTime(rule.StartTime)).TotalMinutes);
-                    if (timeDiff == 0)
+                    if (rule.StartTime != null)
                     {
-                        Console.WriteLine("Trigger Detected: " + rule.RuleName);
-                        var deviceID = rule.DeviceId;
-                        var configKey = rule.ConfigurationKey;
-                        var configValue = rule.ConfigurationValue;
-
-                        int adjustedConfigValue = await _energyProfileInterface.getRevisedConfigValue(deviceID, configKey, configValue);
-
-                        // Set device thru device interface
-                        ruleTriggerManager.Notify(deviceID, configKey, adjustedConfigValue);
-
-                        var configMeaning = string.Format("{0} is set to {1}", configKey, configValue); // await getConfigMeaning(deviceID, configKey, configValue);
-                        var storedRule = await _ruleHistoryRepository.GetByRuleIdAsync(rule.RuleId);
-
-                        History h = new History();
-                        h.Message = configMeaning;
-                        h.Timestamp = DateTime.Now;
-                        h.DeviceAdjustedConfiguration = adjustedConfigValue;
-                        h.ProfileId = rule.Scenario.ProfileId;
-                        h.RuleHistoryId = storedRule.RuleHistoryId;
-
-                        await _historyRepository.AddAsync(h);
-
-                        // Notify troubleshooter interface
-                        // await informTrigger(deviceID, configKey, configValue);
+                        var now = DateTime.Now.ToString("HH:mm");
+                        var startTime = rule.StartTime?.ToString("HH:mm");
+                        if (!now.Equals(startTime)) continue;
                     }
+
+                    if (rule.APIKey != null) 
+                    {
+                        string value;
+                        if (!apiData.TryGetValue(rule.APIKey, out value)) continue;
+                        if (value != rule.ApiValue) continue;
+                    }
+
+                    if (rule.ActionTrigger != null)
+                    {
+                        Random random = new Random();
+                        if (random.Next(2) == 0) return;
+                    }
+
+
+                    Console.WriteLine("Trigger Detected: " + rule.RuleName);
+                    var deviceID = rule.DeviceId;
+                    var configKey = rule.ConfigurationKey;
+                    var configValue = rule.ConfigurationValue;
+
+                    int adjustedConfigValue = await _energyProfileInterface.getRevisedConfigValue(deviceID, configKey, configValue);
+
+                    // Set device thru device interface
+                    ruleTriggerManager.Notify(deviceID, configKey, adjustedConfigValue);
+
+                    var configMeaning = string.Format("{0} is set to {1}", configKey, configValue); // await getConfigMeaning(deviceID, configKey, configValue);
+                    var storedRule = await _ruleHistoryRepository.GetByRuleIdAsync(rule.RuleId);
+
+                    History h = new History();
+                    h.Message = configMeaning;
+                    h.Timestamp = DateTime.Now;
+                    h.DeviceAdjustedConfiguration = adjustedConfigValue;
+                    h.ProfileId = rule.Scenario.ProfileId;
+                    h.RuleHistoryId = storedRule.RuleHistoryId;
+
+                    await _historyRepository.AddAsync(h);
+
+
                 }
             }            
         }
