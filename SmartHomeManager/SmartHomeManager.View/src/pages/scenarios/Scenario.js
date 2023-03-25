@@ -15,6 +15,7 @@ import ModalButton from "components/Rules/ModalButton";
 import MenuItems from "components/Rules/MenuItems";
 import axios from "axios";
 import UploadModalButton from "components/Rules/UploadModal";
+import CreateRuleDialogue from "pages/rules/CreateRuleDialogue";
 
 export default function Scenarios() {
 	const [ allRules, setAllRules] = useState([])
@@ -24,6 +25,7 @@ export default function Scenarios() {
 	const [buttonName, setButtonName] = useState("")
 	const [typesOfRuleButton, setTypesOfRuleButton] = useState("Schedule")
 	let [searchParams, setSearchParams] = useSearchParams();
+	const [showRuleOption, setShowRuleOption] = useState(false);
 	
 	const toast = useToast();
 	const deviceTypeFilter = "Fan";
@@ -225,10 +227,15 @@ export default function Scenarios() {
 					<Button ml={2} colorScheme="whatsapp">
 						Add Scenario
 					</Button>
-					<Button ml={2} colorScheme="whatsapp">
-						<Link to="/scenario/create/create-dialogue">Add Rule</Link>
+					<Button ml={2} colorScheme="whatsapp"
+						onClick={() => {
+							setShowRuleOption(true);
+						}}>		
+						Add Rule				
+						{/* <Link to="/scenario/create/create-dialogue">Add Rule</Link> */}
 					</Button>
 				</Box>
+				
 				<Box width="50%" display="flex" justifyContent="flex-start">
 					<Button ml={2} colorScheme="whatsapp">
 						{currentScenario?(
@@ -254,6 +261,14 @@ export default function Scenarios() {
 					/>
 				</Box>
 			</Box>
+			{showRuleOption && (
+				<CreateRuleDialogue				
+					Close={()=>{
+						setShowRuleOption(false);
+					}}
+					/>
+				)}
 		</Box>
+		
 	);
 }

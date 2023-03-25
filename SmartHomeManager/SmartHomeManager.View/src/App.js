@@ -62,10 +62,10 @@ export function App() {
               path="/scenario/create/action-rule"
               element={<ActionRule />}
             />
-            <Route
+            {/* <Route
               path="/scenario/create/create-dialogue"
               element={<CreateRuleDialogue/>}
-            />
+            /> */}
             <Route
               path="/scenario/create/schedule-rule"
               element={<SchRule />}
