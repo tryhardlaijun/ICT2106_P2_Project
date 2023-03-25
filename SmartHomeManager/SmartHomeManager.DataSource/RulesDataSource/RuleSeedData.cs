@@ -128,7 +128,7 @@ public class RuleSeedData
             ConfigurationValue = 0,
             ActionTrigger = "string",
             RuleName = "string",
-            StartTime = Convert.ToDateTime("2023-02-04T07:21:26.934Z"),
+            StartTime = Convert.ToDateTime("2023-02-04T07:11:26.934Z"),
             EndTime = Convert.ToDateTime("2023-02-04T07:21:26.934Z"),
             DeviceId = devices[0].DeviceId
         };

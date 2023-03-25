@@ -71,13 +71,15 @@ public class Program
         });
 
         // MODULE 3
+        
         builder.Services.AddScoped<IGenericRepository<History>, DataSource.HistoryDataSource.HistoryRepository>();
         builder.Services.AddScoped<IRuleHistoryRepository<RuleHistory>, RuleHistoryRepository>();
         builder.Services.AddScoped<IGenericRepository<Rule>, RuleRepository>();
         builder.Services.AddScoped<IGetRulesRepository, GetRulesRepository>();
+        builder.Services.AddScoped<IGetRulesService, RuleServices>();
+        //builder.Services.AddScoped<IGetRulesRepository, RuleRepository>();
         builder.Services.AddScoped<IGenericRepository<EnergyProfile>, EnergyProfileRepository>();
         builder.Services.AddScoped<IGenericRepository<Scenario>, ScenarioRepository>();
-        builder.Services.AddScoped<IGetRulesService, GetRulesServices>();
         builder.Services.AddScoped<IBackupRulesService, BackupRulesService>();
         builder.Services.AddScoped<IBackupRulesRepository, BackupRulesRepository>();
         builder.Services.AddScoped<IGetScenariosService, GetScenariosService>();
@@ -89,6 +91,7 @@ public class Program
         builder.Services.AddScoped<IGenericRepository<Troubleshooter>, TroubleshootRepository>();
         builder.Services.AddScoped<IGetTroubleshooterService, GetTroubleshooterServices>();
         
+
         // builder.Services.AddHostedService<DirectorServices>();
 
         // DEVICE

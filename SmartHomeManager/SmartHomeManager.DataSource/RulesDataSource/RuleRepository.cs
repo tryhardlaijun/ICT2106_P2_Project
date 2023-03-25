@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.RoomDomain.Entities;
 using SmartHomeManager.Domain.SceneDomain.Entities;
+using SmartHomeManager.Domain.SceneDomain.Interfaces;
 
 namespace SmartHomeManager.DataSource.RulesDataSource
 {
@@ -16,25 +17,57 @@ namespace SmartHomeManager.DataSource.RulesDataSource
             this._dbSet = _applicationDbContext.Set<Rule>();
         }
 
+        #region IGeneric Region
         // Add rule
         public async Task<bool> AddAsync(Rule rule)
         {
             try
             {
-                //await RuleSeedData.Seed(_applicationDbContext);
                 await _applicationDbContext.AddRangeAsync(rule);
                 return await SaveAsync();
             }
-            catch
+            catch(Exception ex)
             {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+        }
+        // Get all
+        public async Task<IEnumerable<Rule>> GetAllAsync()
+        {
+            try
+            {
+                return await _applicationDbContext.Rules.Include(d => d.Device).Include(s => s.Scenario).AsNoTracking().ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+            
+        }
+
+        //Get by Id
+        public async Task<Rule?> GetByIdAsync(Guid id)
+        {
+            return await _applicationDbContext.Rules.Include(d => d.Device).Include(s => s.Scenario).FirstOrDefaultAsync(r => r.RuleId == id);
+        }
+
+        //Update
+        public async Task<bool> UpdateAsync(Rule rule)
+        {
+            try
+            {
+                _applicationDbContext.Update(rule);
+                return await SaveAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
                 return false;
             }
         }
 
-        public Task<bool> DeleteAsync(Rule entity)
-        {
-            throw new NotImplementedException();
-        }
 
         // Delete by Id
         public async Task<bool> DeleteByIdAsync(Guid id)
@@ -49,32 +82,11 @@ namespace SmartHomeManager.DataSource.RulesDataSource
                 }
                 return false;
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return false;
             }           
-        }
-
-        // Get all
-        public async Task<IEnumerable<Rule>> GetAllAsync()
-        {
-            //await RuleSeedData.Seed(_applicationDbContext);
-            return await _applicationDbContext.Rules.Include(d => d.Device).Include(s => s.Scenario).ToListAsync();
-        }
-
-
-        //Get by Id
-        public async Task<Rule?> GetByIdAsync(Guid id)
-        {
-            try
-            {
-                var rule = await _applicationDbContext.Rules.Include(d => d.Device).Include(s => s.Scenario).FirstOrDefaultAsync(r => r.RuleId == id);
-                return rule;
-            }
-            catch
-            {
-               return  null;
-            }
         }
 
         //Save
@@ -85,24 +97,26 @@ namespace SmartHomeManager.DataSource.RulesDataSource
                 await _applicationDbContext.SaveChangesAsync();
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return false; 
             }
         }
 
-        //Update
-        public async Task<bool> UpdateAsync(Rule rule)
+        public Task<bool> DeleteAsync(Rule entity)
         {
-            try
-            {
-                _applicationDbContext.Update(rule);
-                return await SaveAsync();
-            }
-            catch
-            {
-                return false;
-            }
+            throw new NotImplementedException();
         }
+        #endregion
+
+        #region Provided Inteface
+        public async Task<IEnumerable<Rule>> GetAllRulesByScenarioIdAsync(Guid ScenarioId)
+        {
+            return await _applicationDbContext.Rules.Where(r => r.ScenarioId == ScenarioId).ToListAsync();
+        }
+        #endregion
+
+        
     }
 }

@@ -35,7 +35,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
             _ruleHistoryRepository = scope.ServiceProvider.GetRequiredService<IRuleHistoryRepository<RuleHistory>>();
             _historyRepository = scope.ServiceProvider.GetRequiredService<IGenericRepository<History>>();
 
-            _ruleInterface = scope.ServiceProvider.GetRequiredService<IGetRulesService>();
+            //_ruleInterface = scope.ServiceProvider.GetService<IGetRulesService>();
             _scenarioInterface = scope.ServiceProvider.GetRequiredService<IGetScenariosService>();
             _energyProfileInterface = scope.ServiceProvider.GetRequiredService<IEnergyProfileServices>();
 
@@ -47,7 +47,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {            
-            rules = (await _ruleInterface.GetAllRulesAsync()).ToList();       
+            //rules = (await _ruleInterface.GetAllRulesAsync()).ToList();       
             scenarios = (await _scenarioInterface.GetAllScenarios()).ToList();
 
             while (!stoppingToken.IsCancellationRequested)
@@ -114,11 +114,11 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
             switch (operation)
             {
                 case 'c':                    
-                    await addNewRule(await _ruleInterface.GetRuleByIdAsync(ruleID));                    
+                    //await addNewRule(await _ruleInterface.GetRuleByIdAsync(ruleID));                    
                     break;
                 case 'u':
                     rules = rules.Where(r => r.RuleId != ruleID).ToList();
-                    await addNewRule(await _ruleInterface.GetRuleByIdAsync(ruleID));                                     
+                    //await addNewRule(await _ruleInterface.GetRuleByIdAsync(ruleID));                                     
                     break;
                 case 'd':
                     rules = rules.Where(r => r.RuleId != ruleID).ToList();

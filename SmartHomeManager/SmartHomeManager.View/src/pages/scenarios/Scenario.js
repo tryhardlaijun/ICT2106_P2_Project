@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import React, { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import JsonToTable from "components/Rules/JsonToTable";
 import ModalButton from "components/Rules/ModalButton";
 import MenuItems from "components/Rules/MenuItems";
@@ -18,8 +19,12 @@ import UploadModalButton from "components/Rules/UploadModal";
 export default function Scenarios() {
 	const [ allRules, setAllRules] = useState([])
 	const [ allScenario, setAllScenario] = useState([])
+	const [ allTypes, setTypes] = useState([{id:"1",name:"Schedule"},{id:"2",name:"Event"},{id:"3",name:"API"}])
 	const [ currentScenario, setCurrentScenario ] = useState()
 	const [buttonName, setButtonName] = useState("")
+	const [typesOfRuleButton, setTypesOfRuleButton] = useState("Schedule")
+	let [searchParams, setSearchParams] = useSearchParams();
+	
 	const toast = useToast();
 	const deviceTypeFilter = "Fan";
 	const configurationKeyFilter = "Unable to oscillate";
@@ -30,6 +35,26 @@ export default function Scenarios() {
 	async function getAllRules(id){
 		const { data: ruleData } = await axios.get(`https://localhost:7140/api/Rules/rulesByScenarioId/${id}`)
 		setAllRules(ruleData)
+	}
+
+	/**
+	 * @param {string} currentScenario
+	 */
+	async function getRulesBasedOnTypes(currentScenario, type){
+		switch(type){
+			case "Schedule":
+				const { data: scheduleData } = await axios.get(`https://localhost:7140/api/Rules/schedulesByScenarioId/${currentScenario.scenarioId}`)
+				setAllRules(scheduleData)
+				break;
+			case "Event":
+				const { data: eventData } = await axios.get(`https://localhost:7140/api/Rules/eventsByScenarioId/${currentScenario.scenarioId}`)
+				setAllRules(eventData)
+				break;
+			case "API":
+				const { data: apiData } = await axios.get(`https://localhost:7140/api/Rules/apisByScenarioId/${currentScenario.scenarioId}`)
+				setAllRules(apiData)
+				break;
+		}
 	}
 
 	/**
@@ -68,9 +93,24 @@ export default function Scenarios() {
 		getAllRules(scenario.scenarioId)
 		.catch((error)=>{
 			console.error(error)
-			makeToast('Error', 'Failed to fetch rules for the scenario. Please try again later.','error',5000)
+			makeToast('Error', 'Failed to fetch rules for the scenario. Please try again later.', 'error', 5000);
 		})
 		updateLocalStore(scenario.scenarioName, scenario.scenarioId)
+	}
+
+	function ruleTypeSelect(type){
+		//
+		setTypesOfRuleButton(type.name)
+		// console.log(currentScenario)
+		getRulesBasedOnTypes(currentScenario , type.name)
+		// setCurrentScenario(scenario)
+		// setButtonName(scenario.scenarioName)
+		// getAllRules(scenario.scenarioId)
+		// .catch((error)=>{
+		// 	console.error(error)
+		// 	makeToast('Error', 'Failed to fetch rules for the scenario. Please try again later.', 'error', 5000);
+		// })
+		// updateLocalStore(scenario.scenarioName, scenario.scenarioId)
 	}
 
 	/**
@@ -97,7 +137,7 @@ export default function Scenarios() {
 			const { data: scenarioData } = await axios.get(`https://localhost:7140/api/Scenarios/GetAllScenarios`);
 			setAllScenario(scenarioData);
 			if (scenarioData.length > 0) {
-			  const currentScenario = scenarioData[0];
+			  const currentScenario = scenarioData[scenarioData.length-1];
 			  setCurrentScenario(currentScenario);
 			  setButtonName(currentScenario.scenarioName);
 			  getAllRules(currentScenario.scenarioId)
@@ -105,7 +145,7 @@ export default function Scenarios() {
 			}
 		  } catch (error) {
 			console.error(error);
-			makeToast('Error', 'Failed to fetch scenarios data. Please try again later.','error',5000)
+			  makeToast('Error', 'Failed to fetch scenarios data. Please try again later.', 'error', 5000);
 		  }
 		};
 		fetchData();
@@ -116,20 +156,39 @@ export default function Scenarios() {
 			<Heading alignContent="center">Profile : Wen Jun</Heading>
 			<Input placeholder="Voice Control" display="inline-block" />
 
-			<Box h="60px">
-				<Menu isLazy>
-					<MenuButton
-						margin = "2"
-						as={Button}
-						variant="solid"
-						backgroundColor="gray.300"
-						color="black"
-					>
-						{buttonName}
-					</MenuButton>
-					{/* MenuItems are not rendered unless Menu is open */}
-					<MenuItems scenarios={allScenario} buttonUpdate={scenarioSelect}/>
-				</Menu>
+			<Box width="50%" display="flex" justifyContent="flex-start">
+				{/* This will be the list of scenarios */}
+				<Box h="60px">
+					<Menu isLazy>
+						<MenuButton
+							margin = "2"
+							as={Button}
+							variant="solid"
+							backgroundColor="gray.300"
+							color="black"
+						>
+							{buttonName}
+						</MenuButton>
+						{/* MenuItems are not rendered unless Menu is open */}
+						<MenuItems.MenuItems scenarios={allScenario} buttonUpdate={scenarioSelect}/>
+					</Menu>
+				</Box>
+				{/* This will be the 3 types of rules*/}
+				<Box h="60px">
+					<Menu isLazy>
+						<MenuButton
+							margin = "2"
+							as={Button}
+							variant="solid"
+							backgroundColor="gray.300"
+							color="black"
+						>
+							{typesOfRuleButton}
+						</MenuButton>
+						{/* MenuItems are not rendered unless Menu is open */}
+						<MenuItems.RulesMenuItems typeOfRules={allTypes} buttonUpdate={ruleTypeSelect}/>
+					</Menu>
+				</Box>
 			</Box>
 			<JsonToTable ruleData = {allRules} deleteRule = {deleteRule}/>
 			<Box padding="3" display="flex">
@@ -138,7 +197,7 @@ export default function Scenarios() {
 						Add Scenario
 					</Button>
 					<Button ml={2} colorScheme="whatsapp">
-						<Link to="/scenario/create/time-rule">Add Rule</Link>
+						<Link to="/scenario/create/create-dialogue">Add Rule</Link>
 					</Button>
 				</Box>
 				<Box width="50%" display="flex" justifyContent="flex-start">

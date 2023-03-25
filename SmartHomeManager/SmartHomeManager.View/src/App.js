@@ -26,6 +26,8 @@ import SelectNearbyDevice from "pages/SelectNearbyDevice";
 import DeviceConfig from "./pages/DeviceConfig";
 import Report from "pages/Analytics";
 import Troubleshooter from "./pages/troubleshooter/Troubleshooter";
+import CreateRuleDialogue from "pages/rules/CreateRuleDialogue";
+import ApiRule from "pages/rules/ApiRule";
 
 export function App() {
   return (
@@ -61,8 +63,16 @@ export function App() {
               element={<ActionRule />}
             />
             <Route
-              path="/scenario/create/time-rule"
+              path="/scenario/create/create-dialogue"
+              element={<CreateRuleDialogue/>}
+            />
+            <Route
+              path="/scenario/create/schedule-rule"
               element={<SchRule />}
+            />
+            <Route
+              path="/scenario/create/api-rule"
+              element={<ApiRule />}
             />
             <Route
               path="/scenario/edit/:id"

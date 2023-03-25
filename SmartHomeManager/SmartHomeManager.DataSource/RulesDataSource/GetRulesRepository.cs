@@ -12,28 +12,24 @@ namespace SmartHomeManager.DataSource.RulesDataSource
 			_applicationDbContext = applicationDbContext;
 		}
 
-        public async Task<IEnumerable<Rule>> GetAllRulesAsync()
-        {
-            return await _applicationDbContext.Rules.Include(d => d.Device).Include(s => s.Scenario).ToListAsync();
-        }
-
         public async Task<IEnumerable<Rule?>> GetAllRulesByScenarioIdAsync(Guid ScenarioId)
         {
             return await _applicationDbContext.Rules.Where(r => r.ScenarioId == ScenarioId).ToListAsync();
         }
-
-        public async Task<Rule> GetRuleByIdAsync(Guid id)
+        public async Task<IEnumerable<Rule>> GetSchedulesByScenarioIdAsync(Guid ScenarioId)
         {
-            try
-            {
-                var rule = await _applicationDbContext.Rules.Include(d => d.Device).Include(s => s.Scenario).FirstOrDefaultAsync(r => r.RuleId == id);
-                return rule;
-            }
-            catch
-            {
-                return null;
-            }
+            return await _applicationDbContext.Rules.Where(r => r.ScenarioId == ScenarioId && r.StartTime != null).ToListAsync();
         }
+
+        public async Task<IEnumerable<Rule>> GetApiByScenarioIdAsync(Guid ScenarioId)
+        {
+            return await _applicationDbContext.Rules.Where(r => r.ScenarioId == ScenarioId && r.APIKey != null).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Rule>> GetEventsByScenarioIdAsync(Guid ScenarioId)
+        {
+            return await _applicationDbContext.Rules.Where(r => r.ScenarioId == ScenarioId && r.ActionTrigger != null).ToListAsync();
+        }        
     }
 }
 
