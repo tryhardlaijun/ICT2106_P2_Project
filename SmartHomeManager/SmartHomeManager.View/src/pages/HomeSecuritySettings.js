@@ -30,7 +30,6 @@ export default function HomeSecuritySettings() {
     const [accountId, setAccountId] = useState("11111111-1111-1111-1111-111111111111")
     const [currentSecurityMode, setCurrentSecurityMode] = useState(false)
     const [homeSecuritySettings, sethomeSecuritySettings] = useState([])
-    const [homeSecuritySettingsEnabled, sethomeSecuritySettingsEnabled] = useState(false,false,false,false)
     const [dataLoaded, setDataLoaded] = useState(false);
 
     useEffect(() => {
@@ -85,26 +84,23 @@ export default function HomeSecuritySettings() {
         }
     };
 
-    const PutHomeSecuritySettings = async (accountId, deviceGroup, newEnabled) => {
+    const PutHomeSecuritySettings = async (accountId, deviceGroup, newEnabled, index) => {
         try {
             const response = await fetch(`https://localhost:7140/api/HomeSecurity/PutHomeSecuritySettings/${accountId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ deviceGroup: deviceGroup, enabled: newEnabled })
+                body: JSON.stringify({ deviceGroup: deviceGroup, enabled: !newEnabled })
             })
-            if (!response.ok) {
+            if (response.ok) {
+                /*homeSecuritySettings[index].enabled = !newEnabled*/
+            } else {
                 console.error(response.statusText)
             }
         } catch (error) {
             console.error(error)
         }
-    };
-
-    const handleAddEnabled = (newEnabled) => {
-        const newEnables = homeSecuritySettingsEnabled.concat(newEnabled);
-        sethomeSecuritySettingsEnabled(newEnables);
     };
 
     return (
@@ -134,19 +130,19 @@ export default function HomeSecuritySettings() {
                     <Tbody>
                         <Tr>
                             <Td>Door</Td>
-                            <Td>{dataLoaded && (<Switch id='switchDoor' defaultChecked={homeSecuritySettings[0].enabled} onChange={(e) => PutHomeSecuritySettings(accountId, homeSecuritySettings[0].deviceGroup)} />)}</Td>
+                            <Td>{dataLoaded && (<Switch id='switchDoor' defaultChecked={homeSecuritySettings[0].enabled} onChange={(e) => PutHomeSecuritySettings(accountId, homeSecuritySettings[0].deviceGroup, homeSecuritySettings[0].enabled)} />)}</Td>
                         </Tr>
                         <Tr>
                             <Td>Window</Td>
-                            <Td>{dataLoaded && (<Switch id='switchWindow' defaultChecked={homeSecuritySettings[1].enabled} onChange={(e) => PutHomeSecuritySettings(accountId, homeSecuritySettings[1].deviceGroup)} />)}</Td>
+                            <Td>{dataLoaded && (<Switch id='switchWindow' defaultChecked={homeSecuritySettings[1].enabled} onChange={(e) => PutHomeSecuritySettings(accountId, homeSecuritySettings[1].deviceGroup, homeSecuritySettings[1].enabled)} />)}</Td>
                         </Tr>
                         <Tr>
                             <Td>Alarm</Td>
-                            <Td>{dataLoaded && (<Switch id='switchAlarm' defaultChecked={homeSecuritySettings[2].enabled} onChange={(e) => PutHomeSecuritySettings(accountId, homeSecuritySettings[2].deviceGroup)} />)}</Td>
+                            <Td>{dataLoaded && (<Switch id='switchAlarm' defaultChecked={homeSecuritySettings[2].enabled} onChange={(e) => PutHomeSecuritySettings(accountId, homeSecuritySettings[2].deviceGroup, homeSecuritySettings[2].enabled)} />)}</Td>
                         </Tr>
                         <Tr>
                             <Td>Gate</Td>
-                            <Td>{dataLoaded && (<Switch id='switchGate' defaultChecked={homeSecuritySettings[3].enabled} onChange={(e) => PutHomeSecuritySettings(accountId, homeSecuritySettings[3].deviceGroup)} />)}</Td>
+                            <Td>{dataLoaded && (<Switch id='switchGate' defaultChecked={homeSecuritySettings[3].enabled} onChange={(e) => PutHomeSecuritySettings(accountId, homeSecuritySettings[3].deviceGroup, homeSecuritySettings[3].enabled)} />)}</Td>
                         </Tr>
                     </Tbody>
                 </Table>
