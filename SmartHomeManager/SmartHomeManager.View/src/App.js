@@ -7,6 +7,7 @@ import Profiles from "./pages/Profiles";
 import Director from "./pages/Director";
 import Backup from "./pages/Backup";
 import HomeSecuritySettings from "./pages/HomeSecuritySettings";
+import HomeSecurityTriggering from "./pages/HomeSecurityTriggering"
 import Intruder from "./pages/Intruder";
 import Configuration from "./pages/Configuration";
 import EnergyProfile from "./pages/EnergyProfile";
@@ -64,6 +65,7 @@ export function App() {
                         <Route path="/director" element={<Director />} />
                         <Route path="/backup" element={<Backup />} />
                         <Route path="/homesecuritysettings" element={<HomeSecuritySettings />} />
+                        <Route path="/homesecuritytriggering" element={<HomeSecurityTriggering />} />
                         <Route path="/intruder" element={<Intruder />} />
                         <Route path="/configuration" element={<Configuration />} />
                         <Route path="/energyProfile" element={<EnergyProfile />} />

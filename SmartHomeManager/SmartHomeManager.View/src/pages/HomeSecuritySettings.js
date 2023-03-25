@@ -191,6 +191,10 @@ export default function HomeSecuritySettings() {
             <Link href='/intruder' isExternal>
                 Intruder Page (temp) <ExternalLinkIcon mx='2px' />
             </Link>
+            <br></br>
+            <Link href='/homesecuritytriggering' isExternal>
+                Triggering Page (temp) <ExternalLinkIcon mx='2px' />
+            </Link>
         </Container>
     )
 
