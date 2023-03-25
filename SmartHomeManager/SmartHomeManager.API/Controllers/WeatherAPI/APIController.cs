@@ -24,6 +24,11 @@ namespace SmartHomeManager.API.Controllers.WeatherAPI
 		{
 			return await _apiServices.GetAllAPIData();
 		}
+		[HttpGet("getAPIData1")]
+		public async Task<IDictionary<string, string>> GetAllAPIData1()
+		{
+			return await _apiServices.getAPIData();
+		}
 
 
 
