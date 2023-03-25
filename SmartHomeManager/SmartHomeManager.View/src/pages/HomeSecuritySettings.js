@@ -104,9 +104,9 @@ export default function HomeSecuritySettings() {
             .then(() => getHomeSecuritySettings())
     }, []);
 
-    const PutAlertedState = async (accountId, state) => {
+    const PutLockdownState = async (accountId, state) => {
         try {
-            const response = await fetch(`https://localhost:7140/api/HomeSecurity/`, {
+            const response = await fetch(`https://localhost:7140/api/HomeSecurity/PutLockDownState/${accountId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -114,7 +114,7 @@ export default function HomeSecuritySettings() {
                 body: JSON.stringify({ state: state })
             })
             if (response.ok) {
-                setCurrentSecurityMode(!currentSecurityMode)
+                
             } else {
                 console.error(response.statusText)
             }
@@ -237,11 +237,10 @@ export default function HomeSecuritySettings() {
                             </AlertDialogBody>
 
                             <AlertDialogFooter>
-                                <Button colorScheme='red' onClick={onClose}>
+                                <Button colorScheme='red' onClick={() => { onClose(); PutLockdownState(accountId, true); }}>
                                     Lockdown
                                 </Button>
-                                {/*PutAlertedState(accountId, false)*/}
-                                <Button colorScheme='yellow' ref={cancelRef} onClick={e => { onClose;  }} ml={3}>
+                                <Button colorScheme='yellow' ref={cancelRef} onClick={() => { onClose(); PutLockdownState(accountId, false); }} ml={3}>
                                     Cancel Alert
                                 </Button>
                                 <Button colorScheme='blue' onClick={onClose} ml={3}>
@@ -295,10 +294,6 @@ export default function HomeSecuritySettings() {
                 </Box>
                 <Text fontSize='sm' textAlign='center'>Device Trigger Logs</Text>
             </Box>
-            <br></br>
-            <Link href='/intruder' isExternal>
-                Intruder Page (temp) <ExternalLinkIcon mx='2px' />
-            </Link>
             <br></br>
             <Link href='/homesecuritytriggering' isExternal>
                 Triggering Page (temp) <ExternalLinkIcon mx='2px' />
