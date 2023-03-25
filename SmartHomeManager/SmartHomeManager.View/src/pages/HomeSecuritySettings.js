@@ -36,6 +36,7 @@ export default function HomeSecuritySettings() {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [accountId, setAccountId] = useState("11111111-1111-1111-1111-111111111111")
     const [alertedState, setAlertedState] = useState(false)
+    const [lockdownState, setLockdownState] = useState(false)
     const [currentSecurityMode, setCurrentSecurityMode] = useState(false)
     const [homeSecuritySettings, setHomeSecuritySettings] = useState([])
     const [deviceLog, setDeviceLog] = useState([])
@@ -46,6 +47,18 @@ export default function HomeSecuritySettings() {
             const response = await fetch(`https://localhost:7140/api/HomeSecurity/IsAccountAlerted?AccountId=${accountId}`)
             if (response.status == 200) {
                 setAlertedState(await response.json())
+            }
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+
+    async function getLockdownState() {
+        try {
+            const response = await fetch(`https://localhost:7140/api/HomeSecurity/IsAccountLockedDown?AccountId=${accountId}`)
+            if (response.status == 200) {
+                setLockdownState(await response.json())
             }
         }
         catch (error) {
@@ -100,21 +113,22 @@ export default function HomeSecuritySettings() {
 
     useEffect(() => {
         getAlertedState()
+            .then(() => getLockdownState())
             .then(() => getHomeSecurity())
             .then(() => getHomeSecuritySettings())
     }, []);
 
-    const PutLockdownState = async (accountId, state) => {
+    const PutLockdownState = async (accountId, securityMode) => {
         try {
             const response = await fetch(`https://localhost:7140/api/HomeSecurity/PutLockDownState/${accountId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ state: state })
+                body: JSON.stringify({ securityMode: securityMode })
             })
             if (response.ok) {
-                
+
             } else {
                 console.error(response.statusText)
             }
@@ -189,10 +203,10 @@ export default function HomeSecuritySettings() {
             console.log(obj)
             tableRows.push(
                 <Tbody>
-                <Tr>
-                    <Td>{index + 1}</Td>
-                    <Td>{obj}</Td>
-                </Tr>
+                    <Tr>
+                        <Td>{index + 1}</Td>
+                        <Td>{obj}</Td>
+                    </Tr>
                 </Tbody>
             )
         })
@@ -210,6 +224,43 @@ export default function HomeSecuritySettings() {
 
         if (dataLoaded && !alertedState) {
             return (<></>)
+        }
+
+        if (dataLoaded && alertedState && lockdownState) {
+            return (
+                <>
+                    <AlertDialog
+                        closeOnOverlayClick={false}
+                        isOpen={isOpen}
+                        leastDestructiveRef={cancelRef}
+                        onClose={onClose}
+                    >
+                        <AlertDialogOverlay>
+                            <AlertDialogContent>
+                                <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+                                    Intruder Detected!
+                                </AlertDialogHeader>
+
+                                <AlertDialogBody>
+                                    Select &#34;Cancel Alert&#34; to lower alert.
+                                </AlertDialogBody>
+                                <AlertDialogBody>
+                                    &#34;Contact Police&#34; will contact the authorities.
+                                </AlertDialogBody>
+
+                                <AlertDialogFooter>
+                                    <Button colorScheme='yellow' ref={cancelRef} onClick={() => { onClose(); PutLockdownState(accountId, false); location.reload(); }} ml={3}>
+                                        Cancel Alert
+                                    </Button>
+                                    <Button colorScheme='blue' onClick={onClose} ml={3}>
+                                        Contact Police
+                                    </Button>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialogOverlay>
+                    </AlertDialog>
+                </>
+            )
         }
 
         return (
@@ -232,19 +283,13 @@ export default function HomeSecuritySettings() {
                             <AlertDialogBody>
                                 Select &#34;Cancel Alert&#34; to lower alert.
                             </AlertDialogBody>
-                            <AlertDialogBody>
-                                &#34;Contact Police&#34; will contact the authorities.
-                            </AlertDialogBody>
 
                             <AlertDialogFooter>
-                                <Button colorScheme='red' onClick={() => { onClose(); PutLockdownState(accountId, true); }}>
+                                <Button colorScheme='red' onClick={() => { onClose(); PutLockdownState(accountId, true); location.reload(); }}>
                                     Lockdown
                                 </Button>
-                                <Button colorScheme='yellow' ref={cancelRef} onClick={() => { onClose(); PutLockdownState(accountId, false); }} ml={3}>
+                                <Button colorScheme='yellow' ref={cancelRef} onClick={() => { onClose(); PutLockdownState(accountId, false); location.reload(); }} ml={3}>
                                     Cancel Alert
-                                </Button>
-                                <Button colorScheme='blue' onClick={onClose} ml={3}>
-                                    Contact Police
                                 </Button>
                             </AlertDialogFooter>
                         </AlertDialogContent>
@@ -288,7 +333,7 @@ export default function HomeSecuritySettings() {
                 <Box overflowY="auto" minHeight="300px" maxHeight="300px" >
                     <TableContainer>
                         <Table variant='simple'>
-                            { renderSomeList() }
+                            {renderSomeList()}
                         </Table>
                     </TableContainer>
                 </Box>

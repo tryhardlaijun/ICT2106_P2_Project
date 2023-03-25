@@ -33,7 +33,6 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
         private readonly IDirectorServices _directorInterface;
         public HomeSecurityServices(IHomeSecurityRepository<HomeSecurity> homeSecurityRepo, IHomeSecuritySettingRepository<HomeSecuritySetting> homeSecuritySettingRepo, IHomeSecurityDeviceDefinitionRepository<HomeSecurityDeviceDefinition> homeSecurityDeviceDefinitionRepo, IDirectorServices directorServices)
         {
-            alertedAccounts.Add(new Guid("11111111-1111-1111-1111-111111111111"));
             _homeSecurityRepository = homeSecurityRepo;
             _homeSecuritySettingRepository = homeSecuritySettingRepo;
             _homeSecurityDeviceDefinitionRepository = homeSecurityDeviceDefinitionRepo;
@@ -106,7 +105,11 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
         }
 
         /*
-         * TOWRITE
+         * Function is called whenever a device changes state.
+         * Checks if device in question is a notable one (in detectorDeviceGroups), then checks that 
+         * SecurityModeState is true for accountID of device, then checks if 
+         * device trigger matches detection signature.
+         * If all checks pass, accountID is added to alertedAccounts.
          */
         public async void processEventAsync(Guid accountID, string deviceGroup, string configurationKey, int configurationValue)
         {
@@ -138,7 +141,7 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
 
                     finalString = triggeredDevice + " has detected " + correspondingKey + "!";
                     triggeredDeviceLog.Add(new KeyValuePair<Guid, string>(accountID, finalString));
-                    foreach(KeyValuePair<Guid, string> devicelog in triggeredDeviceLog)
+                    foreach (KeyValuePair<Guid, string> devicelog in triggeredDeviceLog)
                     {
                         Console.WriteLine(devicelog.Value);
                     }
@@ -148,7 +151,7 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
         }
 
         /*
-         * TOWRITE
+         * Called by Frontend to get a boolean based on if accountId is found in alertedAccounts.
          */
         public bool isAccountAlerted(Guid accountID)
         {
@@ -156,7 +159,7 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
         }
 
         /*
-         * TOWRITE
+         * Called by Frontend to get a boolean based on if accountId is found in lockedDownAccounts.
          */
         public bool isAccountLockedDown(Guid accountID)
         {
@@ -212,12 +215,15 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
             return false;
         }
 
+        /*
+         * TOWRITE
+         */
         public List<string> getTriggeredDeviceLogs(Guid accountID)
         {
             List<string> deviceLogs = new List<string>();
-            foreach(KeyValuePair<Guid, string> triggeredlog in triggeredDeviceLog)
+            foreach (KeyValuePair<Guid, string> triggeredlog in triggeredDeviceLog)
             {
-                if(triggeredlog.Key == accountID)
+                if (triggeredlog.Key == accountID)
                 {
                     deviceLogs.Add(triggeredlog.Value);
                 }
@@ -226,16 +232,13 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
         }
 
         /*
-         * TOWRITE
+         * Called by Frontend to choose lockdown state.
+         * True: Adds accountID to lockedDownAccounts.
+         * False: Removes accountID from alertedAccounts & lockedDownAccounts.
+         * Finally: Calls director function to trigger all activated devices in accountID's HomeSecuritySettings.
          */
         public void setLockdownState(Guid accountID, bool securityModeState)
         {
-            // called by front end
-            // after user selects state when lockdown prompt
-            // or when turning off lockdown
-            // calls director's executeSecurityProtocol(boolean, HomeSecurityDeviceDefinitions)
-
-
             if (securityModeState)
             {
                 lockedDownAccounts.Add(accountID);
@@ -246,6 +249,14 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
                 lockedDownAccounts.Remove(accountID);
             }
 
+            for (int i = 0; i < alertedAccounts.Count; i++)
+            {
+                Console.WriteLine("alert: " + alertedAccounts[i]);
+            }
+            for (int i = 0; i < lockedDownAccounts.Count; i++)
+            {
+                Console.WriteLine("lock: " + lockedDownAccounts[i]);
+            }
 
             // _directorInterface.executeSecurityProtocol(accountID, securityModeState, );
         }

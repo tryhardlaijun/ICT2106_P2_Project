@@ -43,7 +43,7 @@ namespace SmartHomeManager.API;
 public class Program
 {
     public static async Task Main(string[] args)
-    {
+   {
         var builder = WebApplication.CreateBuilder(args);
 
         // For allowing React to communicate with API
