@@ -13,4 +13,20 @@ function MenuItems({scenarios, buttonUpdate}){
 	)
 }
 
-export default MenuItems;
+function RulesMenuItems({typeOfRules, buttonUpdate}){
+	const DisplayData = typeOfRules.map((rule=>{
+		return <MenuItem key={rule.id} onClick={()=>buttonUpdate(rule)}>{rule.name}</MenuItem>
+	}))
+	return(
+		<MenuList>
+			{DisplayData}
+		</MenuList>
+	)
+}
+
+
+// export default MenuItems;
+export default{
+	MenuItems,
+	RulesMenuItems,
+};

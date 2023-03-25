@@ -11,32 +11,22 @@ using Rule = SmartHomeManager.Domain.SceneDomain.Entities.Rule;
 
 namespace SmartHomeManager.Domain.SceneDomain.Services
 {
-    public class RuleServices
+    public class RuleServices: IGetRulesService
     {
         private readonly IGenericRepository<Rule> _ruleRepository;
+        private readonly IGetRulesRepository _getRuleRepository;
         private readonly IInformDirectorServices _informDirectorServices;
 
         //Initialise the service by passing the repo
-
-        public RuleServices(IGenericRepository<Rule> ruleRepository, IInformDirectorServices informDirectorServices)
+        public RuleServices(IGenericRepository<Rule> ruleRepository,IGetRulesRepository getRulesRepository, IInformDirectorServices informDirectorServices)
         {
             _ruleRepository = ruleRepository;
             _informDirectorServices = informDirectorServices;
+            _getRuleRepository = getRulesRepository;
         }
 
-        //Get all
-        public async Task<IEnumerable<Rule>> GetAllRulesAsync()
-        {
-            return await _ruleRepository.GetAllAsync();
-        }
-
-        //Get using id
-        public async Task<Rule?> GetRuleByIdAsync(Guid id)
-        {
-            return await _ruleRepository.GetByIdAsync(id);
-        }
-
-        //Create
+        #region CRUD Region
+        //Create Rule
         public async Task<bool> CreateRuleAsync(Rule rule)
         {
             if (await _ruleRepository.AddAsync(rule))
@@ -44,11 +34,10 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
                 _informDirectorServices.InformRuleChangesAsync(rule.RuleId, 'c');
                 return true;
             }
-
             return false;
         }
 
-        //Update
+        //Update Rule
         public async Task<bool> EditRuleAsync(Rule rule)
         {
             if (await _ruleRepository.UpdateAsync(rule))
@@ -56,7 +45,6 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
                 _informDirectorServices.InformRuleChangesAsync(rule.RuleId, 'u');
                 return true;
             }
-
             return false;
         }
 
@@ -69,10 +57,48 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
                 return true;
 
             }
-
             return false;
         }
 
+        #region Provided Interface
+        // Get all rules associated with scenario
+        public async Task<IEnumerable<Rule?>> GetAllRulesByScenarioIdAsync(Guid ScenarioId)
+        {
+            return await _getRuleRepository.GetAllRulesByScenarioIdAsync(ScenarioId);
+        }
+
+        public async Task<IEnumerable<Rule?>> GetEventsByScenarioIdAsync(Guid ScenarioId)
+        {
+            return await _getRuleRepository.GetEventsByScenarioIdAsync(ScenarioId);
+        }
+
+        public async Task<IEnumerable<Rule?>> GetApisByScenarioIdAsync(Guid ScenarioId)
+        {
+            return await _getRuleRepository.GetApiByScenarioIdAsync(ScenarioId);
+        }
+
+        public async Task<IEnumerable<Rule?>> GetSchedulesByScenarioIdAsync(Guid ScenarioId)
+        {
+            return await _getRuleRepository.GetSchedulesByScenarioIdAsync(ScenarioId);
+        }
+
+
+        //Get using id
+        public async Task<Rule?> GetRuleByIdAsync(Guid id)
+        {
+            return await _ruleRepository.GetByIdAsync(id);
+        }
+
+        //Get all the rules 
+        public async Task<IEnumerable<Rule>> GetAllRulesAsync()
+        {
+            return await _ruleRepository.GetAllAsync();
+        }
+        #endregion
+
+        #endregion
+
+        // Upload the json file
         public async Task<bool> UploadRules(IFormFile file)
         {
             var allCurrentRules = await GetAllRulesAsync();
@@ -107,6 +133,15 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
 				return false;
             }
         }
+
+        public async Task<byte[]> DownloadRules(Guid ScenarioId)
+        {
+            var allRules = await GetAllRulesByScenarioIdAsync(ScenarioId);
+            var ruleJson = JsonConvert.SerializeObject(allRules.ToList(), Formatting.Indented);
+            return Encoding.UTF8.GetBytes(ruleJson);
+        }
+
+        // Detect clashes
         public async Task<bool> RuleClashesAsync(RuleRequest rule)
         {
             var existingRules = await GetAllRulesAsync();
@@ -132,8 +167,5 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
             }
             return false; // no clash found
         }
-
     }
-
 }
-
