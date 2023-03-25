@@ -84,7 +84,7 @@ export default function HomeSecuritySettings() {
         }
     };
 
-    const PutHomeSecuritySettings = async (accountId, deviceGroup, newEnabled, index) => {
+    const PutHomeSecuritySettings = async (accountId, deviceGroup, newEnabled) => {
         try {
             const response = await fetch(`https://localhost:7140/api/HomeSecurity/PutHomeSecuritySettings/${accountId}`, {
                 method: 'PUT',
@@ -93,9 +93,7 @@ export default function HomeSecuritySettings() {
                 },
                 body: JSON.stringify({ deviceGroup: deviceGroup, enabled: !newEnabled })
             })
-            if (response.ok) {
-                /*homeSecuritySettings[index].enabled = !newEnabled*/
-            } else {
+            if (!response.ok) {
                 console.error(response.statusText)
             }
         } catch (error) {
