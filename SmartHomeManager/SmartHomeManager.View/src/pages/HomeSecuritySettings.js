@@ -19,7 +19,13 @@ import {
     useToast,
     Button,
     ButtonGroup,
-    Link
+    Link,
+    AlertDialog,
+    AlertDialogBody,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogContent,
+    AlertDialogOverlay
 } from '@chakra-ui/react'
 
 import { ExternalLinkIcon } from '@chakra-ui/icons'
@@ -29,9 +35,22 @@ import { tab } from "@testing-library/user-event/dist/tab";
 export default function HomeSecuritySettings() {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [accountId, setAccountId] = useState("11111111-1111-1111-1111-111111111111")
+    const [alertedState, setAlertedState] = useState(false)
     const [currentSecurityMode, setCurrentSecurityMode] = useState(false)
     const [homeSecuritySettings, setHomeSecuritySettings] = useState([])
     const [dataLoaded, setDataLoaded] = useState(false);
+
+    async function getAlertedState() {
+        try {
+            const response = await fetch(`https://localhost:7140/api/HomeSecurity/IsAccountAlerted?AccountId=${accountId}`)
+            if (response.status == 200) {
+                setAlertedState(await response.json())
+            }
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
 
     async function getHomeSecurity() {
         try {
@@ -61,10 +80,29 @@ export default function HomeSecuritySettings() {
     }
 
     useEffect(() => {
-        getHomeSecurity()
+        getAlertedState()
+            .then(() => getHomeSecurity())
             .then(() => getHomeSecuritySettings())
     }, []);
-    //}, [homeSecuritySettings]);
+
+    const PutAlertedState = async (accountId, state) => {
+        try {
+            const response = await fetch(`https://localhost:7140/api/HomeSecurity/`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ state: state })
+            })
+            if (response.ok) {
+                setCurrentSecurityMode(!currentSecurityMode)
+            } else {
+                console.error(response.statusText)
+            }
+        } catch (error) {
+            console.error(error)
+        }
+    };
 
     const PutSecurityMode = async (accountId, newSecurityMode) => {
         try {
@@ -130,8 +168,60 @@ export default function HomeSecuritySettings() {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
+    function AlertDialogExample() {
+        const { isOpen, onOpen, onClose } = useDisclosure({ defaultIsOpen: true })
+        const cancelRef = React.useRef()
+
+        if (dataLoaded && !alertedState) {
+            return (<></>)
+        }
+
+        return (
+            <>
+                <AlertDialog
+                    closeOnOverlayClick={false}
+                    isOpen={isOpen}
+                    leastDestructiveRef={cancelRef}
+                    onClose={onClose}
+                >
+                    <AlertDialogOverlay>
+                        <AlertDialogContent>
+                            <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+                                Intruder Detected!
+                            </AlertDialogHeader>
+
+                            <AlertDialogBody>
+                                Select &#34;Lockdown&#34; to enter lockdown mode!
+                            </AlertDialogBody>
+                            <AlertDialogBody>
+                                Select &#34;Cancel Alert&#34; to lower alert.
+                            </AlertDialogBody>
+                            <AlertDialogBody>
+                                &#34;Contact Police&#34; will contact the authorities.
+                            </AlertDialogBody>
+
+                            <AlertDialogFooter>
+                                <Button colorScheme='red' onClick={onClose}>
+                                    Lockdown
+                                </Button>
+                                {/*PutAlertedState(accountId, false)*/}
+                                <Button colorScheme='yellow' ref={cancelRef} onClick={e => { onClose;  }} ml={3}>
+                                    Cancel Alert
+                                </Button>
+                                <Button colorScheme='blue' onClick={onClose} ml={3}>
+                                    Contact Police
+                                </Button>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialogOverlay>
+                </AlertDialog>
+            </>
+        )
+    }
+
     return (
         <Container maxW='container.sm'>
+            {AlertDialogExample()}
             <Box textAlign='center' h='80px'>
                 <Heading>Home Security Settings</Heading>
             </Box>

@@ -62,8 +62,6 @@ export function App() {
         }
     }, 5000);
 
-
-
     return (
         <>
             <Router>
