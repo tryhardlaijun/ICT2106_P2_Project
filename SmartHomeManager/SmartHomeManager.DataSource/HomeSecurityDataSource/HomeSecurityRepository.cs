@@ -35,7 +35,7 @@ namespace SmartHomeManager.DataSource.HomeSecurityDataSource
 
         public async Task<HomeSecurity?> GetByAccountIdAsync(Guid accountId)
         {
-            return await _applicationDbContext.HomeSecurities.Where(r => r.AccountId == accountId).FirstAsync();
+            return await _applicationDbContext.HomeSecurities.Where(r => r.AccountId == accountId).FirstOrDefaultAsync();
         }
 
 

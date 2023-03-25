@@ -30,8 +30,7 @@ namespace SmartHomeManager.API.Controllers.HomeSecurityAPI
         [HttpGet("GetSecurityMode")]
         public async Task<bool> GetHomeSecurity(Guid accountId)
         {
-            var homeSecurity = await _homeSecurityService.getSecurityMode(accountId);
-            return homeSecurity.SecurityModeState;
+            return await _homeSecurityService.getSecurityState(accountId);
         }
 
         // GET: api/HomeSecurity

@@ -29,41 +29,41 @@ export default function HomeSecuritySettings() {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [accountId, setAccountId] = useState("11111111-1111-1111-1111-111111111111")
     const [currentSecurityMode, setCurrentSecurityMode] = useState(false)
-    const [homeSecuritySettings, sethomeSecuritySettings] = useState([])
+    const [homeSecuritySettings, setHomeSecuritySettings] = useState([])
     const [dataLoaded, setDataLoaded] = useState(false);
 
-    useEffect(() => {
-        const getHomeSecurity = async () => {
-            try {
-                const response = await fetch(`https://localhost:7140/api/HomeSecurity/GetSecurityMode?AccountId=${accountId}`)
-                if (response.status == 200) {
-                    setCurrentSecurityMode(await response.json())
-                }
+    async function getHomeSecurity() {
+        try {
+            const response = await fetch(`https://localhost:7140/api/HomeSecurity/GetSecurityMode?AccountId=${accountId}`)
+            if (response.status == 200) {
+                setCurrentSecurityMode(await response.json())
             }
-            catch (error) {
-                console.log(error);
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+
+    async function getHomeSecuritySettings() {
+        try {
+            const response = await fetch(`https://localhost:7140/api/HomeSecurity/GetHomeSecuritySettings?AccountId=${accountId}`)
+            if (response.status == 200) {
+                setHomeSecuritySettings(await response.json())
             }
-        };
-        getHomeSecurity();
-    }, [currentSecurityMode]);
+        }
+        catch (error) {
+            console.log(error);
+        }
+        finally {
+            setDataLoaded(true)
+        }
+    }
 
     useEffect(() => {
-        const getHomeSecuritySettings = async () => {
-            try {
-                const response = await fetch(`https://localhost:7140/api/HomeSecurity/GetHomeSecuritySettings?AccountId=${accountId}`)
-                if (response.status == 200) {
-                    sethomeSecuritySettings(await response.json())
-                }
-            }
-            catch (error) {
-                console.log(error);
-            }
-            finally {
-                setDataLoaded(true)
-            }
-        };
-        getHomeSecuritySettings();
-    }, [homeSecuritySettings]);
+        getHomeSecurity()
+            .then(() => getHomeSecuritySettings())
+    }, []);
+    //}, [homeSecuritySettings]);
 
     const PutSecurityMode = async (accountId, newSecurityMode) => {
         try {
@@ -93,13 +93,41 @@ export default function HomeSecuritySettings() {
                 },
                 body: JSON.stringify({ deviceGroup: deviceGroup, enabled: !newEnabled })
             })
-            if (!response.ok) {
+            if (response.ok) {
+                let newArr = [...homeSecuritySettings];
+
+                // locate array index of device group
+                var index = newArr.findIndex(function (item, i) {
+                    return item.deviceGroup == deviceGroup
+                });
+
+                // invert enabled value
+                newArr[index].enabled = !(newArr[index].enabled)
+            } else {
                 console.error(response.statusText)
             }
         } catch (error) {
             console.error(error)
         }
     };
+
+    function renderDeviceGroups() {
+        const tableRows = []
+        homeSecuritySettings.forEach(function (obj) {
+            tableRows.push(<Tr>
+                <Td>{capitalizeFirstLetter(obj.deviceGroup)}</Td>
+                <Td><Switch id={obj.deviceGroup} defaultChecked={obj.enabled}
+                    onChange={(e) => PutHomeSecuritySettings(accountId, obj.deviceGroup, obj.enabled)} />
+                </Td>
+            </Tr>)
+        })
+
+        return tableRows
+    }
+
+    function capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
 
     return (
         <Container maxW='container.sm'>
@@ -110,7 +138,6 @@ export default function HomeSecuritySettings() {
                 <SimpleGrid columns={2} spacingX='40px' spacingY='20px' padding='4px'>
                     <Text fontSize='lg' textAlign='center'>Activate HomeSecurity</Text>
                     {dataLoaded && (<Switch id='switchMasterActivation' defaultChecked={currentSecurityMode} onChange={(e) => PutSecurityMode(accountId, currentSecurityMode)} />)}
-                    {/*{console.log("fish " + dataLoaded + " " + currentSecurityMode)}*/}
                 </SimpleGrid>
             </Box>
 
@@ -126,22 +153,7 @@ export default function HomeSecuritySettings() {
                         </Tr>
                     </Thead>
                     <Tbody>
-                        <Tr>
-                            <Td>Door</Td>
-                            <Td>{dataLoaded && (<Switch id='switchDoor' defaultChecked={homeSecuritySettings[0].enabled} onChange={(e) => PutHomeSecuritySettings(accountId, homeSecuritySettings[0].deviceGroup, homeSecuritySettings[0].enabled)} />)}</Td>
-                        </Tr>
-                        <Tr>
-                            <Td>Window</Td>
-                            <Td>{dataLoaded && (<Switch id='switchWindow' defaultChecked={homeSecuritySettings[1].enabled} onChange={(e) => PutHomeSecuritySettings(accountId, homeSecuritySettings[1].deviceGroup, homeSecuritySettings[1].enabled)} />)}</Td>
-                        </Tr>
-                        <Tr>
-                            <Td>Alarm</Td>
-                            <Td>{dataLoaded && (<Switch id='switchAlarm' defaultChecked={homeSecuritySettings[2].enabled} onChange={(e) => PutHomeSecuritySettings(accountId, homeSecuritySettings[2].deviceGroup, homeSecuritySettings[2].enabled)} />)}</Td>
-                        </Tr>
-                        <Tr>
-                            <Td>Gate</Td>
-                            <Td>{dataLoaded && (<Switch id='switchGate' defaultChecked={homeSecuritySettings[3].enabled} onChange={(e) => PutHomeSecuritySettings(accountId, homeSecuritySettings[3].deviceGroup, homeSecuritySettings[3].enabled)} />)}</Td>
-                        </Tr>
+                        {dataLoaded && renderDeviceGroups()}
                     </Tbody>
                 </Table>
             </TableContainer>
