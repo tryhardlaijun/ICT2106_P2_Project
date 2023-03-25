@@ -15,10 +15,13 @@ namespace SmartHomeManager.Domain.EnergyProfileDomain.Services
     public class EnergyProfileServices : IEnergyProfileServices
     {
         private readonly IEnergyProfileRepository<EnergyProfile> _energyProfileRepository;
+        private Dictionary<string, List<string>> whiteListConfigValues = new Dictionary<string, List<string>>();
 
         public EnergyProfileServices(IEnergyProfileRepository<EnergyProfile> energyProfileRepository)
         {
             _energyProfileRepository = energyProfileRepository;
+            whiteListConfigValues.Add("TEMPERATURE", new List<string> { "16", "32", "negative" });
+            whiteListConfigValues.Add("SPEED", new List<string> { "1", "10", "positive" });
         }
 
         public async Task<IEnumerable<EnergyProfile>> GetAllEnergyProfilesAsync()
@@ -46,31 +49,18 @@ namespace SmartHomeManager.Domain.EnergyProfileDomain.Services
             return await _energyProfileRepository.UpdateConfigValueAsync(accountId, configValue);
         }
 
-        public async Task<int> getRevisedConfigValue(Guid deviceID, string configurationKey, int configurationValue)
+        public async Task<int> getRevisedConfigValue(Guid accountID, Guid deviceID, string configurationKey, int configurationValue)
         {
-            //blacklisted config keys
-            string[] blackListedConfigKeys = new string[] { "Color", "Light" };
-            if (blackListedConfigKeys.Contains(configurationKey))
-            {
-                return configurationValue;
-            }
+            //whitelisted config keys
+            if(!whiteListConfigValues.ContainsKey(configurationKey)) return configurationValue;
 
             // Simulate using function from EnergyEfficiency Analytics
             double efficiencyIndex = GetDeviceEnergyEfficiency(deviceID);
 
-            // whitelisted config keys. values are min, max, direction
-            Dictionary<string, List<string>> allConfigValues = new Dictionary<string, List<string>>();
-            allConfigValues.Add("AC", new List<string> { "16", "32", "negative" });
-            allConfigValues.Add("Fan", new List<string> { "1", "10", "positive" });
-            allConfigValues.Add("Heater", new List<string> { "32", "40", "positive" });
-
             //Simulate another function from IDeviceInfoService
-            List<int> configValues = ConfigValueRange(allConfigValues[configurationKey]);
+            List<int> configValues = ConfigValueRange(whiteListConfigValues[configurationKey]);
 
-            // Hardcoded accountId
-            Guid accountId = new Guid("11111111-1111-1111-1111-111111111111");
-            EnergyProfile energyProfile = await GetEnergyProfileAsync(accountId);
-            //Console.WriteLine("value: " + energyProfile.ConfigurationValue);
+            EnergyProfile energyProfile = await GetEnergyProfileAsync(accountID);
 
             if (energyProfile == null)
             {
@@ -80,8 +70,6 @@ namespace SmartHomeManager.Domain.EnergyProfileDomain.Services
 
             Console.WriteLine(newConfigurationValue);
             return newConfigurationValue;
-
-            //return configurationValue;
         }
 
         // Simulate implementation of function from EnergyEfficiency Analytics
