@@ -27,8 +27,8 @@ namespace SmartHomeManager.API.Controllers.BackupAPI
         [HttpPost("restoreBackup")]
         public async Task<ActionResult> restoreBackup([FromBody]BackupRuleWebRequest backupRuleRequest) //public async Task<List<Rule>> loadBackupRule(Guid scenarioId)
         {
-            var scenarios = await _backupServices.loadBackupScenario(backupRuleRequest.profileId);
-            var rules = await _backupServices.loadBackupRule(backupRuleRequest.profileId, backupRuleRequest.backupId); //backupRuleRequest.profileId, 
+            var scenarios = await _backupServices.loadBackupScenario(backupRuleRequest.profileId, backupRuleRequest.scenarioIdList);
+            var rules = await _backupServices.loadBackupRule(backupRuleRequest.profileId, backupRuleRequest.backupId, backupRuleRequest.scenarioIdList); //backupRuleRequest.profileId, 
             if (rules != null && scenarios != null) {
                 return Ok(rules);
             }
@@ -42,7 +42,7 @@ namespace SmartHomeManager.API.Controllers.BackupAPI
         [HttpGet("loadBackupScenario/{profileId}")]
         public async Task<List<BackupScenario>> loadBackupScenarioGet(Guid profileId) //public async Task<List<Scenario>> loadBackupScenario(Guid profileId)
         {
-            return await _backupServices.loadBackupScenario(profileId);
+            return await _backupServices.loadBackupScenario(profileId, new List<Guid>() );
         }
 
         /*[HttpPost("loadBackupScenario")]
