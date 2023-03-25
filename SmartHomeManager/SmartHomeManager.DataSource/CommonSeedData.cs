@@ -1,4 +1,5 @@
-﻿using SmartHomeManager.Domain.AccountDomain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.APIDomain.Entities;
 using SmartHomeManager.Domain.DeviceDomain.Entities;
 using SmartHomeManager.Domain.DeviceLoggingDomain.Entities;
@@ -21,7 +22,7 @@ namespace SmartHomeManager.DataSource
         public static async Task Seed(ApplicationDbContext context)
         {
             // Delete all existing database objects
-            /*context.Accounts.RemoveRange(context.Accounts);
+            context.Accounts.RemoveRange(context.Accounts);
             await context.SaveChangesAsync();
 
             context.Profiles.RemoveRange(context.Profiles);
@@ -33,7 +34,11 @@ namespace SmartHomeManager.DataSource
             context.DeviceCoordinates.RemoveRange(context.DeviceCoordinates);
 
             context.RuleHistories.RemoveRange(context.RuleHistories);
-            context.DeviceProducts.RemoveRange(context.DeviceProducts);*/
+            context.DeviceProducts.RemoveRange(context.DeviceProducts);
+
+            context.APIDatas.RemoveRange(context.APIDatas);
+            context.APIKeys.RemoveRange(context.APIKeys);
+            context.APIValues.RemoveRange(context.APIValues);
 
             await context.SaveChangesAsync();
 
@@ -338,76 +343,85 @@ namespace SmartHomeManager.DataSource
 			await context.APIKeys.AddRangeAsync(apiKey);
 			await context.SaveChangesAsync();
 
-			var apiValue = new List<APIValue>
-			{
-				new APIValue
-				{
-					APIKeyType = apiKey[0].APIKeyType,
-					APIValues = string.Empty
+            var apiValue = new List<APIValue>
+            {
+                new APIValue
+                {
+                    APIValueId = new Guid(),
+                    APIKeyType = apiKey[0].APIKeyType,
+                    APIValues = string.Empty
+
+                },
+                new APIValue
+                {
+                    APIValueId = new Guid(),
+                    APIKeyType = apiKey[1].APIKeyType,
+                    APIValues = string.Empty
+
+                },
+                new APIValue
+                {
+                    APIValueId = new Guid(),
+                    APIKeyType = apiKey[2].APIKeyType,
+                    APIValues = string.Empty
+
+                },
+                new APIValue
+                {
+                    APIValueId = new Guid(),
+                    APIKeyType = apiKey[3].APIKeyType,
+                    APIValues = "Sunny"
+
+                },
+                new APIValue
+                {
+                    APIValueId = new Guid(),
+                    APIKeyType = apiKey[3].APIKeyType,
+                    APIValues = "Showers"
+
+                },
+                new APIValue
+                {
+                    APIValueId = new Guid(),
+                    APIKeyType = apiKey[3].APIKeyType,
+                    APIValues = "Thundery Showers"
+
+                },
+                new APIValue
+                {
+                    APIValueId = new Guid(),
+                    APIKeyType = apiKey[3].APIKeyType,
+                    APIValues = "Cloudy"
+
+                },
+                new APIValue
+                {
+                    APIValueId = new Guid(),
+                    APIKeyType = apiKey[3].APIKeyType,
+                    APIValues = "Partly Cloudy"
+
+                },
+                new APIValue
+                {
+                    APIValueId = new Guid(),
+                    APIKeyType = apiKey[3].APIKeyType,
+                    APIValues = "Light Rain"
+
+                },
+                new APIValue
+                {
+                    APIValueId = new Guid(),
+                    APIKeyType = apiKey[3].APIKeyType,
+                    APIValues = "Moderate Rain"
+
+                }
+            };
+
+            await context.APIValues.AddRangeAsync(apiValue);
+            await context.SaveChangesAsync();
 
 
-				},
-				new APIValue
-				{
-					APIKeyType = apiKey[1].APIKeyType,
-					APIValues = string.Empty
-
-				},
-				new APIValue
-				{
-					APIKeyType = apiKey[2].APIKeyType,
-					APIValues = string.Empty
-
-				},
-				new APIValue
-				{
-					APIKeyType = apiKey[3].APIKeyType,
-					APIValues = "Sunny"
-
-				},
-				new APIValue
-				{
-					APIKeyType = apiKey[3].APIKeyType,
-					APIValues = "Showers"
-
-				},
-				new APIValue
-				{
-					APIKeyType = apiKey[3].APIKeyType,
-					APIValues = "Thundery Showers"
-
-				},
-				new APIValue
-				{
-					APIKeyType = apiKey[3].APIKeyType,
-					APIValues = "Cloudy"
-
-				},
-				new APIValue
-				{
-					APIKeyType = apiKey[3].APIKeyType,
-					APIValues = "Partly Cloudy"
-
-				},
-				new APIValue
-				{
-					APIKeyType = apiKey[3].APIKeyType,
-					APIValues = "Light Rain"
-
-				},
-				new APIValue
-				{
-					APIKeyType = apiKey[3].APIKeyType,
-					APIValues = "Moderate Rain"
-
-				}
-			};
-
-			await context.APIValues.AddRangeAsync(apiValue);
-			await context.SaveChangesAsync();
-
-
-			Random rnd = new Random();
+            Random rnd = new Random();
             var DeviceLogs = new List<DeviceLog>();
             for (int j = 13; j < 13 + 7; j++)
             {
