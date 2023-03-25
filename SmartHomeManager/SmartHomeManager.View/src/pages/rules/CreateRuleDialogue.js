@@ -63,8 +63,7 @@ export default function CreateRuleDialogue() {
     const [options, setOption] = useState([
         {key:"1",value:"options1",name:"Schedule",url:"/scenario/create/schedule-rule"},
         {key:"2",value:"options2",name:"Event",url:"/scenario/create/action-rule"},
-        {key:"3",value:"options3",name:"API",url:"/scenario/create/api-rule"},
-        {key:"4",value:"options4",name:"Test",url:"/scenario/create/api-rule"}])
+        {key:"3",value:"options3",name:"API",url:"/scenario/create/api-rule"}])
 
     const handleButtonClick = () => {
         console.log("Test")

@@ -5,11 +5,13 @@ import {
 	FormControl,
 	FormLabel,
 	Input,
+	Heading,
 	Select,
 } from "@chakra-ui/react";
 
-function FormCard({ ruleInfo, updateForm }) {
+function FormCard({ ruleInfo, updateForm, updateOption, stateInfo }) {
     let originalDevice = ruleInfo.deviceId;
+	const name = stateInfo?"Update Schedule":"Add New Schedule";
     let startTime = ruleInfo.startTime ? toSgTime(ruleInfo.startTime): "--:--:--"
     let endTime = ruleInfo.endTime ? toSgTime(ruleInfo.endTime): "--:--:--"
     function toSgTime(sqlTime) {
@@ -30,6 +32,12 @@ function FormCard({ ruleInfo, updateForm }) {
         return newDate
       }
 
+	function returnDeviceName(deviceID){
+		if(deviceID == "33333333-3333-3333-3333-333333333333"){
+			return "FAN Room 1"
+		}
+	}
+
     function toSqlTime(sgTime) {
         console.log(sgTime);
         let date = new Date();
@@ -40,6 +48,9 @@ function FormCard({ ruleInfo, updateForm }) {
       }
 	return (
 		<>
+		<Heading w="100%" textAlign={"center"} fontWeight="normal" mb="2%">
+			{name}
+		</Heading>
 			<Input
 				variant="unstyled"
 				textAlign="center"
@@ -95,28 +106,29 @@ function FormCard({ ruleInfo, updateForm }) {
 						}}
 					>
 						<option value={originalDevice}>
-							{ruleInfo.deviceId}
+							{returnDeviceName(ruleInfo.deviceId)}
 						</option>
+					</Select>
+				</FormControl>			
+			</Flex>
+			<Flex mt="2%">
+				<FormControl mr="5%">
+					<FormLabel>Action</FormLabel>
+					<Select placeholder="Select option" value={stateInfo?stateInfo.configurationKey:null}
+					onChange={(e)=>{
+						updateForm({configurationKey: e.target.value})
+					}}>
+						<option value="speed">Speed</option>
+						<option value="oscillation">Oscillation</option>
 					</Select>
 				</FormControl>
 				<FormControl>
-					<FormLabel>Action</FormLabel>
-					<Select
-                    value={ruleInfo.configurationValue}
-						placeholder="Select option"
-						onChange={(e) => {
-							const selectedOption = e.target.selectedOptions[0];
-							const selectedKey = selectedOption.innerText;
-							const selectedValue = selectedOption.value;
-							updateForm({
-								configurationKey: selectedKey,
-								configurationValue: selectedValue,
-							});
-                            console.log(selectedKey);
-						}}
-					>
-						<option value={0}>Dim</option>
-						<option value={1}>Turn On</option>
+					<FormLabel>Value</FormLabel>
+					<Select placeholder="Select option" value={stateInfo?stateInfo.configurationValue:null}
+					onChange={(e)=>{
+						updateForm({configurationValue: parseInt(e.target.value)})
+					}}>	
+						{updateOption(ruleInfo)}						
 					</Select>
 				</FormControl>
 			</Flex>

@@ -14,8 +14,8 @@ import { useToast } from "@chakra-ui/react";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 
-function FormCard({ ruleInfo, updateForm }) {
-	const name = "Scencerio Name";
+function FormCard({ ruleInfo, updateForm, updateOption }) {
+	const name = "Create New Schedule";
 	let startTime = ruleInfo.startTime==="" ? "00:00:00":new Date(ruleInfo.startTime).toLocaleTimeString("en-SG",{hour12: false});
 	let endTime = ruleInfo.endTime==="" ? "00:00:00":new Date(ruleInfo.endTime).toLocaleTimeString("en-SG",{hour12: false});
 	let originalDevice = ruleInfo.deviceId
@@ -75,7 +75,7 @@ function FormCard({ ruleInfo, updateForm }) {
 						<option value={originalDevice}>{ruleInfo.deviceId}</option>
 					</Select>
 				</FormControl>
-				<FormControl>
+				{/* <FormControl>
 					<FormLabel>Action</FormLabel>
 					<Select placeholder="Select option"
 					onChange={(e)=>{
@@ -83,6 +83,27 @@ function FormCard({ ruleInfo, updateForm }) {
 					}}>
 						<option value={0}>Dim</option>
 						<option value={1}>Turn On</option>
+					</Select>
+				</FormControl> */}
+			</Flex>
+			<Flex mt="2%">
+				<FormControl mr="5%">
+					<FormLabel>Action</FormLabel>
+					<Select placeholder="Select option"
+					onChange={(e)=>{
+						updateForm({configurationKey: e.target.value})
+					}}>
+						<option value="speed">Speed</option>
+						<option value="oscillation">Oscillation</option>
+					</Select>
+				</FormControl>
+				<FormControl>
+					<FormLabel>Value</FormLabel>
+					<Select placeholder="Select option"
+					onChange={(e)=>{
+						updateForm({configurationValue: parseInt(e.target.value)})
+					}}>	
+						{updateOption(ruleInfo)}						
 					</Select>
 				</FormControl>
 			</Flex>
@@ -127,6 +148,28 @@ export default function SchRule() {
 		}})
 	}
 
+	function renderOptions(ruleDetail){
+		if(ruleDetail.configurationKey=="speed"){
+			return(
+				<>
+				<option value={0}>1</option>
+				<option value={1}>2</option>
+				<option value={2}>3</option>
+				<option value={3}>4</option>
+				<option value={4}>5</option>
+				</>
+			);
+		}else if(ruleDetail.configurationKey=="oscillation"){
+			return(
+				<>
+				<option value={0}>Turn On</option>
+				<option value={1}>Turn Off</option>
+				</>
+			);
+		}
+		return null;
+	}
+
 	return (
 		<>
 			<Box
@@ -142,6 +185,7 @@ export default function SchRule() {
 					<FormCard
 						ruleInfo={ruleDetail}
 						updateForm={updateDetails}
+						updateOption={renderOptions}
 					/>
 					<Button
 						mt="2%"

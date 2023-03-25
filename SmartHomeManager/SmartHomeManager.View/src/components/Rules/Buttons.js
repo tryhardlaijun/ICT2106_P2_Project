@@ -2,18 +2,13 @@ import { Button, Td } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-function Buttons({props, deleteRule}) {
+function Buttons({props, deleteRule,editButton}) {
 	const [isDeleted, setIsDeleted] = useState(false);
 	console.log(props);
 	return (
 		<Td>
 			<Button ml={2} colorScheme="blue">
-				<Link
-					to={`/scenario/edit/${props.ruleId}`}
-					state={props.props}
-				>
-					Edit
-				</Link>
+				{editButton({props})}
 			</Button>
 			<Button
 				ml={2}
