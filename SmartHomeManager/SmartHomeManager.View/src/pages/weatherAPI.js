@@ -50,20 +50,23 @@ export default function WeatherAPI() {
                         <Thead>
                             <Tr>
                                 <Th>Timestamp</Th>
-                                <Th>Version</Th>
-                                <Th></Th>
+                                <Th>Type</Th>
+                                <Th>Value</Th>
+                                <Th>Specification</Th>
                             </Tr>
                         </Thead>
                         <Tbody>
                                 {
                                     APIList.map((item_type, count) => {
-                                        let ts = new Date(item_type.TimeStamp)
+                                        let ts = new Date(item_type.timeStamp)
 
                                     return (
                                         <Tr key={count+1}>
                                             <Td>{ts.toLocaleDateString('en-GB') + ' ' + ts.toLocaleTimeString('en-GB')}</Td>
-                                            <Td>v{count}</Td>
-                                            <Td display="none">{item_type.APIDataId}</Td>
+                                            <Td display="none">{item_type.apiDataId}</Td>
+                                            <Td>{item_type.type}</Td>
+                                            <Td >{item_type.value}</Td>
+                                            <Td>{item_type.specification}</Td>
                                             
                                         </Tr>
                                     )
