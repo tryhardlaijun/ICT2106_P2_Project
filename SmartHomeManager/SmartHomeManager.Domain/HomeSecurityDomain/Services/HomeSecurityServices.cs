@@ -18,9 +18,9 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
 {
     public class HomeSecurityServices : IHomeSecurityServices
     {
-        private List<Guid> alertedAccounts = new List<Guid>();
-        private List<Guid> lockedDownAccounts = new List<Guid>();
-        private List<KeyValuePair<Guid, string>> triggeredDeviceLog = new List<KeyValuePair<Guid, string>>();
+        private static List<Guid> alertedAccounts = new List<Guid>();
+        private static List<Guid> lockedDownAccounts = new List<Guid>();
+        private static List<KeyValuePair<Guid, string>> triggeredDeviceLog = new List<KeyValuePair<Guid, string>>();
         private IEnumerable<HomeSecurityDeviceDefinition>? homeSecurityDeviceDefinitions;
         List<string> detectorDeviceGroups = new List<string>() {
             "camera", "microphone"
@@ -34,8 +34,6 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
         public HomeSecurityServices(IHomeSecurityRepository<HomeSecurity> homeSecurityRepo, IHomeSecuritySettingRepository<HomeSecuritySetting> homeSecuritySettingRepo, IHomeSecurityDeviceDefinitionRepository<HomeSecurityDeviceDefinition> homeSecurityDeviceDefinitionRepo, IDirectorServices directorServices)
         {
             alertedAccounts.Add(new Guid("11111111-1111-1111-1111-111111111111"));
-            triggeredDeviceLog.Add(new KeyValuePair<Guid, string>(new Guid("11111111-1111-1111-1111-111111111111"), "Camera has detected Motion!!"));
-            triggeredDeviceLog.Add(new KeyValuePair<Guid, string>(new Guid("11111111-1111-1111-1111-111111111111"), "Microphone has detected Sound!!"));
             _homeSecurityRepository = homeSecurityRepo;
             _homeSecuritySettingRepository = homeSecuritySettingRepo;
             _homeSecurityDeviceDefinitionRepository = homeSecurityDeviceDefinitionRepo;
