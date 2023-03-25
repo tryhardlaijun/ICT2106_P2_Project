@@ -1,4 +1,5 @@
 ﻿using SmartHomeManager.Domain.AccountDomain.Entities;
+using SmartHomeManager.Domain.APIDomain.Entities;
 using SmartHomeManager.Domain.DeviceDomain.Entities;
 using SmartHomeManager.Domain.DeviceLoggingDomain.Entities;
 using SmartHomeManager.Domain.DeviceStoreDomain.Entities;
@@ -306,7 +307,107 @@ namespace SmartHomeManager.DataSource
             await context.Histories.AddRangeAsync(history);
             await context.SaveChangesAsync();
 
-            Random rnd = new Random();
+			var apiKey = new List<APIKey>
+			{
+				new APIKey
+				{
+					APIKeyType = "temperature_less_than",
+					APILabelText = "Temperature less than"
+
+				},
+				new APIKey
+				{
+					APIKeyType = "temperature_equals_to",
+					APILabelText = "Temperature Equals to"
+
+				},
+				new APIKey
+				{
+					APIKeyType = "temperature_more_than",
+					APILabelText = "Temperature More than"
+
+				},
+				new APIKey
+				{
+					APIKeyType = "weather",
+					APILabelText = "Weather"
+
+				},
+			};
+
+			await context.APIKeys.AddRangeAsync(apiKey);
+			await context.SaveChangesAsync();
+
+			var apiValue = new List<APIValue>
+			{
+				new APIValue
+				{
+					APIKeyType = apiKey[0].APIKeyType,
+					APIValues = string.Empty
+
+
+				},
+				new APIValue
+				{
+					APIKeyType = apiKey[1].APIKeyType,
+					APIValues = string.Empty
+
+				},
+				new APIValue
+				{
+					APIKeyType = apiKey[2].APIKeyType,
+					APIValues = string.Empty
+
+				},
+				new APIValue
+				{
+					APIKeyType = apiKey[3].APIKeyType,
+					APIValues = "Sunny"
+
+				},
+				new APIValue
+				{
+					APIKeyType = apiKey[3].APIKeyType,
+					APIValues = "Showers"
+
+				},
+				new APIValue
+				{
+					APIKeyType = apiKey[3].APIKeyType,
+					APIValues = "Thundery Showers"
+
+				},
+				new APIValue
+				{
+					APIKeyType = apiKey[3].APIKeyType,
+					APIValues = "Cloudy"
+
+				},
+				new APIValue
+				{
+					APIKeyType = apiKey[3].APIKeyType,
+					APIValues = "Partly Cloudy"
+
+				},
+				new APIValue
+				{
+					APIKeyType = apiKey[3].APIKeyType,
+					APIValues = "Light Rain"
+
+				},
+				new APIValue
+				{
+					APIKeyType = apiKey[3].APIKeyType,
+					APIValues = "Moderate Rain"
+
+				}
+			};
+
+			await context.APIValues.AddRangeAsync(apiValue);
+			await context.SaveChangesAsync();
+
+
+			Random rnd = new Random();
             var DeviceLogs = new List<DeviceLog>();
             for (int j = 13; j < 13 + 7; j++)
             {

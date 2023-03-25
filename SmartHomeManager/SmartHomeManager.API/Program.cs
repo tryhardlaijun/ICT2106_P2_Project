@@ -38,6 +38,9 @@ using SmartHomeManager.DataSource.BackupDataSource;
 using SmartHomeManager.Domain.BackupDomain.Interfaces;
 using SmartHomeManager.Domain.BackupDomain.Services;
 using SmartHomeManager.Domain.DeviceDomain.Services;
+using SmartHomeManager.Domain.APIDomain.Interface;
+using SmartHomeManager.Domain.APIDomain.Service;
+using SmartHomeManager.DataSource.APIDataSource;
 
 namespace SmartHomeManager.API;
 
@@ -91,7 +94,13 @@ public class Program
         builder.Services.AddScoped<IBackupRulesService, GetRulesServices>();
         builder.Services.AddScoped<IBackupScenariosService, GetScenariosService>();
 
-        builder.Services.AddScoped<IDirectorControlDeviceService, DeviceService>();
+		//API service
+		builder.Services.AddScoped<IAPIDataRepository, APIDataRepository>();
+		builder.Services.AddScoped<IAPIKeyRepository, APIKeyRepository>();
+		builder.Services.AddScoped<IAPIValueRepository, APIValueRepository>();
+		builder.Services.AddScoped<IAPIDataService, APIDataServices>();
+
+		builder.Services.AddScoped<IDirectorControlDeviceService, DeviceService>();
         builder.Services.AddScoped<ITroubleshooterServices, TroubleshooterServices>();
 
         builder.Services.AddHostedService<DirectorServices>();
