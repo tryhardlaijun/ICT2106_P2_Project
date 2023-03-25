@@ -28,19 +28,40 @@ import SelectNearbyDevice from "pages/SelectNearbyDevice";
 import DeviceConfig from "./pages/DeviceConfig";
 import Report from "pages/Analytics";
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export function App() {
+    const [accountId, setAccountId] = useState("11111111-1111-1111-1111-111111111111")
+
+    async function getIsAccountAlerted() {
+        console.log("checking.")
+        try {
+            const response = await fetch(`https://localhost:7140/api/HomeSecurity/IsAccountAlerted?AccountId=${accountId}`)
+            if (response.status == 200) {
+                return response.json()
+            }
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+
     const toast = useToast();
     useEffect(() => {
-        toast({
-            title: "Error",
-            description: "This is for intrusion",
-            status: "error",
-            duration: 9000,
-            isClosable: true,
-        });
     }, []);
+
+    setInterval(async () => {         
+        if (await getIsAccountAlerted()) {
+            toast({
+                title: "Potential Intrusion Detected!",
+                description: "Click to head to Intrusion Page",
+                status: "error",
+                duration: 5000,
+                isClosable: true,
+            });
+        }
+    }, 5000);
+
 
 
     return (

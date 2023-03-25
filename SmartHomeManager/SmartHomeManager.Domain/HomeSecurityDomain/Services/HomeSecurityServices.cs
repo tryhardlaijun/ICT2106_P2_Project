@@ -31,6 +31,7 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
         private readonly IDirectorServices _directorInterface;
         public HomeSecurityServices(IHomeSecurityRepository<HomeSecurity> homeSecurityRepo, IHomeSecuritySettingRepository<HomeSecuritySetting> homeSecuritySettingRepo, IHomeSecurityDeviceDefinitionRepository<HomeSecurityDeviceDefinition> homeSecurityDeviceDefinitionRepo, IDirectorServices directorServices)
         {
+            alertedAccounts.Add(new Guid("11111111-1111-1111-1111-111111111111"));
             _homeSecurityRepository = homeSecurityRepo;
             _homeSecuritySettingRepository = homeSecuritySettingRepo;
             _homeSecurityDeviceDefinitionRepository = homeSecurityDeviceDefinitionRepo;
