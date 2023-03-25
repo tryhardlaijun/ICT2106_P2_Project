@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
     Heading,
     Container,
@@ -28,19 +28,22 @@ import axios from "axios";
 export default function HomeSecuritySettings() {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [accountId, setAccountId] = useState("11111111-1111-1111-1111-111111111111")
-    const [securityMode, setSecurityMode] = useState(null);
-    var currentSecurityMode = false
+    const [currentSecurityMode, setCurrentSecurityMode] = useState(false)
+    const [dataLoaded, setDataLoaded] = useState(false);
 
     useEffect(() => {
         const getHomeSecurity = async () => {
-            const response = await fetch(`https://localhost:7140/api/HomeSecurity/GetSecurityMode?AccountId=${accountId}`)
-
-            if (response.status == 200) {
-                currentSecurityMode = await response.json();
-                if (currentSecurityMode) {
-                    setSwitch('switchMasterActivation')
+            try {
+                const response = await fetch(`https://localhost:7140/api/HomeSecurity/GetSecurityMode?AccountId=${accountId}`)
+                if (response.status == 200) {
+                    setCurrentSecurityMode(await response.json())
                 }
-                console.log(currentSecurityMode)
+            }
+            catch (error) {
+                console.log(error);
+            }
+            finally {
+                setDataLoaded(true)
             }
         };
         getHomeSecurity();
@@ -53,6 +56,9 @@ export default function HomeSecuritySettings() {
         switchActivation.nextSibling.children[0].setAttribute('data-checked', '')
     }
 
+    function setChecked(id) {
+        document.getElementById(id).setAttribute('checked', '')
+    }
 
     const PutSecurityMode = async (accountId, newSecurityMode) => {
         console.log(currentSecurityMode)
@@ -62,21 +68,22 @@ export default function HomeSecuritySettings() {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ securityMode: newSecurityMode })
+                body: JSON.stringify({ securityMode: !newSecurityMode })
             })
             if (response.ok) {
-                currentSecurityMode = !currentSecurityMode
+                setCurrentSecurityMode(!currentSecurityMode)
             } else {
                 console.error(response.statusText)
             }
         } catch (error) {
-            console.error(error);
+            console.error(error)
         }
-        console.log(currentSecurityMode)
+        finally {
+            console.log(currentSecurityMode)
+        }
     };
 
     return (
-
         <Container maxW='container.sm'>
             <Box textAlign='center' h='80px'>
                 <Heading>Home Security Settings</Heading>
@@ -84,9 +91,11 @@ export default function HomeSecuritySettings() {
             <Box border='2px' borderRadius='16px'>
                 <SimpleGrid columns={2} spacingX='40px' spacingY='20px' padding='4px'>
                     <Text fontSize='lg' textAlign='center'>Activate HomeSecurity</Text>
-                    <Switch id='switchMasterActivation' onChange={(e) => PutSecurityMode(accountId, currentSecurityMode)} />
+                    {dataLoaded && (<Switch id='switchMasterActivation' defaultChecked={currentSecurityMode} onChange={(e) => PutSecurityMode(accountId, currentSecurityMode)} />)}
+                    {console.log("fish " + dataLoaded + " " + currentSecurityMode)}
                 </SimpleGrid>
             </Box>
+
             <br></br>
             {/*isChecked defaultChecked isFocusable isDisabled isInvalid isReadOnly isRequired*/}
             <TableContainer border='2px' borderRadius='16px'>
