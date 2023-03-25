@@ -133,7 +133,7 @@ namespace SmartHomeManager.Domain.APIDomain.Service
 		//Creating the values of the keys 
 		public async Task createValuesDetails()
 		{
-			IEnumerable<APIValue> test = await _APIValueRepository.GetallValue();
+			IEnumerable<APIValue> test = await _APIValueRepository.GetAllValue();
 
 			if (test.Count() == 0)
 			{

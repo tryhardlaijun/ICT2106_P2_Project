@@ -1,11 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using SmartHomeManager.Domain.AccountDomain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.Domain.APIDomain.Entities;
 using SmartHomeManager.Domain.APIDomain.Service;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,9 +36,10 @@ namespace SmartHomeManager.DataSource.APIDataSource
 			
 		}
 
-		public async Task<IEnumerable<APIValue>> GetallValue()
+		public async Task<IEnumerable<APIValue>> GetAllValue()
 		{
 			return await _applicationDbContext.APIValues.ToListAsync();
+
 
 		}
 

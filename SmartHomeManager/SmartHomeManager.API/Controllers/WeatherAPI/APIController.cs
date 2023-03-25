@@ -26,5 +26,12 @@ namespace SmartHomeManager.API.Controllers.WeatherAPI
 		}
 
 
+		[HttpGet("getAPIValue")]
+		public async Task GetAllAPIValue()
+		{
+			await _apiServices.createValuesDetails();
+		}
+
+
 	}
 }
