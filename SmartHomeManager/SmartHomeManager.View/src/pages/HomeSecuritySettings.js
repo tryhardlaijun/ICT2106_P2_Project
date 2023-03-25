@@ -29,6 +29,8 @@ export default function HomeSecuritySettings() {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [accountId, setAccountId] = useState("11111111-1111-1111-1111-111111111111")
     const [currentSecurityMode, setCurrentSecurityMode] = useState(false)
+    const [homeSecuritySettings, sethomeSecuritySettings] = useState([])
+    const [homeSecuritySettingsEnabled, sethomeSecuritySettingsEnabled] = useState(false,false,false,false)
     const [dataLoaded, setDataLoaded] = useState(false);
 
     useEffect(() => {
@@ -42,26 +44,29 @@ export default function HomeSecuritySettings() {
             catch (error) {
                 console.log(error);
             }
+        };
+        getHomeSecurity();
+    }, [currentSecurityMode]);
+
+    useEffect(() => {
+        const getHomeSecuritySettings = async () => {
+            try {
+                const response = await fetch(`https://localhost:7140/api/HomeSecurity/GetHomeSecuritySettings?AccountId=${accountId}`)
+                if (response.status == 200) {
+                    sethomeSecuritySettings(await response.json())
+                }
+            }
+            catch (error) {
+                console.log(error);
+            }
             finally {
                 setDataLoaded(true)
             }
         };
-        getHomeSecurity();
-    }, []);
-
-    function setSwitch(id) {
-        const switchActivation = document.getElementById(id)
-        switchActivation.parentElement.setAttribute('data-checked', '')
-        switchActivation.nextSibling.setAttribute('data-checked', '')
-        switchActivation.nextSibling.children[0].setAttribute('data-checked', '')
-    }
-
-    function setChecked(id) {
-        document.getElementById(id).setAttribute('checked', '')
-    }
+        getHomeSecuritySettings();
+    }, [homeSecuritySettings]);
 
     const PutSecurityMode = async (accountId, newSecurityMode) => {
-        console.log(currentSecurityMode)
         try {
             const response = await fetch(`https://localhost:7140/api/HomeSecurity/PutSecurityMode/${accountId}`, {
                 method: 'PUT',
@@ -78,9 +83,28 @@ export default function HomeSecuritySettings() {
         } catch (error) {
             console.error(error)
         }
-        finally {
-            console.log(currentSecurityMode)
+    };
+
+    const PutHomeSecuritySettings = async (accountId, deviceGroup, newEnabled) => {
+        try {
+            const response = await fetch(`https://localhost:7140/api/HomeSecurity/PutHomeSecuritySettings/${accountId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ deviceGroup: deviceGroup, enabled: newEnabled })
+            })
+            if (!response.ok) {
+                console.error(response.statusText)
+            }
+        } catch (error) {
+            console.error(error)
         }
+    };
+
+    const handleAddEnabled = (newEnabled) => {
+        const newEnables = homeSecuritySettingsEnabled.concat(newEnabled);
+        sethomeSecuritySettingsEnabled(newEnables);
     };
 
     return (
@@ -92,7 +116,7 @@ export default function HomeSecuritySettings() {
                 <SimpleGrid columns={2} spacingX='40px' spacingY='20px' padding='4px'>
                     <Text fontSize='lg' textAlign='center'>Activate HomeSecurity</Text>
                     {dataLoaded && (<Switch id='switchMasterActivation' defaultChecked={currentSecurityMode} onChange={(e) => PutSecurityMode(accountId, currentSecurityMode)} />)}
-                    {console.log("fish " + dataLoaded + " " + currentSecurityMode)}
+                    {/*{console.log("fish " + dataLoaded + " " + currentSecurityMode)}*/}
                 </SimpleGrid>
             </Box>
 
@@ -110,19 +134,19 @@ export default function HomeSecuritySettings() {
                     <Tbody>
                         <Tr>
                             <Td>Door</Td>
-                            <Td><Switch id='switchDoor' /></Td>
+                            <Td>{dataLoaded && (<Switch id='switchDoor' defaultChecked={homeSecuritySettings[0].enabled} onChange={(e) => PutHomeSecuritySettings(accountId, homeSecuritySettings[0].deviceGroup)} />)}</Td>
                         </Tr>
                         <Tr>
                             <Td>Window</Td>
-                            <Td><Switch id='switchWindow' /></Td>
+                            <Td>{dataLoaded && (<Switch id='switchWindow' defaultChecked={homeSecuritySettings[1].enabled} onChange={(e) => PutHomeSecuritySettings(accountId, homeSecuritySettings[1].deviceGroup)} />)}</Td>
                         </Tr>
                         <Tr>
                             <Td>Alarm</Td>
-                            <Td><Switch id='switchAlarm' /></Td>
+                            <Td>{dataLoaded && (<Switch id='switchAlarm' defaultChecked={homeSecuritySettings[2].enabled} onChange={(e) => PutHomeSecuritySettings(accountId, homeSecuritySettings[2].deviceGroup)} />)}</Td>
                         </Tr>
                         <Tr>
                             <Td>Gate</Td>
-                            <Td><Switch id='switchGate' /></Td>
+                            <Td>{dataLoaded && (<Switch id='switchGate' defaultChecked={homeSecuritySettings[3].enabled} onChange={(e) => PutHomeSecuritySettings(accountId, homeSecuritySettings[3].deviceGroup)} />)}</Td>
                         </Tr>
                     </Tbody>
                 </Table>
