@@ -1,8 +1,13 @@
 import { Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, ModalCloseButton, useDisclosure } from "@chakra-ui/react";
 import React from "react";
+import { Link } from "react-router-dom";
 
 function ModalButton(props) {
-    const { isOpen, onOpen, onClose } = useDisclosure()
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const redirectTo = {
+        pathname: "/troubleshooters",
+        search: `?deviceType=${props.deviceType}&configMsg=${props.configMsg}`,
+    };
     return (
         <>
             <Button onClick={onOpen} ml={2} colorScheme="whatsapp">{props.title}</Button>
@@ -11,15 +16,18 @@ function ModalButton(props) {
                 <ModalOverlay />
                 <ModalContent>
                     <ModalHeader>{props.title}</ModalHeader>
+
                     <ModalCloseButton />
                     <ModalBody>
-                        {    props.text}
+                        {props.text}
+
                     </ModalBody>
                     <ModalFooter>
                         <Button colorScheme='blue' mr={3} onClick={onClose}>
                             Close
                         </Button>
-                        <Button variant='solid' colorScheme ="orange">{props.action}</Button>
+                        <Button variant='solid' colorScheme="orange"><Link to={redirectTo}>Troubleshoot</Link></Button>
+
                     </ModalFooter>
                 </ModalContent>
             </Modal>

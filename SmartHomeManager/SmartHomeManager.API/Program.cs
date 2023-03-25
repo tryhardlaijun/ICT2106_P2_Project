@@ -88,7 +88,8 @@ public class Program
         builder.Services.AddScoped<IGenericRepository<HomeSecurity>, HomeSecurityRepository>();
         builder.Services.AddScoped<IGenericRepository<HomeSecuritySetting>, HomeSecuritySettingRepository>();
         builder.Services.AddScoped<IHomeSecurityDeviceDefinitionRepository<HomeSecurityDeviceDefinition>, HomeSecurityDeviceDefinitionRepository>();
-
+        builder.Services.AddScoped<IGenericRepository<Troubleshooter>, TroubleshootRepository>();
+        builder.Services.AddScoped<IGetTroubleshooterService, GetTroubleshooterServices>();
         
 
         // builder.Services.AddHostedService<DirectorServices>();

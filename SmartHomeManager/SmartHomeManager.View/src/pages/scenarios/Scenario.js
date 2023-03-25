@@ -26,6 +26,8 @@ export default function Scenarios() {
 	let [searchParams, setSearchParams] = useSearchParams();
 	
 	const toast = useToast();
+	const deviceTypeFilter = "Fan";
+	const configurationKeyFilter = "Unable to oscillate";
 
 	/**
 	 * @param {string} id
@@ -212,7 +214,14 @@ export default function Scenarios() {
 					/>
 					<ModalButton
 						title="Simulate Troubleshooting"
+						text="Device fan seems to be unable to oscillate"
 						action="Try again"
+						redirectTo={{
+							pathname: "/troubleshooters",
+							state: { deviceTypeFilter, configurationKeyFilter },
+						}}
+						deviceType="Fan"
+						configMsg="Unable to oscillate"
 					/>
 				</Box>
 			</Box>

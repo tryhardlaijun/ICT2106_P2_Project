@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartHomeManager.DataSource;
 
@@ -10,12 +11,14 @@ using SmartHomeManager.DataSource;
 namespace SmartHomeManager.DataSource.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230224055430_TroublershooterEdit")]
+    partial class TroublershooterEdit
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "7.0.3");
+            modelBuilder.HasAnnotation("ProductVersion", "7.0.2");
 
             modelBuilder.Entity("SmartHomeManager.Domain.APIDomain.Entities.APIData", b =>
                 {
@@ -766,15 +769,20 @@ namespace SmartHomeManager.DataSource.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ConfigurationKey")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("DeviceType")
+                    b.Property<string>("DeviceTypeName")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Recommendation")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("TroubleshooterId");
+
+                    b.HasIndex("DeviceTypeName");
 
                     b.ToTable("Troubleshooters");
                 });
@@ -1049,6 +1057,17 @@ namespace SmartHomeManager.DataSource.Migrations
                         .IsRequired();
 
                     b.Navigation("Profile");
+                });
+
+            modelBuilder.Entity("SmartHomeManager.Domain.SceneDomain.Entities.Troubleshooter", b =>
+                {
+                    b.HasOne("SmartHomeManager.Domain.DeviceDomain.Entities.DeviceType", "DeviceType")
+                        .WithMany()
+                        .HasForeignKey("DeviceTypeName")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DeviceType");
                 });
 
             modelBuilder.Entity("SmartHomeManager.Domain.AccountDomain.Entities.Profile", b =>

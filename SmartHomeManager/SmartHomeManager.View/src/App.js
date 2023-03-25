@@ -25,6 +25,7 @@ import RegisterDevice from "./pages/RegisterDevice";
 import SelectNearbyDevice from "pages/SelectNearbyDevice";
 import DeviceConfig from "./pages/DeviceConfig";
 import Report from "pages/Analytics";
+import Troubleshooter from "./pages/troubleshooter/Troubleshooter";
 import CreateRuleDialogue from "pages/rules/CreateRuleDialogue";
 import ApiRule from "pages/rules/ApiRule";
 
@@ -56,6 +57,7 @@ export function App() {
             <Route path="/configuration" element={<Configuration />} />
             <Route path="/energyProfile" element={<EnergyProfile />} />
             <Route path="/scenario" element={<Scenario />} />
+            <Route path="/troubleshooters" element={<Troubleshooter />} />
             <Route
               path="/scenario/create/action-rule"
               element={<ActionRule />}
