@@ -232,7 +232,6 @@ export default function Scenarios() {
 							setShowRuleOption(true);
 						}}>		
 						Add Rule				
-						{/* <Link to="/scenario/create/create-dialogue">Add Rule</Link> */}
 					</Button>
 				</Box>
 				

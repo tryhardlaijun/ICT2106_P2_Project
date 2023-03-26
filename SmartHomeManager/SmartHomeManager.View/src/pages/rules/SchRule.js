@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Box, Button } from "@chakra-ui/react";
-import { useNavigate , useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 import FormCard from "components/Rules/FormCard";
+import OverwriteRuleDialogue from "pages/rules/OverwriteRuleDialogue";
 
 export default function SchRule() {
+	const [showRuleOption, setShowRuleOption] = useState(false);
+	const [clashedRule, setClashedRule] = useState("");
 	const location = useLocation();
 	const navigate = useNavigate();
 	const toast = useToast();
@@ -24,7 +27,7 @@ export default function SchRule() {
 		apiKey: "",
 		apiValue: "",
 	});
-	
+
 	function updateDetails(value) {
 		return setRuleDetail((prev) => {
 			return { ...prev, ...value };
@@ -33,7 +36,7 @@ export default function SchRule() {
 
 	async function createRule() {
 		const newRule = { ...ruleDetail };
-		console.log("this is rule info "+ location.state)
+		console.log("this is rule info " + location.state)
 		const url = newFlag
 			? "https://localhost:7140/api/Rules/CreateRule"
 			: "https://localhost:7140/api/Rules/EditRule";
@@ -45,29 +48,40 @@ export default function SchRule() {
 		});
 	}
 	async function checkIfClash(ruleReq) {
-		await axios.post("https://localhost:7140/api/Rules/CheckIfClash", ruleReq, {
+		const response = await axios.post("https://localhost:7140/api/Rules/CheckIfClash", ruleReq, {
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+		return response;
+	}
+
+	async function OverwriteRules(ruleReq) {
+		const response = await axios.post("https://localhost:7140/api/Rules/OverWrite", ruleReq, {
 			headers: {
 				"Content-Type": "application/json",
 			},
 		})
+
+		return response;
 	}
 
-	function renderOptions(ruleDetail){
-		if(ruleDetail.configurationKey=="speed"){
-			return(
+	function renderOptions(ruleDetail) {
+		if (ruleDetail.configurationKey == "speed") {
+			return (
 				<>
-				<option value={0}>1</option>
-				<option value={1}>2</option>
-				<option value={2}>3</option>
-				<option value={3}>4</option>
-				<option value={4}>5</option>
+					<option value={0}>1</option>
+					<option value={1}>2</option>
+					<option value={2}>3</option>
+					<option value={3}>4</option>
+					<option value={4}>5</option>
 				</>
 			);
-		}else if(ruleDetail.configurationKey=="oscillation"){
-			return(
+		} else if (ruleDetail.configurationKey == "oscillation") {
+			return (
 				<>
-				<option value={0}>Turn On</option>
-				<option value={1}>Turn Off</option>
+					<option value={0}>Turn On</option>
+					<option value={1}>Turn Off</option>
 				</>
 			);
 		}
@@ -90,14 +104,36 @@ export default function SchRule() {
 			isClosable: true,
 		});
 	}
-
+	async function handleCreateAndEditRule() {
+		try {
+			const success = await createRule();
+			toast({
+				title: "Rule created.",
+				description: "Rule Successfully added to the DB",
+				status: "success",
+				duration: 3000,
+				isClosable: true,
+			});
+			navigate("/Scenario");
+		} catch (error) {
+			toast({
+				title: "Error Creating Rule.",
+				description: "Something went wrong",
+				status: "error",
+				duration: 3000,
+				isClosable: true,
+			});
+		}
+	}
 	const handleSubmit = async () => {
 		console.log(ruleDetail)
 		let returnCode = ""
+		let clashedTitle = ""
 		await checkIfClash(ruleDetail).then(() => {
 		}).catch((err) => {
 			console.error(err)
 			returnCode = err.response.status
+			clashedTitle = (err.response.data.ruleName)
 		})
 		// console.log("see this\n" + returnCode)
 		//console.log(typeof(returnCode))
@@ -105,30 +141,28 @@ export default function SchRule() {
 			makeToast("Error Invalid Rule.", "Something went wrong.", "error", 3000);
 		}
 		else if (returnCode == "409") {
-			makeToast("Rule creation failed.", "There is a clash with an existing rule.", "error", 3000);
+			setShowRuleOption(true);
+			setClashedRule(clashedTitle)
 		}
 		else {
-			try {
-				const success = await createRule();
-				toast({
-					title: "Rule created.",
-					description: "Rule Successfully added to the DB",
-					status: "success",
-					duration: 3000,
-					isClosable: true,
-				});
-				navigate("/Scenario");
-			} catch (error) {
-				toast({
-					title: "Error Creating Rule.",
-					description: "Something went wrong",
-					status: "error",
-					duration: 3000,
-					isClosable: true,
-				});
-			}
+			handleCreateAndEditRule()
 		}
 	};
+	const handleOverwrite = async () => {
+		try {
+			const success = await OverwriteRules(ruleDetail);
+			handleCreateAndEditRule()
+		} catch (error) {
+			toast({
+				title: "Error Overwrite Rule.",
+				description: "Something went wrong",
+				status: "error",
+				duration: 3000,
+				isClosable: true,
+			});
+		}
+	};
+
 
 	useEffect(() => {
 		if (location.state) {
@@ -165,10 +199,21 @@ export default function SchRule() {
 						variant="solid"
 						onClick={handleSubmit}
 					>
-						 {location.state ? "Update" : "Create"}
+						{location.state ? "Update" : "Create"}
 					</Button>
 				</form>
 			</Box>
+			{showRuleOption && (
+				<OverwriteRuleDialogue
+					Close={() => {
+						setShowRuleOption(false);
+					}}
+					OverwriteCallBack={() => {
+						handleOverwrite()
+					}}
+					Title={clashedRule}
+				/>
+			)}
 		</>
 	);
 }
