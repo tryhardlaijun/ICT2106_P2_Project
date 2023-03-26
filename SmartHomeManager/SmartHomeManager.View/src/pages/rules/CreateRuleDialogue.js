@@ -84,8 +84,8 @@ export default function CreateRuleDialogue({Close}) {
 		onClose()
 	}
 	return (		
-			<>
-      <Modal isOpen={isOpen} onClose={onClose}>
+		<>
+		<Modal isOpen={isOpen} onClose={handleClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Create Rule</ModalHeader>

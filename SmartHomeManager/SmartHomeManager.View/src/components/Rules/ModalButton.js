@@ -8,8 +8,12 @@ function ModalButton(props) {
         pathname: "/troubleshooters",
         search: `?deviceType=${props.deviceType}&configMsg=${props.configMsg}`,
     };
+
+        // Initialize the isOpen state to true
+    //const [isModalOpen, setIsModalOpen] = useState(true);
     return (
         <>
+
             <Button onClick={onOpen} ml={2} colorScheme="whatsapp">{props.title}</Button>
 
             <Modal isOpen={isOpen} onClose={onClose}>

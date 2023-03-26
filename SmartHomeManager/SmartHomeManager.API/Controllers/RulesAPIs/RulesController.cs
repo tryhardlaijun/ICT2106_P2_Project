@@ -247,13 +247,29 @@ public class RulesController : ControllerBase
     public async Task<IActionResult> CheckIfClash(RuleRequest ruleRequest)
     {
         var result = await _registerRuleService.RuleClashesAsync(ruleRequest);
-        if (!result)
+        if (result == null)
         {
             return StatusCode(200, ruleRequest);
         }
         else
         {
-            return StatusCode(409, "Clashing with another rule");
+            return StatusCode(409, result);
+        }
+    }
+
+    [HttpPost("OverWrite")]
+    public async Task<IActionResult> Overwrite(RuleRequest ruleRequest)
+    {
+        var clashingRuleRequest = await _registerRuleService.RuleClashesAsync(ruleRequest);
+        if (clashingRuleRequest != null)
+        {
+            await _registerRuleService.DeleteRuleByIdAsync(clashingRuleRequest.RuleId);
+            return StatusCode(200, ruleRequest);
+        }
+        else
+        {
+            return StatusCode(409, "No clashing rule found");
+
         }
     }
 }
