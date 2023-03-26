@@ -108,7 +108,7 @@ export default function HomeSecuritySettings() {
     useEffect(() => {
         setInterval(async () => {
             getAllDeviceLogs()
-        }, 5000);
+        }, 10000);
     }, []);
 
     useEffect(() => {

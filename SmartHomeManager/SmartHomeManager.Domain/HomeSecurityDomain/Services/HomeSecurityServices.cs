@@ -237,7 +237,7 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
          * False: Removes accountID from alertedAccounts & lockedDownAccounts.
          * Finally: Calls director function to trigger all activated devices in accountID's HomeSecuritySettings.
          */
-        public void setLockdownState(Guid accountID, bool securityModeState)
+        public async void setLockdownState(Guid accountID, bool securityModeState)
         {
             if (securityModeState)
             {
@@ -258,7 +258,16 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
                 Console.WriteLine("lock: " + lockedDownAccounts[i]);
             }
 
-            // _directorInterface.executeSecurityProtocol(accountID, securityModeState, );
+            IEnumerable<HomeSecuritySetting> enabledSettings = await getHomeSecuritySettings(accountID);
+            foreach (HomeSecuritySetting setting in enabledSettings)
+            {
+                if(setting.Enabled && securityModeState)
+                {
+                    //Console.WriteLine("Inside Setting Lockdown State " + setting.HomeSecurityDeviceDefinition.DeviceGroup);
+                    _directorInterface.executeSecurityProtocol(accountID, setting.HomeSecurityDeviceDefinition);
+                }
+            }
+            
         }
     }
 }

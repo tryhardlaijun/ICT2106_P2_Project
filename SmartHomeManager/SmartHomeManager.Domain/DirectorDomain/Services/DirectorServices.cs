@@ -172,9 +172,9 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
             }
         }
 
-        public void executeSecurityProtocol(Guid accountId, bool target, HomeSecurityDeviceDefinition homeSecurityDeviceDefinition)
+        public void executeSecurityProtocol(Guid accountId, HomeSecurityDeviceDefinition homeSecurityDeviceDefinition)
         {
-            throw new NotImplementedException();
+            //setDeviceTypeConfig(accountId, homeSecurityDeviceDefinition.DeviceGroup, homeSecurityDeviceDefinition.ConfigurationKey, homeSecurityDeviceDefinition.ConfigurationOnValue);
         }
     }
 }

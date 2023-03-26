@@ -35,7 +35,7 @@ namespace SmartHomeManager.DataSource.HomeSecuritySettingsDataSource
 
         public async Task<IEnumerable<HomeSecuritySetting>> GetAllAsync()
         {
-            return await _applicationDbContext.HomeSecuritySettings.ToListAsync();
+            return await _applicationDbContext.HomeSecuritySettings.Include(hs => hs.HomeSecurityDeviceDefinition).ToListAsync();
         }
 
         public async Task<IEnumerable<HomeSecuritySetting?>> GetByHomeSecurityIdAsync(Guid homeSecurityId)
