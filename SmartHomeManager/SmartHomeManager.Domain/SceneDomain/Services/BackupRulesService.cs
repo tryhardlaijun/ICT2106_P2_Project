@@ -15,7 +15,15 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
 
         public async Task<bool> LoadRulesBackup(Guid profileId, IEnumerable<Rule> rules)
         {
-            return await _backupRulesRepository.LoadRulesBackup(profileId, rules);
+            try
+            {
+                return await _backupRulesRepository.LoadRulesBackup(profileId, rules);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return false;
+            }           
         }
     }
 }
