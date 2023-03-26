@@ -38,23 +38,11 @@ namespace SmartHomeManager.API.Controllers.BackupAPI
             }
         }
 
-        //for fetch scenarios to display in table
-        [HttpGet("loadBackupScenario/{profileId}")]
-        public async Task<List<BackupScenario>> loadBackupScenario(Guid profileId) //public async Task<List<Scenario>> loadBackupScenario(Guid profileId)
+        //for fetch scenarios to display in frontend accordion
+        [HttpGet("getAllBackupScenario/{profileId}")]
+        public async Task<IEnumerable<BackupScenario>> getAllBackupScenarioByProfileID(Guid profileId)
         {
-            return await _backupServices.loadBackupScenario(profileId, new List<Guid>() );
-        }
-
-        [HttpGet("getAllBackupScenario")]
-        public async Task<IEnumerable<BackupScenario>> getAllBackupScenario()
-        {
-            return await _backupServices.getAllBackupScenario();
-        }
-
-        [HttpGet("getAllBackupRule")]
-        public async Task<IEnumerable<BackupRule>> getAllBackupRule()
-        {
-            return await _backupServices.getAllBackupRule();
+            return await _backupServices.getAllBackupScenarioByProfileId(profileId);
         }
     }
 }

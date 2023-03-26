@@ -27,7 +27,7 @@ export default function Backup() {
         //to set profileId(/accountId) in Login.js, using this because it already has rules/scenarios in db
         //not sure if accountId is the same as the profileId saved in Scenarios
         localStorage.setItem('profileId', '22222222-2222-2222-2222-222222222222')
-        fetch("https://localhost:7140/api/Backup/loadBackupScenario/" + localStorage.getItem('profileId'))
+        fetch("https://localhost:7140/api/Backup/getAllBackupScenario/" + localStorage.getItem('profileId'))
             .then((response) => response.json())
             .then((data) => {
                 //console.log(data);

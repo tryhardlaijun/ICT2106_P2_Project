@@ -17,12 +17,7 @@ namespace SmartHomeManager.DataSource.BackupDataSource
         {
             _applicationDbContext = applicationDbContext;
         }
-
-        public async Task<IEnumerable<BackupRule>> GetAllBackupRule()
-        {
-            return await _applicationDbContext.BackupRules.ToListAsync();
-        }
-        public async Task<List<BackupRule>> GetBackupRuleById(Guid backupId)
+        public async Task<List<BackupRule>> GetAllBackupRuleByBackupId(Guid backupId)
         {
             return await _applicationDbContext.BackupRules.Where(r => r.BackupId == backupId).ToListAsync();
         }

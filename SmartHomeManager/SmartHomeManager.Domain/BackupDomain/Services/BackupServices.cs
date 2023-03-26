@@ -22,7 +22,7 @@ namespace SmartHomeManager.Domain.BackupDomain.Services
             _backupScenarioInterface = backupsScenariosService;
         }
 
-
+        //used in director
         public async void createBackup(List<Rule> rulesList, List<Scenario> scenarioList)
         {
             var now = DateTime.Now;
@@ -63,10 +63,11 @@ namespace SmartHomeManager.Domain.BackupDomain.Services
             }
         }
 
+        //used in controller restoreBackup
         public async Task<List<BackupRule>> loadBackupRule(Guid profileId, Guid backupId, List<Guid> scenarioIdList)
         {
             var rulesList = new List<Rule>();
-            var backupRulesList = await _backupRuleRepository.GetBackupRuleById(backupId);
+            var backupRulesList = await _backupRuleRepository.GetAllBackupRuleByBackupId(backupId);
 
             foreach (var backupRule in backupRulesList)
             {
@@ -95,10 +96,12 @@ namespace SmartHomeManager.Domain.BackupDomain.Services
             await _backupRuleInterface.loadRulesBackup(profileId, rulesList);
             return backupRulesList;
         }
+
+        //used in controller restoreBackup
         public async Task<List<BackupScenario>> loadBackupScenario(Guid profileId, List<Guid> scenarioIdList)
         {
             var scenarioList = new List<Scenario>();
-            var backupScenarioList = await _backupScenarioRepository.GetBackupScenarioById(profileId);
+            var backupScenarioList = await _backupScenarioRepository.GetAllBackupScenarioByProfileId(profileId);
             foreach (var backupScenario in backupScenarioList)
             {           
                 if (!scenarioIdList.Any() && scenarioIdList.Contains(backupScenario.ScenarioId))
@@ -119,14 +122,10 @@ namespace SmartHomeManager.Domain.BackupDomain.Services
             return backupScenarioList;
         }
 
-        public async Task<IEnumerable<BackupScenario>> getAllBackupScenario()
+        //used in controller getAllBackupScenario
+        public async Task<IEnumerable<BackupScenario>> getAllBackupScenarioByProfileId(Guid profileId)
         {
-            return await _backupScenarioRepository.GetAllBackupScenario();
-        }
-
-        public async Task<IEnumerable<BackupRule>> getAllBackupRule()
-        {
-            return await _backupRuleRepository.GetAllBackupRule();
+            return await _backupScenarioRepository.GetAllBackupScenarioByProfileId(profileId);
         }
 
         public async void restoreBackupComplete()
