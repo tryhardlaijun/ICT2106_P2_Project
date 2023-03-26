@@ -29,7 +29,9 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
                 EndTime = r.EndTime,
                 DeviceId = r.DeviceId,
                 APIKey = r.APIKey,
-                ApiValue = r.ApiValue
+                ApiValue = r.ApiValue,
+                Device = r.Device,
+                Scenario = r.Scenario
             }).ToList();
             RuleList clone = new RuleList(cloneList);
             return clone;

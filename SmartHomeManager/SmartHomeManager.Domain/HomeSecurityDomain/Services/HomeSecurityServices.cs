@@ -18,7 +18,6 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
         private List<Guid>? alertedAccounts;
         private List<Guid>? lockedDownAccounts;
 
-        private IGenericRepository<HomeSecurity> _homeSecurityRepository;
         private IGenericRepository<HomeSecuritySetting> _homeSecuritySettingRepository;
         private IHomeSecurityDeviceDefinitionRepository<HomeSecurityDeviceDefinition> _homeSecurityDeviceDefinitionRepository;
 
@@ -27,7 +26,6 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
             _serviceProvider = serviceProvider;
 
             var scope = _serviceProvider.CreateScope();
-            _homeSecurityRepository = scope.ServiceProvider.GetRequiredService<IRuleHistoryRepository<HomeSecurity>>();
             _homeSecuritySettingRepository = scope.ServiceProvider.GetRequiredService<IGenericRepository<HomeSecuritySetting>>();
             _homeSecurityDeviceDefinitionRepository = scope.ServiceProvider.GetRequiredService<IHomeSecurityDeviceDefinitionRepository<HomeSecurityDeviceDefinition>>();
         }

@@ -66,8 +66,8 @@ public class Program
         });
 
         // MODULE 3
-        builder.Services.AddScoped<IGenericRepository<History>, DataSource.HistoryDataSource.HistoryRepository>();
-        builder.Services.AddScoped<IRuleHistoryRepository<RuleHistory>, RuleHistoryRepository>();
+        builder.Services.AddScoped<IHistoryRepository, DataSource.HistoryDataSource.HistoryRepository>();
+        builder.Services.AddScoped<IRuleHistoryRepository, RuleHistoryRepository>();
         builder.Services.AddScoped<IGenericRepository<Rule>, RuleRepository>();
         builder.Services.AddScoped<IEnergyProfileRepository<EnergyProfile>, EnergyProfileRepository>();
         builder.Services.AddScoped<IGenericRepository<Scenario>, ScenarioRepository>();

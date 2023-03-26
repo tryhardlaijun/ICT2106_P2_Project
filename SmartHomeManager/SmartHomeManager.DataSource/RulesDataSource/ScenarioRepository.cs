@@ -56,7 +56,7 @@ namespace SmartHomeManager.DataSource.RulesDataSource
 
         public async Task<IEnumerable<Scenario>> GetAllAsync()
         {
-            return await _applicationDbContext.Scenarios.ToListAsync();
+            return await _applicationDbContext.Scenarios.Include(p => p.Profile).ToListAsync();
         }
 
         public async Task<Scenario?> GetByIdAsync(Guid id)

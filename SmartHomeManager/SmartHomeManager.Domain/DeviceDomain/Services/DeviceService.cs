@@ -12,7 +12,7 @@ namespace SmartHomeManager.Domain.DeviceDomain.Services
     {
         public void Update(Guid deviceId, string configKey, int configVal)
         {
-            Console.WriteLine("Updating Device Service");
+            Console.WriteLine(string.Format("Setting device's ({0}) [{1}] to [{2}]",deviceId, configKey, configVal));
         }
     }
 }

@@ -1,15 +1,12 @@
-﻿using SmartHomeManager.Domain.Common;
-using SmartHomeManager.Domain.DirectorDomain.Entities;
+﻿using SmartHomeManager.Domain.DirectorDomain.Entities;
 
 namespace SmartHomeManager.Domain.DirectorDomain.Interfaces
 {
-    /// <summary>
-    /// Most repositories should extend this interface for dependency injection.
-    /// </summary>
-    /// <typeparam name="T">The entity that the repository will handle.</typeparam>
-    public interface IRuleHistoryRepository<T> : IGenericRepository<T> where T : class
+    public interface IRuleHistoryRepository
     {
-        public Task<T?> GetByRuleIdAsync(Guid id);
+        public Task<bool> AddAsync(RuleHistory rh);
+        public Task<IEnumerable<RuleHistory>> GetAllAsync();
+        public Task<RuleHistory?> GetByRuleIdAsync(Guid ruleId);
 
         public Task<int> GetRuleIndexLimitAsync();
 

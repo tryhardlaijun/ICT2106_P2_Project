@@ -23,6 +23,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
                 ScenarioId = r.ScenarioId,
                 ScenarioName = r.ScenarioName,
                 Profile = r.Profile,
+                ProfileId = r.ProfileId,
                 isActive = r.isActive
             }).ToList();
             ScenarioList clone = new ScenarioList(cloneList);
