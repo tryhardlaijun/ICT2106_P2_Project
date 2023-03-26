@@ -15,7 +15,6 @@ function FormCard({ ruleInfo, updateForm, updateOption, stateInfo }) {
     let startTime = ruleInfo.startTime ? toSgTime(ruleInfo.startTime): "--:--:--"
     let endTime = ruleInfo.endTime ? toSgTime(ruleInfo.endTime): "--:--:--"
     function toSgTime(sqlTime) {
-        console.log(sqlTime);
         if(!(sqlTime.includes('Z'))){
             sqlTime = sqlTime+'Z'
         }
@@ -23,12 +22,10 @@ function FormCard({ ruleInfo, updateForm, updateOption, stateInfo }) {
         date.setSeconds(0)
         let newDate = date.toLocaleTimeString('en-SG', { hour12: false }).slice(0,5);
         let [hours] = newDate.split(':')
-        console.log(hours);
         if(hours == '24'){
             date.setHours(0)
             newDate ="00" + newDate.slice(2);
         }
-        console.log(newDate);
         return newDate
       }
 
@@ -38,12 +35,16 @@ function FormCard({ ruleInfo, updateForm, updateOption, stateInfo }) {
 		}
 	}
 
-    function toSqlTime(sgTime) {
-        console.log(sgTime);
+    function toSqlTime(sgTime, flag) {
         let date = new Date();
         let [hours, minutes] = sgTime.split(':');
         date.setHours(hours, minutes, 0,0);
-        console.log(date.toISOString())
+		if(flag){
+			let startTimeDate = new Date(ruleInfo.startTime)
+			if(date < startTimeDate){
+				date.setDate(date.getDate() + 1)
+			}
+		}
         return date.toISOString();
       }
 	return (
@@ -77,8 +78,7 @@ function FormCard({ ruleInfo, updateForm, updateOption, stateInfo }) {
 						type="time"
 						value={startTime}
 						onChange={(e) => {
-                            console.log(e.target.value);
-							updateForm({ startTime: toSqlTime(e.target.value) });
+							updateForm({ startTime: toSqlTime(e.target.value, 0) });
 						}}
 					/>
 				</FormControl>
@@ -90,7 +90,7 @@ function FormCard({ ruleInfo, updateForm, updateOption, stateInfo }) {
 						type="time"
 						value={endTime}
 						onChange={(e) => {
-							updateForm({ endTime: toSqlTime(e.target.value) });
+							updateForm({ endTime: toSqlTime(e.target.value, 1) });
 						}}
 					/>
 				</FormControl>
