@@ -5,7 +5,7 @@ using SmartHomeManager.Domain.SceneDomain.Entities;
 
 namespace SmartHomeManager.Domain.BackupDomain.Services
 {
-    public class BackupServices : IUpdateBackupService, IBackupService
+    public class BackupServices : IBackupService
     {
         private readonly IBackupRuleRepository _backupRuleRepository;
         private readonly IBackupScenarioRepository _backupScenarioRepository;
@@ -128,10 +128,5 @@ namespace SmartHomeManager.Domain.BackupDomain.Services
             return await _backupScenarioRepository.GetAllBackupScenarioByProfileId(profileId);
         }
 
-        public async void restoreBackupComplete()
-        {
-            throw new NotImplementedException();
-            //return wait unpauseTrigger
-        }
     }
 }

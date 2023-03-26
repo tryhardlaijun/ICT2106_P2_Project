@@ -6,7 +6,7 @@ using SmartHomeManager.Domain.APIDomain.Service;
 using SmartHomeManager.Domain.DirectorDomain.Entities;
 using SmartHomeManager.Domain.DirectorDomain.Services;
 
-namespace SmartHomeManager.API.Controllers.WeatherAPI
+namespace SmartHomeManager.API.Controllers.ApiAPI
 {
 	[Route("api/API")]
 	[ApiController]
@@ -18,20 +18,11 @@ namespace SmartHomeManager.API.Controllers.WeatherAPI
 			_apiServices = new(dataRepository,keyRepository, valueRepository);
 		}
 
-
 		[HttpGet("getAPIData")]
 		public async Task<IEnumerable<APIData>> GetAllAPIData()
 		{
 			return await _apiServices.GetAllAPIData();
 		}
-		[HttpGet("getAPIData1")]
-		public async Task<IDictionary<string, string>> GetAllAPIData1()
-		{
-			return await _apiServices.getAPIData();
-		}
-
-
-
 
 	}
 }

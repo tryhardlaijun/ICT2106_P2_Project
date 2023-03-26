@@ -66,13 +66,11 @@ public class Program
         });
 
         // MODULE 3
+
+        // TEAM 1
         builder.Services.AddScoped<IHistoryRepository, DataSource.HistoryDataSource.HistoryRepository>();
         builder.Services.AddScoped<IRuleHistoryRepository, RuleHistoryRepository>();
-        builder.Services.AddScoped<IGenericRepository<Rule>, RuleRepository>();
         builder.Services.AddScoped<IEnergyProfileRepository<EnergyProfile>, EnergyProfileRepository>();
-        builder.Services.AddScoped<IGenericRepository<Scenario>, ScenarioRepository>();
-        builder.Services.AddScoped<IGetRulesService, GetRulesServices>();
-        builder.Services.AddScoped<IGetScenariosService, GetScenariosService>();
         builder.Services.AddScoped<IInformDirectorServices, DirectorServices>();
         builder.Services.AddScoped<IEnergyProfileServices, EnergyProfileServices>();
         builder.Services.AddScoped<IGenericRepository<HomeSecurity>, HomeSecurityRepository>();
@@ -80,28 +78,25 @@ public class Program
         builder.Services.AddScoped<IHomeSecurityDeviceDefinitionRepository<HomeSecurityDeviceDefinition>, HomeSecurityDeviceDefinitionRepository>();
         builder.Services.AddScoped<IBackupRuleRepository, BackupRuleRepository>();
         builder.Services.AddScoped<IBackupScenarioRepository, BackupScenarioRepository>();
-
-        builder.Services.AddScoped<IInformDirectorServices, DirectorServices>();
-        builder.Services.AddScoped<IEnergyProfileServices, EnergyProfileServices>();        
-        builder.Services.AddScoped<IUpdateBackupService, BackupServices>();
+        //builder.Services.AddScoped<IUpdateBackupService, BackupServices>();
         builder.Services.AddScoped<IBackupService, BackupServices>();
+        builder.Services.AddScoped<IAPIDataRepository, APIDataRepository>();
+        builder.Services.AddScoped<IAPIKeyRepository, APIKeyRepository>();
+        builder.Services.AddScoped<IAPIValueRepository, APIValueRepository>();
+        builder.Services.AddScoped<IAPIDataService, APIDataServices>();
+        builder.Services.AddScoped<IDirectorControlDeviceService, DeviceService>();
 
-        builder.Services.AddScoped<IGenericRepository<Rule>, RuleRepository>();        
+        // TEAM 3
+        builder.Services.AddScoped<IGenericRepository<Rule>, RuleRepository>();
         builder.Services.AddScoped<IGenericRepository<Scenario>, ScenarioRepository>();
-
         builder.Services.AddScoped<IGetRulesService, GetRulesServices>();
-        builder.Services.AddScoped<IGetScenariosService, GetScenariosService>();
+        builder.Services.AddScoped<IGetScenariosService, GetScenariosService>();        
         builder.Services.AddScoped<IBackupRulesService, GetRulesServices>();
         builder.Services.AddScoped<IBackupScenariosService, GetScenariosService>();
 
-		//API service
-		builder.Services.AddScoped<IAPIDataRepository, APIDataRepository>();
-		builder.Services.AddScoped<IAPIKeyRepository, APIKeyRepository>();
-		builder.Services.AddScoped<IAPIValueRepository, APIValueRepository>();
-		builder.Services.AddScoped<IAPIDataService, APIDataServices>();
-
-		builder.Services.AddScoped<IDirectorControlDeviceService, DeviceService>();
         builder.Services.AddScoped<ITroubleshooterServices, TroubleshooterServices>();
+        
+        
 
         builder.Services.AddHostedService<DirectorServices>();
 
