@@ -33,6 +33,7 @@ export default function SchRule() {
 
 	async function createRule() {
 		const newRule = { ...ruleDetail };
+		console.log("this is rule info "+ location.state)
 		const url = newFlag
 			? "https://localhost:7140/api/Rules/CreateRule"
 			: "https://localhost:7140/api/Rules/EditRule";
@@ -49,6 +50,28 @@ export default function SchRule() {
 				"Content-Type": "application/json",
 			},
 		})
+	}
+
+	function renderOptions(ruleDetail){
+		if(ruleDetail.configurationKey=="speed"){
+			return(
+				<>
+				<option value={0}>1</option>
+				<option value={1}>2</option>
+				<option value={2}>3</option>
+				<option value={3}>4</option>
+				<option value={4}>5</option>
+				</>
+			);
+		}else if(ruleDetail.configurationKey=="oscillation"){
+			return(
+				<>
+				<option value={0}>Turn On</option>
+				<option value={1}>Turn Off</option>
+				</>
+			);
+		}
+		return null;
 	}
 
 	/**
@@ -69,13 +92,14 @@ export default function SchRule() {
 	}
 
 	const handleSubmit = async () => {
+		console.log(ruleDetail)
 		let returnCode = ""
 		await checkIfClash(ruleDetail).then(() => {
 		}).catch((err) => {
 			console.error(err)
 			returnCode = err.response.status
 		})
-		console.log("see this\n" + returnCode)
+		// console.log("see this\n" + returnCode)
 		//console.log(typeof(returnCode))
 		if (returnCode == "400") {
 			makeToast("Error Invalid Rule.", "Something went wrong.", "error", 3000);
@@ -104,13 +128,12 @@ export default function SchRule() {
 				});
 			}
 		}
-
 	};
 
 	useEffect(() => {
 		if (location.state) {
 			let ruleinfo = location.state;
-			console.log(ruleinfo);
+			console.log("this is rule info" + ruleinfo);
 			setRuleDetail(ruleinfo);
 		} else {
 			setNewFlag(true);
@@ -132,6 +155,8 @@ export default function SchRule() {
 					<FormCard
 						ruleInfo={ruleDetail}
 						updateForm={updateDetails}
+						updateOption={renderOptions}
+						stateInfo={location.state}
 					/>
 					<Button
 						mt="2%"
@@ -140,7 +165,7 @@ export default function SchRule() {
 						variant="solid"
 						onClick={handleSubmit}
 					>
-						Submit
+						 {location.state ? "Update" : "Create"}
 					</Button>
 				</form>
 			</Box>

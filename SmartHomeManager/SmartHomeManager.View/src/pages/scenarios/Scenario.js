@@ -15,6 +15,7 @@ import ModalButton from "components/Rules/ModalButton";
 import MenuItems from "components/Rules/MenuItems";
 import axios from "axios";
 import UploadModalButton from "components/Rules/UploadModal";
+import CreateRuleDialogue from "pages/rules/CreateRuleDialogue";
 
 export default function Scenarios() {
 	const [ allRules, setAllRules] = useState([])
@@ -24,6 +25,7 @@ export default function Scenarios() {
 	const [buttonName, setButtonName] = useState("")
 	const [typesOfRuleButton, setTypesOfRuleButton] = useState("Schedule")
 	let [searchParams, setSearchParams] = useSearchParams();
+	const [showRuleOption, setShowRuleOption] = useState(false);
 	
 	const toast = useToast();
 	const deviceTypeFilter = "Fan";
@@ -33,7 +35,7 @@ export default function Scenarios() {
 	 * @param {string} id
 	 */
 	async function getAllRules(id){
-		const { data: ruleData } = await axios.get(`https://localhost:7140/api/Rules/rulesByScenarioId/${id}`)
+		const { data: ruleData } = await axios.get(`https://localhost:7140/api/Rules/schedulesByScenarioId/${id}`)
 		setAllRules(ruleData)
 	}
 
@@ -54,6 +56,44 @@ export default function Scenarios() {
 				const { data: apiData } = await axios.get(`https://localhost:7140/api/Rules/apisByScenarioId/${currentScenario.scenarioId}`)
 				setAllRules(apiData)
 				break;
+		}
+	}
+
+	function renderUpdateButton({props}){
+		// console.log(props)
+		if(typesOfRuleButton == "Schedule"){
+			return(
+				<>
+				<Link
+					to={`/schedule/edit/${props.ruleId}`}
+					state={props}
+				>
+					Edit
+				</Link>
+				</>
+			);
+		}else if(typesOfRuleButton == "Event"){
+			return(
+				<>
+				<Link
+					to={`/event/edit/${props.ruleId}`}
+					state={props}
+				>
+					Edit
+				</Link>
+				</>
+			);
+		}else if(typesOfRuleButton == "API"){
+			return(
+				<>
+				<Link
+					to={`/api/edit/${props.ruleId}`}
+					state={props}
+				>
+					Edit
+				</Link>
+				</>
+			);
 		}
 	}
 
@@ -96,21 +136,12 @@ export default function Scenarios() {
 			makeToast('Error', 'Failed to fetch rules for the scenario. Please try again later.', 'error', 5000);
 		})
 		updateLocalStore(scenario.scenarioName, scenario.scenarioId)
+		console.log(localStorage.getItem("currentScenarioId"))
 	}
 
 	function ruleTypeSelect(type){
-		//
 		setTypesOfRuleButton(type.name)
-		// console.log(currentScenario)
 		getRulesBasedOnTypes(currentScenario , type.name)
-		// setCurrentScenario(scenario)
-		// setButtonName(scenario.scenarioName)
-		// getAllRules(scenario.scenarioId)
-		// .catch((error)=>{
-		// 	console.error(error)
-		// 	makeToast('Error', 'Failed to fetch rules for the scenario. Please try again later.', 'error', 5000);
-		// })
-		// updateLocalStore(scenario.scenarioName, scenario.scenarioId)
 	}
 
 	/**
@@ -190,16 +221,21 @@ export default function Scenarios() {
 					</Menu>
 				</Box>
 			</Box>
-			<JsonToTable ruleData = {allRules} deleteRule = {deleteRule}/>
+			<JsonToTable ruleData = {allRules} deleteRule = {deleteRule} editButton={renderUpdateButton}/>
 			<Box padding="3" display="flex">
 				<Box width="50%" display="flex" justifyContent="flex-start">
 					<Button ml={2} colorScheme="whatsapp">
 						Add Scenario
 					</Button>
-					<Button ml={2} colorScheme="whatsapp">
-						<Link to="/scenario/create/create-dialogue">Add Rule</Link>
+					<Button ml={2} colorScheme="whatsapp"
+						onClick={() => {
+							setShowRuleOption(true);
+						}}>		
+						Add Rule				
+						{/* <Link to="/scenario/create/create-dialogue">Add Rule</Link> */}
 					</Button>
 				</Box>
+				
 				<Box width="50%" display="flex" justifyContent="flex-start">
 					<Button ml={2} colorScheme="whatsapp">
 						{currentScenario?(
@@ -225,6 +261,14 @@ export default function Scenarios() {
 					/>
 				</Box>
 			</Box>
+			{showRuleOption && (
+				<CreateRuleDialogue				
+					Close={()=>{
+						setShowRuleOption(false);
+					}}
+					/>
+				)}
 		</Box>
+		
 	);
 }

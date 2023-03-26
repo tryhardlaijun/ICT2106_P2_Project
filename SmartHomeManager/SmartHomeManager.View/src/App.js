@@ -62,10 +62,10 @@ export function App() {
               path="/scenario/create/action-rule"
               element={<ActionRule />}
             />
-            <Route
+            {/* <Route
               path="/scenario/create/create-dialogue"
               element={<CreateRuleDialogue/>}
-            />
+            /> */}
             <Route
               path="/scenario/create/schedule-rule"
               element={<SchRule />}
@@ -75,8 +75,16 @@ export function App() {
               element={<ApiRule />}
             />
             <Route
-              path="/scenario/edit/:id"
+              path="/event/edit/:id"
+              element={<ActionRule />}
+            />
+            <Route
+              path="/schedule/edit/:id"
               element={<SchRule />}
+            />
+            <Route
+              path="/api/edit/:id"
+              element={<ApiRule />}
             />
             <Route path="/config" element={<DeviceConfig />} />
             <Route path="/analytics" element={<Report />} />
