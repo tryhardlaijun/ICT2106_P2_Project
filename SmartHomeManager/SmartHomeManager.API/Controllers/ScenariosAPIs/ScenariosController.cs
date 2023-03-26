@@ -5,6 +5,7 @@ using SmartHomeManager.Domain.SceneDomain.Services;
 using SmartHomeManager.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.DataSource;
+using SmartHomeManager.Domain.DirectorDomain.Interfaces;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -17,9 +18,9 @@ namespace SmartHomeManager.API.Controllers.ScenariosAPIs
         private readonly ScenarioServices _scenarioServices;
         //private readonly GetScenarioService _getScenarioService;
 
-        public ScenariosController(IGenericRepository<Scenario> scenarioRepository)
+        public ScenariosController(IGenericRepository<Scenario> scenarioRepository, IInformDirectorServices informDirectorServices)
         {
-            _scenarioServices = new(scenarioRepository);
+            _scenarioServices = new(scenarioRepository,informDirectorServices);
             //_getScenarioService = new(scenarioRepository);
         }
 
@@ -41,30 +42,58 @@ namespace SmartHomeManager.API.Controllers.ScenariosAPIs
 
         // GET api/Scenarios/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Scenario>> GetScenario([FromBody] Guid id)
+        public async Task<ActionResult<Scenario>> GetScenario(Guid id)
         {
-            return null;
+            var scenario = await _scenarioServices.GetScenarioByIdAsync(id);
+            if(scenario !=null)
+            {
+                return StatusCode(200,scenario);
+            }
+            return StatusCode(404, "scenario not exist");
         }
 
         // POST api/Scenarios
         [HttpPost("CreateScenario")]
-        public async Task<ActionResult<Scenario>> CreateScenario([FromBody] Scenario scenario)
-        {
-            return null;
+        public async Task<ActionResult<Scenario>> CreateScenario([FromBody] ScenarioRequest scenarioRequest)
+        { 
+            var scenario = new Scenario
+            {
+                ScenarioId = scenarioRequest.ScenarioId,
+                ScenarioName = scenarioRequest.ScenarioName,
+                ProfileId = scenarioRequest.ProfileId,
+                isActive = scenarioRequest.isActive
+            };
+            await _scenarioServices.CreateScenarioAsync(scenario);
+            return StatusCode(200, scenarioRequest);
         }
 
         // PUT api/Scenarios/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        [HttpPut("EditScenario")]
+        public async Task<ActionResult> EditScenario(ScenarioRequest scenarioRequest)
         {
-
+            var scenario = new Scenario
+            {
+                ScenarioId = scenarioRequest.ScenarioId,
+                ScenarioName = scenarioRequest.ScenarioName,
+                ProfileId = scenarioRequest.ProfileId,
+                isActive = scenarioRequest.isActive
+            };
+            await _scenarioServices.EditScenarioAsync(scenario);
+            return StatusCode(200, scenarioRequest);
         }
+
 
         // DELETE api/Scenarios/1
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteScenario([FromBody] Guid id)
+        public async Task<IActionResult> DeleteScenario(Guid id)
         {
-            return null;
+           var scenario = await _scenarioServices.GetScenarioByIdAsync(id);
+           if (scenario != null)
+            {
+                await _scenarioServices.DeleteScenarioeByIdAsync(id);
+                return StatusCode(200, scenario);
+            }
+            return StatusCode(404, "scenario not exist");
         }
     }
 }
