@@ -5,7 +5,7 @@ using SmartHomeManager.Domain.SceneDomain.Entities;
 
 namespace SmartHomeManager.Domain.BackupDomain.Services
 {
-    public class BackupServices : IUpdateBackupService, IBackupService
+    public class BackupServices : IBackupService
     {
         private readonly IBackupRuleRepository _backupRuleRepository;
         private readonly IBackupScenarioRepository _backupScenarioRepository;
@@ -22,11 +22,12 @@ namespace SmartHomeManager.Domain.BackupDomain.Services
             _backupScenarioInterface = backupsScenariosService;
         }
 
-
+        //used in director
         public async void createBackup(List<Rule> rulesList, List<Scenario> scenarioList)
         {
             var now = DateTime.Now;
             Guid backupId = Guid.NewGuid();
+            Console.WriteLine("Backing up rules and scenarios...");
 
             foreach (var scenario in scenarioList)
             {
@@ -62,69 +63,70 @@ namespace SmartHomeManager.Domain.BackupDomain.Services
             }
         }
 
-        public async Task<List<BackupRule>> loadBackupRule(Guid profileId, Guid backupId)
+        //used in controller restoreBackup
+        public async Task<List<BackupRule>> loadBackupRule(Guid profileId, Guid backupId, List<Guid> scenarioIdList)
         {
             var rulesList = new List<Rule>();
-            var backupRulesList = await _backupRuleRepository.GetBackupRuleById(backupId);
+            var backupRulesList = await _backupRuleRepository.GetAllBackupRuleByBackupId(backupId);
 
             foreach (var backupRule in backupRulesList)
             {
-                Rule rule = new Rule
+                if (!scenarioIdList.Any() && scenarioIdList.Contains(backupRule.ScenarioId))
                 {
-                    RuleId = backupRule.RuleId,
-                    ScenarioId = backupRule.ScenarioId,
-                    RuleName = backupRule.RuleName,
-                    StartTime = backupRule.StartTime,
-                    EndTime = backupRule.EndTime,
-                    ActionTrigger = backupRule.ActionTrigger,
-                    ConfigurationKey = backupRule.ConfigurationKey,
-                    ConfigurationValue = backupRule.ConfigurationValue,
-                    APIKey = backupRule.APIKey,
-                    ApiValue = backupRule.ApiValue,
-                    DeviceId = backupRule.DeviceId
-                };
+                    Rule rule = new Rule
+                    {
+                        RuleId = backupRule.RuleId,
+                        ScenarioId = backupRule.ScenarioId,
+                        RuleName = backupRule.RuleName,
+                        StartTime = backupRule.StartTime,
+                        EndTime = backupRule.EndTime,
+                        ActionTrigger = backupRule.ActionTrigger,
+                        ConfigurationKey = backupRule.ConfigurationKey,
+                        ConfigurationValue = backupRule.ConfigurationValue,
+                        APIKey = backupRule.APIKey,
+                        ApiValue = backupRule.ApiValue,
+                        DeviceId = backupRule.DeviceId
+                    };
 
-                rulesList.Add(rule);
+                    rulesList.Add(rule);
+                }
+                
             }
 
             await _backupRuleInterface.loadRulesBackup(profileId, rulesList);
             return backupRulesList;
         }
-        public async Task<List<BackupScenario>> loadBackupScenario(Guid profileId)
+
+        //used in controller restoreBackup
+        public async Task<List<BackupScenario>> loadBackupScenario(Guid profileId, List<Guid> scenarioIdList)
         {
             var scenarioList = new List<Scenario>();
-            var backupScenarioList = await _backupScenarioRepository.GetBackupScenarioById(profileId);
+            var backupScenarioList = await _backupScenarioRepository.GetAllBackupScenarioByProfileId(profileId);
             foreach (var backupScenario in backupScenarioList)
-            {
-                Scenario scenario = new Scenario
+            {           
+                if (!scenarioIdList.Any() && scenarioIdList.Contains(backupScenario.ScenarioId))
                 {
-                    isActive = false,
-                    ScenarioName = backupScenario.ScenarioName,
-                    ProfileId = profileId,
-                    ScenarioId = backupScenario.ScenarioId
-                };
+                    Scenario scenario = new Scenario
+                    {
+                        isActive = false,
+                        ScenarioName = backupScenario.ScenarioName,
+                        ProfileId = profileId,
+                        ScenarioId = backupScenario.ScenarioId
+                    };
 
-                scenarioList.Add(scenario);
+                    scenarioList.Add(scenario);
+                }
             }
 
             await _backupScenarioInterface.loadScenarioBackup(profileId, scenarioList);
             return backupScenarioList;
         }
 
-        public async Task<IEnumerable<BackupScenario>> getAllBackupScenario()
+        //used in controller getAllBackupScenario
+        public async Task<IEnumerable<BackupScenario>> getAllBackupScenarioByProfileId(Guid profileId)
         {
-            return await _backupScenarioRepository.GetAllBackupScenario();
+            return await _backupScenarioRepository.GetAllBackupScenarioByProfileId(profileId);
         }
 
-        public async Task<IEnumerable<BackupRule>> getAllBackupRule()
-        {
-            return await _backupRuleRepository.GetAllBackupRule();
-        }
-
-        public async void restoreBackupComplete()
-        {
-            throw new NotImplementedException();
-            //return wait unpauseTrigger
-        }
     }
 }

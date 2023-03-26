@@ -37,6 +37,10 @@ using SmartHomeManager.Domain.NotificationDomain.Interfaces;
 using SmartHomeManager.DataSource.BackupDataSource;
 using SmartHomeManager.Domain.BackupDomain.Interfaces;
 using SmartHomeManager.Domain.BackupDomain.Services;
+using SmartHomeManager.Domain.DeviceDomain.Services;
+using SmartHomeManager.Domain.APIDomain.Interface;
+using SmartHomeManager.Domain.APIDomain.Service;
+using SmartHomeManager.DataSource.APIDataSource;
 
 namespace SmartHomeManager.API;
 
@@ -62,9 +66,10 @@ public class Program
         });
 
         // MODULE 3
-        builder.Services.AddScoped<IGenericRepository<History>, DataSource.HistoryDataSource.HistoryRepository>();
-        builder.Services.AddScoped<IRuleHistoryRepository<RuleHistory>, RuleHistoryRepository>();
-        builder.Services.AddScoped<IGenericRepository<Rule>, RuleRepository>();
+
+        // TEAM 1
+        builder.Services.AddScoped<IHistoryRepository, DataSource.HistoryDataSource.HistoryRepository>();
+        builder.Services.AddScoped<IRuleHistoryRepository, RuleHistoryRepository>();
         builder.Services.AddScoped<IEnergyProfileRepository<EnergyProfile>, EnergyProfileRepository>();
         builder.Services.AddScoped<IGenericRepository<Scenario>, ScenarioRepository>();
         builder.Services.AddScoped<IInformDirectorServices, DirectorServices>();
@@ -79,14 +84,23 @@ public class Program
         builder.Services.AddScoped<IEnergyProfileServices, EnergyProfileServices>();        
         builder.Services.AddScoped<IUpdateBackupService, BackupServices>();
         builder.Services.AddScoped<IBackupService, BackupServices>();
+        builder.Services.AddScoped<IAPIDataRepository, APIDataRepository>();
+        builder.Services.AddScoped<IAPIKeyRepository, APIKeyRepository>();
+        builder.Services.AddScoped<IAPIValueRepository, APIValueRepository>();
+        builder.Services.AddScoped<IAPIDataService, APIDataServices>();
+        builder.Services.AddScoped<IDirectorControlDeviceService, DeviceService>();
 
-        builder.Services.AddScoped<IGenericRepository<Rule>, RuleRepository>();        
+        // TEAM 3
+        builder.Services.AddScoped<IGenericRepository<Rule>, RuleRepository>();
         builder.Services.AddScoped<IGenericRepository<Scenario>, ScenarioRepository>();
-
         builder.Services.AddScoped<IGetRulesService, GetRulesServices>();
-        builder.Services.AddScoped<IGetScenariosService, GetScenariosService>();
+        builder.Services.AddScoped<IGetScenariosService, GetScenariosService>();        
         builder.Services.AddScoped<IBackupRulesService, GetRulesServices>();
         builder.Services.AddScoped<IBackupScenariosService, GetScenariosService>();
+
+        builder.Services.AddScoped<ITroubleshooterServices, TroubleshooterServices>();
+        
+        
 
         builder.Services.AddHostedService<DirectorServices>();
 

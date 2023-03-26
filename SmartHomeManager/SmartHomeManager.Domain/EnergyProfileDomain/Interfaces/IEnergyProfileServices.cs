@@ -8,6 +8,6 @@ namespace SmartHomeManager.Domain.EnergyProfileDomain.Interfaces
 {
     public interface IEnergyProfileServices
     {
-        public Task<int> getRevisedConfigValue(Guid deviceID, String configurationKey, int configurationValue);
+        public Task<int> getRevisedConfigValue(Guid accountID, Guid deviceID, String configurationKey, int configurationValue);
     }
 }

@@ -13,5 +13,7 @@ namespace SmartHomeManager.Domain.BackupDomain.Entities.DTOs
         public Guid profileId { get; set; }
         [Required]
         public Guid backupId { get; set; }
+        [Required]
+        public List<Guid>? scenarioIdList { get; set; }
     }
 }

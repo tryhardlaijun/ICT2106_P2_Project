@@ -28,6 +28,7 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
 
         private IHomeSecurityRepository<HomeSecurity> _homeSecurityRepository;
         private IHomeSecuritySettingRepository<HomeSecuritySetting> _homeSecuritySettingRepository;
+        private IGenericRepository<HomeSecuritySetting> _homeSecuritySettingRepository;
         private IHomeSecurityDeviceDefinitionRepository<HomeSecurityDeviceDefinition> _homeSecurityDeviceDefinitionRepository;
 
         private readonly IDirectorServices _directorInterface;

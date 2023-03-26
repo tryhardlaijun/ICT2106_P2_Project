@@ -12,7 +12,6 @@
     <None Remove="SceneDomain\Interfaces\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="SceneDomain\Services\" />
     <Folder Include="SceneDomain\Entities\DTOs\" />
   </ItemGroup>
   <ItemGroup>
@@ -38,14 +37,11 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="7.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
   
   <ItemGroup>
     <Folder Include="RoomDomain\Services\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="DeviceDomain\Interfaces\" />
   </ItemGroup>
 
 </Project>

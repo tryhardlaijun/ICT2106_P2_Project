@@ -1,16 +1,27 @@
-import { Box, Container, Heading, Button, useToast } from "@chakra-ui/react";
+import { Box, Container, Heading, Button, useToast, VStack, Text, calc } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
-import axios from 'axios';
+import {
+    Slider,
+    SliderTrack,
+    SliderFilledTrack,
+    SliderThumb,
+    SliderMark,
+    Select,
+} from '@chakra-ui/react'
+
+import { ArrowRightIcon } from '@chakra-ui/icons'
 
 export default function EnergyProfile() {
     const toast = useToast();
     // Hardcoded accountId 3fa85f64-5717-4562-b3fc-2c963f66afa6
     const [accountId, setAccountId] = useState("11111111-1111-1111-1111-111111111111");
     const [energyProfile, setEnergyProfile] = useState(null);
-    var valueSelected = "";
+    const [energyProfileSelected, setEnergyProfileSelected] = useState(-1);
     var configValue = -1;
+    let energyProfileSelectedValue = null
     const [newValue, setNewValue] = useState('EnergyProfile')
     const [energyProfiles, setEnergyProfiles] = useState([])
+    const [dropdownValue, setDropdownValue] = useState("option_ac")
 
     useEffect(() => {
         const getEnergyProfile = async () => {
@@ -21,13 +32,16 @@ export default function EnergyProfile() {
                 const data = await response.json();
                 setEnergyProfile(data);
 
-                console.log(data.configurationValue);
                 document.getElementById("previouslySelected").innerText = data.configurationValue;
 
 
                 //set currently selected button to grey
                 if (data != null) {
-                    if (data.configurationValue == "0") {
+                    setProfileValue(parseInt(data.configurationValue))
+                    setEnergyProfileSelected(parseInt(data.configurationValue))
+                    energyProfileSelectedValue = parseInt(data.configurationValue)
+                    updateSlider(sliderSetting)
+                    if (data.configurationValue == "0") {                        
                         document.getElementById("button0").style.backgroundColor = "#E2E8F0";
                     }
                     else if (data.configurationValue == "1") {
@@ -40,6 +54,7 @@ export default function EnergyProfile() {
             }
 
         };
+        
         getEnergyProfile();
     }, []);
 
@@ -47,7 +62,6 @@ export default function EnergyProfile() {
 
     function handleClick(event) {
         // This function handles the click event
-        console.log('Box clicked:', event.target.innerText);
         // All hardcoded except Config Value
 
         configValue = parseInt(document.getElementById("previouslySelected").innerText);
@@ -60,7 +74,9 @@ export default function EnergyProfile() {
 
         // "highlight" box when clicked
         if (event.target.innerText == "0") {
-            valueSelected = "0";
+            setEnergyProfileSelected(0)
+            setProfileValue(0)
+            energyProfileSelectedValue = 0
             document.getElementById("button0").style.backgroundColor = "yellow";
             if (configValue == 0) {
                 document.getElementById("button1").style.backgroundColor = "white";
@@ -77,7 +93,9 @@ export default function EnergyProfile() {
 
         }
         else if (event.target.innerText == "1") {
-            valueSelected = "1";
+            setEnergyProfileSelected(1)
+            energyProfileSelectedValue = 1
+            setProfileValue(1)
             document.getElementById("button1").style.backgroundColor = "yellow";
             if (configValue == 0) {
                 document.getElementById("button0").style.backgroundColor = "#E2E8F0";
@@ -94,7 +112,9 @@ export default function EnergyProfile() {
 
         }
         else if (event.target.innerText == "2") {
-            valueSelected = "2";
+            setEnergyProfileSelected(2)
+            setProfileValue(2)
+            energyProfileSelectedValue = 2
             document.getElementById("button2").style.backgroundColor = "yellow";
             if (configValue == 0) {
                 document.getElementById("button0").style.backgroundColor = "#E2E8F0";
@@ -110,21 +130,21 @@ export default function EnergyProfile() {
             }
 
         }
-
-
-
+        handleSlider(sliderValue)
+        
+        
     }
 
     function submit() {
-        console.log("value selected: ", valueSelected);
+        console.log("value selected: ", energyProfileSelected);
 
-        if (valueSelected != "") {
+        if (energyProfileSelected != -1) {
             console.log()
-            putData("11111111-1111-1111-1111-111111111111", valueSelected)
+            putData("11111111-1111-1111-1111-111111111111", energyProfileSelected)
 
             //setEnergyProfile(newEnergyProfile);
-            configValue = parseInt(valueSelected);
-            document.getElementById("previouslySelected").innerText = valueSelected;
+            configValue = energyProfileSelected
+            document.getElementById("previouslySelected").innerText = ""+energyProfileSelected;
             console.log("new configValue: ", configValue);
 
             if (configValue == 0) {
@@ -146,7 +166,7 @@ export default function EnergyProfile() {
             toast({
                 title: "Saved energy profile successfully",
                 description:
-                    "Chose " + valueSelected + " as new energy profile.",
+                    "Chose " + energyProfileSelected + " as new energy profile.",
                 status: "success",
                 duration: 3000,
                 isClosable: true,
@@ -192,6 +212,69 @@ export default function EnergyProfile() {
         }
     };
 
+    
+    const [reccoValue, setReccoValue] = useState(26)
+    const [profileValue, setProfileValue] = useState(0)
+    const labelStyles = {
+        fontSize: "md",
+        color: "gray.500",
+        marginTop: "4px",
+    };
+
+    
+    const demoSliderSettings = {
+        "option_ac": {
+            "default": 26,
+            "min": 16,
+            "max": 32,
+            "step": .5,
+            "factor": 1
+        },
+        "option_fan": {
+            "default": 5,
+            "min": 1,
+            "max": 10,
+            "step": 1,
+            "factor": -1
+        },
+        "option_heater": {
+            "default": 32,
+            "min": 32,
+            "max": 40,
+            "step": .5,
+            "factor": -1
+        }
+    }
+
+    const [sliderValue, setSliderValue] = useState()
+    const [sliderMin, setSliderMin] = useState()
+    const [sliderMax, setSliderMax] = useState()
+    const [sliderStep, setSliderStep] = useState()
+    const [sliderSetting, setSliderSetting] = useState("option_ac")
+    let sliderSettingValue = null
+    
+    const updateSlider = (value) => {
+        setSliderSetting(value)
+        sliderSettingValue = value
+        setDropdownValue(value)
+        let sliderOption = demoSliderSettings[value]
+        setSliderMin(sliderOption["min"])
+        setSliderMax(sliderOption["max"])
+        setSliderStep(sliderOption["step"])
+        setSliderValue(sliderOption["default"])
+        handleSlider(sliderOption["default"])
+    }
+    const handleSlider = (val) => {
+        setSliderValue(val);
+        let setting = sliderSettingValue ?? sliderSetting
+        let option = demoSliderSettings[setting]
+        let factor = energyProfileSelectedValue ?? energyProfileSelected
+        let calculation = val * factor * .05 * option["factor"] + val
+        setReccoValue(calculation)
+    };
+
+
+
     return (
         <Container mt="3%">
             <Heading>Energy Profile Manager</Heading>
@@ -203,7 +286,9 @@ export default function EnergyProfile() {
 
                     <Box display='flex' alignItems='center' justifyContent='center'>
                         Previously selected:&nbsp;<span id="previouslySelected"></span>
-                    </Box>
+                        </Box>
+                        <Box alignItems="center" display='flex' justifyContent='center' id="newlySelected"></Box>
+
 
                     <Box p='6' display='flex' alignItems='center' justifyContent='center'>
                         <Box as="button" p={[5, 5, 5, 5]} marginRight="10%" borderWidth='3px' w="25%" h="70px" id="button0" onClick={handleClick}> 0 </Box>
@@ -220,6 +305,49 @@ export default function EnergyProfile() {
                         <Button onClick={submit}>Confirm changes to energy profile</Button>
                     </Box>
                 </Box>
+            </Box>
+            <Box display='flex' alignItems='center' justifyContent='center'>
+                <VStack>
+                    <Box display='flex' alignItems='center' justifyContent='center'>
+
+                        <Heading as="h2" size="md">Choose Energy Profile</Heading>
+                        </Box>
+                    <Box mt="3%" display='flex' alignItems='center' justifyContent='center'>
+                            <Select placeholder='Select option' value={dropdownValue} onChange={(e) => updateSlider(e.target.value) }>
+                                <option value='option_ac'>Air Conditioner</option>
+                                <option value='option_fan'>Fan</option>
+                                <option value='option_heater'>Heater</option>
+                        </Select>
+                    </Box>     
+                </VStack>
+                </Box>
+            </VStack>
+            <Box paddingTop="10%" display="flex" alignItems="center" justifyContent="center">
+                <Slider value={sliderValue} min={sliderMin} max={sliderMax} step={sliderStep} onChange={(value) => handleSlider(value)}>
+                    <SliderTrack bg='blue.100'>
+                        <SliderFilledTrack />
+                    </SliderTrack>
+                    <SliderMark value={sliderMin} {...labelStyles}>{sliderMin}</SliderMark>
+                    <SliderMark value={sliderMax} {...labelStyles}>{sliderMax}</SliderMark>
+                    <SliderMark
+                        value={sliderValue}
+                        textAlign='center'
+                        bg='blue.500'
+                        color='white'
+                        mt='-10'
+                        ml='-6'
+                        w='12'
+                    >
+                        {sliderValue}
+                    </SliderMark>
+                    <SliderThumb boxSize={6} />
+                </Slider>
+            </Box>
+            <Box paddingTop="5%" display='flex' alignItems='center' justifyContent='center'>
+                Your recommended setting will change from 
+            </Box>
+            <Box paddingTop="5%" display='flex' alignItems='center' justifyContent='center' fontSize="xl">
+                {sliderValue} <ArrowRightIcon ml={"5%"} mr={"5%"} /> {reccoValue}
             </Box>
         </Container>
 

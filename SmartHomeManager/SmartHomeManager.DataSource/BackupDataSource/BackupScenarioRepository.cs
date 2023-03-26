@@ -19,11 +19,7 @@ namespace SmartHomeManager.DataSource.BackupDataSource
             _applicationDbContext = applicationDbContext;
         }
 
-        public async Task<IEnumerable<BackupScenario>> GetAllBackupScenario()
-        {
-            return await _applicationDbContext.BackupScenarios.ToListAsync();
-        }
-        public async Task<List<BackupScenario>> GetBackupScenarioById(Guid profileId)
+        public async Task<List<BackupScenario>> GetAllBackupScenarioByProfileId(Guid profileId)
         {
             return await _applicationDbContext.BackupScenarios.Where(s => s.ProfileId == profileId).ToListAsync();
         }
