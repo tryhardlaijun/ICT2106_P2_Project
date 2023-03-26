@@ -82,7 +82,7 @@ public class Program
         builder.Services.AddScoped<IBackupScenarioRepository, BackupScenarioRepository>();
         
         builder.Services.AddScoped<IEnergyProfileServices, EnergyProfileServices>();        
-        builder.Services.AddScoped<IUpdateBackupService, BackupServices>();
+        //builder.Services.AddScoped<IUpdateBackupService, BackupServices>();
         builder.Services.AddScoped<IBackupService, BackupServices>();
         builder.Services.AddScoped<IAPIDataRepository, APIDataRepository>();
         builder.Services.AddScoped<IAPIKeyRepository, APIKeyRepository>();

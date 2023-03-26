@@ -41,7 +41,7 @@ export default function EnergyProfile() {
                     setEnergyProfileSelected(parseInt(data.configurationValue))
                     energyProfileSelectedValue = parseInt(data.configurationValue)
                     updateSlider(sliderSetting)
-                    if (data.configurationValue == "0") {                        
+                    if (data.configurationValue == "0") {
                         document.getElementById("button0").style.backgroundColor = "#E2E8F0";
                     }
                     else if (data.configurationValue == "1") {
@@ -54,7 +54,7 @@ export default function EnergyProfile() {
             }
 
         };
-        
+
         getEnergyProfile();
     }, []);
 
@@ -131,8 +131,8 @@ export default function EnergyProfile() {
 
         }
         handleSlider(sliderValue)
-        
-        
+
+
     }
 
     function submit() {
@@ -144,7 +144,7 @@ export default function EnergyProfile() {
 
             //setEnergyProfile(newEnergyProfile);
             configValue = energyProfileSelected
-            document.getElementById("previouslySelected").innerText = ""+energyProfileSelected;
+            document.getElementById("previouslySelected").innerText = "" + energyProfileSelected;
             console.log("new configValue: ", configValue);
 
             if (configValue == 0) {
@@ -212,7 +212,7 @@ export default function EnergyProfile() {
         }
     };
 
-    
+
     const [reccoValue, setReccoValue] = useState(26)
     const [profileValue, setProfileValue] = useState(0)
     const labelStyles = {
@@ -221,7 +221,7 @@ export default function EnergyProfile() {
         marginTop: "4px",
     };
 
-    
+
     const demoSliderSettings = {
         "option_ac": {
             "default": 26,
@@ -252,7 +252,7 @@ export default function EnergyProfile() {
     const [sliderStep, setSliderStep] = useState()
     const [sliderSetting, setSliderSetting] = useState("option_ac")
     let sliderSettingValue = null
-    
+
     const updateSlider = (value) => {
         setSliderSetting(value)
         sliderSettingValue = value
@@ -321,7 +321,6 @@ export default function EnergyProfile() {
                     </Box>     
                 </VStack>
                 </Box>
-            </VStack>
             <Box paddingTop="10%" display="flex" alignItems="center" justifyContent="center">
                 <Slider value={sliderValue} min={sliderMin} max={sliderMax} step={sliderStep} onChange={(value) => handleSlider(value)}>
                     <SliderTrack bg='blue.100'>
@@ -349,7 +348,7 @@ export default function EnergyProfile() {
             <Box paddingTop="5%" display='flex' alignItems='center' justifyContent='center' fontSize="xl">
                 {sliderValue} <ArrowRightIcon ml={"5%"} mr={"5%"} /> {reccoValue}
             </Box>
-        </Container>
+        </Container >
 
     )
 }
