@@ -60,7 +60,6 @@ export default function Scenarios() {
 	}
 
 	function renderUpdateButton({props}){
-		// console.log(props)
 		if(typesOfRuleButton == "Schedule"){
 			return(
 				<>
@@ -136,7 +135,6 @@ export default function Scenarios() {
 			makeToast('Error', 'Failed to fetch rules for the scenario. Please try again later.', 'error', 5000);
 		})
 		updateLocalStore(scenario.scenarioName, scenario.scenarioId)
-		console.log(localStorage.getItem("currentScenarioId"))
 	}
 
 	function ruleTypeSelect(type){

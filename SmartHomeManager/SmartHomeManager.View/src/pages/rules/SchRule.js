@@ -36,7 +36,6 @@ export default function SchRule() {
 
 	async function createRule() {
 		const newRule = { ...ruleDetail };
-		console.log("this is rule info " + location.state)
 		const url = newFlag
 			? "https://localhost:7140/api/Rules/CreateRule"
 			: "https://localhost:7140/api/Rules/EditRule";
@@ -126,7 +125,6 @@ export default function SchRule() {
 		}
 	}
 	const handleSubmit = async () => {
-		console.log(ruleDetail)
 		let returnCode = ""
 		let clashedTitle = ""
 		await checkIfClash(ruleDetail).then(() => {
@@ -135,8 +133,6 @@ export default function SchRule() {
 			returnCode = err.response.status
 			clashedTitle = (err.response.data.ruleName)
 		})
-		// console.log("see this\n" + returnCode)
-		//console.log(typeof(returnCode))
 		if (returnCode == "400") {
 			makeToast("Error Invalid Rule.", "Something went wrong.", "error", 3000);
 		}
@@ -167,7 +163,6 @@ export default function SchRule() {
 	useEffect(() => {
 		if (location.state) {
 			let ruleinfo = location.state;
-			console.log("this is rule info" + ruleinfo);
 			setRuleDetail(ruleinfo);
 		} else {
 			setNewFlag(true);
