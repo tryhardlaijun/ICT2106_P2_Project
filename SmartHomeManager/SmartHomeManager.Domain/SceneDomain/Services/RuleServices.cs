@@ -34,7 +34,7 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
             var newRule = _ruleAdapter.ToRule(ruleRequest);
             if (await _ruleRepository.AddAsync(newRule))
             {
-                _informDirectorServices.InformRuleChangesAsync(newRule.RuleId, 'c');
+                //_informDirectorServices.InformRuleChangesAsync(newRule.RuleId, 'c');
                 return true;
             }
             return false;
@@ -46,7 +46,7 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
             var rule = _ruleAdapter.ToRule(ruleRequest);
             if (await _ruleRepository.UpdateAsync(rule))
             {
-                _informDirectorServices.InformRuleChangesAsync(rule.RuleId, 'u');
+                //_informDirectorServices.InformRuleChangesAsync(rule.RuleId, 'u');
                 return true;
             }
             return false;
@@ -57,7 +57,7 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
         {
             if (await _ruleRepository.DeleteByIdAsync(id))
             {
-                _informDirectorServices.InformRuleChangesAsync(id, 'd');
+                //_informDirectorServices.InformRuleChangesAsync(id, 'd');
                 return true;
 
             }

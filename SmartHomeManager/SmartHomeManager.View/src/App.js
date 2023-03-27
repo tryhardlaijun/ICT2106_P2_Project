@@ -32,6 +32,8 @@ import ApiRule from "pages/rules/ApiRule";
 import API from "./pages/API";
 
 import { useEffect, useState } from 'react';
+import EditScenarioDialogue from "pages/scenarios/EditScenarioDialogue";
+import CreateScenarioDialogue from "pages/scenarios/CreateScenarioDialogue";
 
 export function App() {
     const [accountId, setAccountId] = useState("11111111-1111-1111-1111-111111111111")
@@ -112,12 +114,12 @@ export function App() {
                         />
                         <Route
                             path="/scenario/edit/:id"
-                            element={<SchRule />}
+                            element={<EditScenarioDialogue />}
                         />
-                        {/* <Route
-                          path="/scenario/create/create-dialogue"
-                          element={<CreateRuleDialogue/>}
-                        /> */}
+                        <Route
+                          path="/scenario/create/create-dialogue-scenario"
+                          element={<CreateScenarioDialogue/>}
+                        />
                         <Route
                             path="/event/edit/:id"
                             element={<ActionRule />}

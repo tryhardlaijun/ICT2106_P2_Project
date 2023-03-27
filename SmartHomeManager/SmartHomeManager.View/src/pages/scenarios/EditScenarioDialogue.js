@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 
 
-import { redirect, useLocation } from "react-router-dom";
+import { redirect, useLocation,useNavigate } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
@@ -42,6 +42,7 @@ const FormCard = ({scenarioInfo, updateForm}) => {
 
 export default function EditScenarioDialogue() {
 	const location = useLocation();
+	const navigate = useNavigate();
     const [scenarioDetail, setScenarioDetail] = useState({
         ScenarioId:  localStorage.getItem("currentScenarioId"),
         ScenarioName: "",
@@ -58,9 +59,10 @@ export default function EditScenarioDialogue() {
 
     async function EditScenario(e){
 		const EditScenario = {...scenarioDetail}
-		const {data} = await axios.put('http://localhost:7140/api/Scenarios/EditScenario', EditScenario, {headers:{
+		const {data} = await axios.put('https://localhost:7140/api/Scenarios/EditScenario', EditScenario, {headers:{
 			'Content-Type': 'application/json'
 		}})
+		navigate("/Scenario");
 	}
 	const toast = useToast();
 

@@ -172,7 +172,7 @@ export default function Scenarios() {
 					'Content-Type': 'application/json' }})
 		} catch (error) {
 			console.error(error);
-			makeToast('Error', 'Failed to process voice input. Please try again.');
+			makeToast('Error', 'Failed to process voice input. Please try again.',error,5000);
 		}
 	}
 
