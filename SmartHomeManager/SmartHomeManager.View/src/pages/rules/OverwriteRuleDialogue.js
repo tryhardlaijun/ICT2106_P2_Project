@@ -36,7 +36,7 @@ export default function OverwriteRuleDialogue(props) {
 
     return (
         <>
-            <Modal isOpen={isOpen} onClose={handleButtonClick}>
+            <Modal isOpen={isOpen} >
                 <ModalOverlay />
                 <ModalContent>
                     <ModalHeader>
