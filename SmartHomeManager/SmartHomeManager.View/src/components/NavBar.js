@@ -165,19 +165,23 @@ const NAV_ITEMS = [
         href: "/analytics",
     },
     {
-        label: "Home Security Settings",
-        href: "/homesecuritysettings",
+        label: "Energy Profile",
+        href: "/energyProfile",
+    },
+    {
+        label: "Director",
+        href: "/Director",
     },
     {
         label: "Backup",
         href: "/backup",
     },
     {
-        label: "Energy Profile",
-        href: "/energyProfile",
-    },
-    {
         label: "API Data",
         href: "/API",
+    },
+    {
+        label: "Home Security Settings",
+        href: "/homesecuritysettings",
     }
 ];
