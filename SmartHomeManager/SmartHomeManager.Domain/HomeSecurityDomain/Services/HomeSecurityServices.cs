@@ -249,14 +249,14 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
                 lockedDownAccounts.Remove(accountID);
             }
 
-            for (int i = 0; i < alertedAccounts.Count; i++)
-            {
-                Console.WriteLine("alert: " + alertedAccounts[i]);
-            }
-            for (int i = 0; i < lockedDownAccounts.Count; i++)
-            {
-                Console.WriteLine("lock: " + lockedDownAccounts[i]);
-            }
+            //for (int i = 0; i < alertedAccounts.Count; i++)
+            //{
+            //    Console.WriteLine("alert: " + alertedAccounts[i]);
+            //}
+            //for (int i = 0; i < lockedDownAccounts.Count; i++)
+            //{
+            //    Console.WriteLine("lock: " + lockedDownAccounts[i]);
+            //}
 
             IEnumerable<HomeSecuritySetting> enabledSettings = await getHomeSecuritySettings(accountID);
             foreach (HomeSecuritySetting setting in enabledSettings)
