@@ -176,33 +176,51 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
                     bool sameDevice = existingRule.DeviceId == ruleReq.DeviceId;
                     bool sameConfigurationKey = existingRule.ConfigurationKey == ruleReq.ConfigurationKey;
                     bool differentRule = existingRule.RuleId != ruleReq.RuleId;
+                    // Change DateTime to 1st of Jan
+                    DateTime jan1st = new DateTime(existingRule.StartTime.Value.Year, 1, 1);
+                    DateTime jan2nd = jan1st.AddDays(1);
+
+                    existingRule.StartTime = new DateTime(jan1st.Year, jan1st.Month, jan1st.Day, existingRule.StartTime.Value.Hour, existingRule.StartTime.Value.Minute, existingRule.StartTime.Value.Second);
+                    existingRule.EndTime = existingRule.StartTime.Value.TimeOfDay < existingRule.EndTime.Value.TimeOfDay ?
+                                            new DateTime(jan1st.Year, jan1st.Month, jan1st.Day, existingRule.EndTime.Value.Hour, existingRule.EndTime.Value.Minute, existingRule.EndTime.Value.Second) :
+                                            new DateTime(jan2nd.Year, jan2nd.Month, jan2nd.Day, existingRule.EndTime.Value.Hour, existingRule.EndTime.Value.Minute, existingRule.EndTime.Value.Second);
+
+                    // Do the same for ruleReq
+                    ruleReq.StartTime = new DateTime(jan1st.Year, jan1st.Month, jan1st.Day, ruleReq.StartTime.Value.Hour, ruleReq.StartTime.Value.Minute, ruleReq.StartTime.Value.Second);
+                    ruleReq.EndTime = ruleReq.StartTime.Value.TimeOfDay < ruleReq.EndTime.Value.TimeOfDay ?
+                                        new DateTime(jan1st.Year, jan1st.Month, jan1st.Day, ruleReq.EndTime.Value.Hour, ruleReq.EndTime.Value.Minute, ruleReq.EndTime.Value.Second) :
+                                        new DateTime(jan2nd.Year, jan2nd.Month, jan2nd.Day, ruleReq.EndTime.Value.Hour, ruleReq.EndTime.Value.Minute, ruleReq.EndTime.Value.Second);
 
                     bool timeOverlap = (
-    // Standard overlap
-    (existingRule.StartTime?.TimeOfDay < ruleReq.EndTime?.TimeOfDay && existingRule.EndTime?.TimeOfDay > ruleReq.StartTime?.TimeOfDay) ||
+    // Both rules are on the same date
+    (existingRule.StartTime?.Date == ruleReq.StartTime?.Date && existingRule.EndTime?.Date == ruleReq.EndTime?.Date) && (
+        // Standard overlap
+        (existingRule.StartTime?.TimeOfDay < ruleReq.EndTime?.TimeOfDay && existingRule.EndTime?.TimeOfDay > ruleReq.StartTime?.TimeOfDay) ||
 
-    // Existing rule starts within requested rule
-    (existingRule.StartTime?.TimeOfDay >= ruleReq.StartTime?.TimeOfDay && existingRule.StartTime?.TimeOfDay < ruleReq.EndTime?.TimeOfDay) ||
+        // Existing rule starts within requested rule
+        (existingRule.StartTime?.TimeOfDay >= ruleReq.StartTime?.TimeOfDay && existingRule.StartTime?.TimeOfDay < ruleReq.EndTime?.TimeOfDay) ||
 
-    // Existing rule ends within requested rule
-    (existingRule.EndTime?.TimeOfDay > ruleReq.StartTime?.TimeOfDay && existingRule.EndTime?.TimeOfDay <= ruleReq.EndTime?.TimeOfDay) ||
+        // Existing rule ends within requested rule
+        (existingRule.EndTime?.TimeOfDay > ruleReq.StartTime?.TimeOfDay && existingRule.EndTime?.TimeOfDay <= ruleReq.EndTime?.TimeOfDay) ||
 
-    // Both rules cross midnight
-    ((ruleReq.StartTime?.TimeOfDay >= ruleReq.EndTime?.TimeOfDay && existingRule.StartTime?.TimeOfDay >= existingRule.EndTime?.TimeOfDay) &&
-        (existingRule.StartTime?.TimeOfDay < ruleReq.EndTime?.TimeOfDay || existingRule.EndTime?.TimeOfDay > ruleReq.StartTime?.TimeOfDay)) ||
+        // Both rules cross midnight
+        ((ruleReq.StartTime?.TimeOfDay >= ruleReq.EndTime?.TimeOfDay && existingRule.StartTime?.TimeOfDay >= existingRule.EndTime?.TimeOfDay) &&
+            (existingRule.StartTime?.TimeOfDay < ruleReq.EndTime?.TimeOfDay || existingRule.EndTime?.TimeOfDay > ruleReq.StartTime?.TimeOfDay)) ||
 
-    // Only the existing rule crosses midnight
-    (existingRule.StartTime?.TimeOfDay >= existingRule.EndTime?.TimeOfDay &&
-        (existingRule.StartTime?.TimeOfDay < ruleReq.EndTime?.TimeOfDay || existingRule.EndTime?.TimeOfDay > ruleReq.StartTime?.TimeOfDay && existingRule.EndTime?.TimeOfDay <= ruleReq.EndTime?.TimeOfDay)) ||
+        // Only the existing rule crosses midnight
+        (existingRule.StartTime?.TimeOfDay >= existingRule.EndTime?.TimeOfDay &&
+            (existingRule.StartTime?.TimeOfDay < ruleReq.EndTime?.TimeOfDay || existingRule.EndTime?.TimeOfDay > ruleReq.StartTime?.TimeOfDay && existingRule.EndTime?.TimeOfDay <= ruleReq.EndTime?.TimeOfDay)) ||
 
-    // Only the requested rule crosses midnight
-    (ruleReq.StartTime?.TimeOfDay >= ruleReq.EndTime?.TimeOfDay &&
-        (ruleReq.StartTime?.TimeOfDay < existingRule.EndTime?.TimeOfDay || ruleReq.EndTime?.TimeOfDay > existingRule.StartTime?.TimeOfDay && ruleReq.EndTime?.TimeOfDay <= existingRule.EndTime?.TimeOfDay)) ||
+        // Only the requested rule crosses midnight
+        (ruleReq.StartTime?.TimeOfDay >= ruleReq.EndTime?.TimeOfDay &&
+            (ruleReq.StartTime?.TimeOfDay < existingRule.EndTime?.TimeOfDay || ruleReq.EndTime?.TimeOfDay > existingRule.StartTime?.TimeOfDay && ruleReq.EndTime?.TimeOfDay <= existingRule.EndTime?.TimeOfDay)) ||
 
-    // New rule completely overlaps the old rule, and both rules cross midnight
-    (ruleReq.StartTime?.TimeOfDay <= existingRule.StartTime?.TimeOfDay && ruleReq.EndTime?.TimeOfDay >= existingRule.EndTime?.TimeOfDay &&
-        ruleReq.StartTime?.TimeOfDay >= ruleReq.EndTime?.TimeOfDay && existingRule.StartTime?.TimeOfDay >= existingRule.EndTime?.TimeOfDay)
+        // New rule completely overlaps the old rule, and both rules cross midnight
+        (ruleReq.StartTime?.TimeOfDay <= existingRule.StartTime?.TimeOfDay && ruleReq.EndTime?.TimeOfDay >= existingRule.EndTime?.TimeOfDay &&
+            ruleReq.StartTime?.TimeOfDay >= ruleReq.EndTime?.TimeOfDay && existingRule.StartTime?.TimeOfDay >= existingRule.EndTime?.TimeOfDay)
+    )
 );
+
 
 
 

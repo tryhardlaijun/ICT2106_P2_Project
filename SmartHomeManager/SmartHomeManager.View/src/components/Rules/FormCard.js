@@ -44,6 +44,8 @@ function FormCard({ ruleInfo, updateForm, updateOption, stateInfo }) {
 			if(date < startTimeDate){
 				date.setDate(date.getDate() + 1)
 			}
+			console.log("Start Time" + startTimeDate);
+			console.log("End Time" + date)
 		}
         return date.toISOString();
       }

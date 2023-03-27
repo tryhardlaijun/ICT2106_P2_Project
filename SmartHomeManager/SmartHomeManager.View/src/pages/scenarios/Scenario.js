@@ -245,17 +245,17 @@ export default function Scenarios() {
 						text="This rule will clash with another rule to turn on device at 1500."
 						action="override"
 					/>
-					<ModalButton
+					{/* <ModalButton
 						title="Simulate Troubleshooting"
 						text="Device fan seems to be unable to oscillate"
 						action="Try again"
 						redirectTo={{
 							pathname: "/troubleshooters",
-							state: { deviceTypeFilter, configurationKeyFilter },
+							// state: { deviceTypeFilter, configurationKeyFilter },
 						}}
 						deviceType="Fan"
 						configMsg="Unable to oscillate"
-					/>
+					/> */}
 				</Box>
 			</Box>
 			{showRuleOption && (
