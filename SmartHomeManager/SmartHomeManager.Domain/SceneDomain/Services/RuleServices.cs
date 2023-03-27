@@ -16,6 +16,7 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
         private readonly IGenericRepository<Rule> _ruleRepository;
         private readonly IGetRulesRepository _getRuleRepository;
         private readonly IInformDirectorServices _informDirectorServices;
+        private readonly IRuleAdapter _ruleAdapter;
 
         //Initialise the service by passing the repo
         public RuleServices(IGenericRepository<Rule> ruleRepository,IGetRulesRepository getRulesRepository, IInformDirectorServices informDirectorServices)
@@ -23,23 +24,26 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
             _ruleRepository = ruleRepository;
             _informDirectorServices = informDirectorServices;
             _getRuleRepository = getRulesRepository;
+            _ruleAdapter = new RuleAdapter();
         }
 
         #region CRUD Region
         //Create Rule
-        public async Task<bool> CreateRuleAsync(Rule rule)
+        public async Task<bool> CreateRuleAsync(RuleRequest ruleRequest)
         {
-            if (await _ruleRepository.AddAsync(rule))
+            var newRule = _ruleAdapter.ToRule(ruleRequest);
+            if (await _ruleRepository.AddAsync(newRule))
             {
-                _informDirectorServices.InformRuleChangesAsync(rule.RuleId, 'c');
+                _informDirectorServices.InformRuleChangesAsync(newRule.RuleId, 'c');
                 return true;
             }
             return false;
         }
 
         //Update Rule
-        public async Task<bool> EditRuleAsync(Rule rule)
+        public async Task<bool> EditRuleAsync(RuleRequest ruleRequest)
         {
+            var rule = _ruleAdapter.ToRule(ruleRequest);
             if (await _ruleRepository.UpdateAsync(rule))
             {
                 _informDirectorServices.InformRuleChangesAsync(rule.RuleId, 'u');
@@ -62,37 +66,51 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
 
         #region Provided Interface
         // Get all rules associated with scenario
-        public async Task<IEnumerable<Rule?>> GetAllRulesByScenarioIdAsync(Guid ScenarioId)
+        public async Task<IEnumerable<RuleRequest?>> GetAllRulesByScenarioIdAsync(Guid ScenarioId)
         {
-            return await _getRuleRepository.GetAllRulesByScenarioIdAsync(ScenarioId);
+            var rules = await _getRuleRepository.GetAllRulesByScenarioIdAsync(ScenarioId);
+            var resp = rules.Select(rule=> _ruleAdapter.ToRuleRequest(rule)).ToList();
+            return resp;
         }
 
-        public async Task<IEnumerable<Rule?>> GetEventsByScenarioIdAsync(Guid ScenarioId)
+        public async Task<IEnumerable<RuleRequest?>> GetEventsByScenarioIdAsync(Guid ScenarioId)
         {
-            return await _getRuleRepository.GetEventsByScenarioIdAsync(ScenarioId);
+            var rules = await _getRuleRepository.GetEventsByScenarioIdAsync(ScenarioId);
+            var resp = rules.Select(rule=> _ruleAdapter.ToRuleRequest(rule)).ToList();
+            return resp;
         }
 
-        public async Task<IEnumerable<Rule?>> GetApisByScenarioIdAsync(Guid ScenarioId)
+        public async Task<IEnumerable<RuleRequest?>> GetApisByScenarioIdAsync(Guid ScenarioId)
         {
-            return await _getRuleRepository.GetApiByScenarioIdAsync(ScenarioId);
+            var rules = await _getRuleRepository.GetApiByScenarioIdAsync(ScenarioId);
+            var resp = rules.Select(rule=> _ruleAdapter.ToRuleRequest(rule)).ToList();
+            return resp;
         }
 
-        public async Task<IEnumerable<Rule?>> GetSchedulesByScenarioIdAsync(Guid ScenarioId)
+        public async Task<IEnumerable<RuleRequest?>> GetSchedulesByScenarioIdAsync(Guid ScenarioId)
         {
-            return await _getRuleRepository.GetSchedulesByScenarioIdAsync(ScenarioId);
+            var rules = await _getRuleRepository.GetSchedulesByScenarioIdAsync(ScenarioId);
+            var resp = rules.Select(rule=> _ruleAdapter.ToRuleRequest(rule)).ToList();
+            return resp;
         }
 
 
         //Get using id
-        public async Task<Rule?> GetRuleByIdAsync(Guid id)
+        public async Task<RuleRequest?> GetRuleByIdAsync(Guid id)
         {
-            return await _ruleRepository.GetByIdAsync(id);
+            var rule = await _ruleRepository.GetByIdAsync(id);
+            if(rule == null){
+                return null;
+            }
+            return _ruleAdapter.ToRuleRequest(rule);
         }
 
         //Get all the rules 
-        public async Task<IEnumerable<Rule>> GetAllRulesAsync()
+        public async Task<IEnumerable<RuleRequest>> GetAllRulesAsync()
         {
-            return await _ruleRepository.GetAllAsync();
+            var rules = await _ruleRepository.GetAllAsync();
+            var resp = rules.Select(rule=> _ruleAdapter.ToRuleRequest(rule)).ToList();
+            return resp;
         }
         #endregion
 
@@ -107,7 +125,7 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
                 using (var stream = new StreamReader(file.OpenReadStream()))
                 {
                     string fileContents = await stream.ReadToEndAsync();
-                    List<Rule>? newRule = JsonConvert.DeserializeObject<List<Rule>>(fileContents);
+                    List<RuleRequest>? newRule = JsonConvert.DeserializeObject<List<RuleRequest>>(fileContents);
                     if (newRule.Any() && newRule != null)
                     {
                         foreach (var rule in newRule)
