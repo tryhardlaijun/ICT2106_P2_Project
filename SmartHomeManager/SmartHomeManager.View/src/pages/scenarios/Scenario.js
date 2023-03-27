@@ -17,6 +17,7 @@ import axios from "axios";
 import UploadModalButton from "components/Rules/UploadModal";
 import CreateRuleDialogue from "pages/rules/CreateRuleDialogue";
 import { AddIcon,DeleteIcon,EditIcon,ChevronDownIcon } from '@chakra-ui/icons'
+import { Badge,Divider } from '@chakra-ui/react'
 import { v4 as uuidv4 } from "uuid";
 
 export default function Scenarios() {
@@ -239,34 +240,35 @@ export default function Scenarios() {
 
 	return (
 		<Box padding="16">
+			<Box width="100%" display="flex" justifyContent="flex-start">	
 			<Box width="100%" display="flex" justifyContent="flex-start">			
-				<Heading alignContent="center">Profile : Wen Jun</Heading>
-				
-				<Button ml={2} paddingRight={5}>
-					{currentScenario?(
-						<Link to={`https://localhost:7140/api/Rules/DownloadRules?ScenarioId=${currentScenario.scenarioId}`}>Export</Link>
-					): "Export Rules"}
-				</Button>
-				<UploadModalButton title={"test"} text={"Import"} action={getAllRules} />
-				{/* <Box width="50%" display="flex" justifyContent="flex-end">					 */}
-					<ModalButton
-						title="Simulate Clash"
-						text="This rule will clash with another rule to turn on device at 1500."
-						action="override"
-					/>
-				{/* </Box> */}
-			</Box>		
-			<Box h="20px"></Box>
+					<Heading size={"2xl"}>Profile : Wen Jun</Heading>
 					
-			{/*<Input placeholder="Voice Control" display="inline-block" />*/}
-			<Box display="flex">
-				<Input placeholder="Voice Control" display="inline-block" onChange={(e)=>{handleVoiceInput({ScenarioName: e.target.value})}} value={scenarioDetail.ScenarioName} />
-				<Button onClick={handleVoiceSubmit}>
-					Submit
-				</Button>
+				</Box>		
+				<Box width="100%" display="flex" justifyContent="flex-end">			
+					<Button ml={2} paddingRight={5}>
+						{currentScenario?(
+							<Link to={`https://localhost:7140/api/Rules/DownloadRules?ScenarioId=${currentScenario.scenarioId}`}>Export</Link>
+						): "Export Rules"}
+					</Button>
+					<UploadModalButton title={"test"} text={"Import"} action={getAllRules} />
+						<ModalButton
+						 	color="red"
+							title="Simulate Clash"
+							text="This rule will clash with another rule to turn on device at 1500."
+							action="override"
+						/>
+				</Box>						
 			</Box>
-
+			<Badge>Profile_Id: {scenarioDetail.ProfileId}</Badge>
+			
+			
+			
+			
+		
+			{/*<Input placeholder="Voice Control" display="inline-block" />*/}
 			<Box h="10px"></Box>
+			<Divider orientation='horizontal' />
 
 			<Box width="50%" display="flex" justifyContent="flex-start">
 				{/* This will be the list of scenarios */}
@@ -342,6 +344,16 @@ export default function Scenarios() {
 					</Button>					
 				</Box>		
 				
+			</Box>
+			<Box h="20px"></Box>
+			<Divider orientation='horizontal' />
+
+			<Box h="20px"></Box>
+			<Box display="flex">
+				<Input placeholder="Voice Control" display="inline-block" onChange={(e)=>{handleVoiceInput({ScenarioName: e.target.value})}} value={scenarioDetail.ScenarioName} />
+				<Button onClick={handleVoiceSubmit}>
+					Submit
+				</Button>
 			</Box>
 			{showRuleOption && (
 				<CreateRuleDialogue				

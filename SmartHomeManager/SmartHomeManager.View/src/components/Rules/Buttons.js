@@ -27,6 +27,7 @@ function Buttons({props, deleteRule,editButton, deviceName}) {
 				<DeleteIcon marginLeft={1} ></DeleteIcon>
 			</Button>
 			<ModalButton
+						color="orange"
 						title="Troubleshoot"
 						text= {"Device " + deviceName + "'s "+ props.configurationKey.toLowerCase() +" is not operating!"}
 						action="Try again"

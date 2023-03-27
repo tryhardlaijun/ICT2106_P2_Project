@@ -26,7 +26,7 @@ function jsonToTable({ruleData, deleteRule, editButton}) {
     });
     return (
         <TableContainer>
-            <Table variant='striped' colorScheme='gray'>
+            <Table variant='striped' colorScheme="blackAlpha">
                 <Thead>
                     <Tr>
                         <Th>Rule Name</Th>

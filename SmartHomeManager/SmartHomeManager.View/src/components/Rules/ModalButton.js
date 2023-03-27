@@ -3,7 +3,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Troubleshooter from "pages/troubleshooter/Troubleshooter";
 
-function ModalButton(props) {
+function ModalButton(props,color) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const redirectTo = {
         pathname: "/troubleshooters",
@@ -15,7 +15,7 @@ function ModalButton(props) {
     return (
         <>
 
-            <Button onClick={onOpen} ml={2} colorScheme={"blackAlpha"}>{props.title}</Button>
+            <Button onClick={onOpen} ml={2} colorScheme={props.color}>{props.title}</Button>
 
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
