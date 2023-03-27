@@ -37,8 +37,8 @@ export default function SchRule() {
 	async function createRule() {
 		const newRule = { ...ruleDetail };
 		const url = newFlag
-			? "https://localhost:7140/api/Rules/CreateRule"
-			: "https://localhost:7140/api/Rules/EditRule";
+			? "http://localhost:7140/api/Rules/CreateRule"
+			: "http://localhost:7140/api/Rules/EditRule";
 		const method = newFlag ? axios.post : axios.put;
 		const { data } = await method(url, newRule, {
 			headers: {
@@ -47,7 +47,7 @@ export default function SchRule() {
 		});
 	}
 	async function checkIfClash(ruleReq) {
-		const response = await axios.post("https://localhost:7140/api/Rules/CheckIfClash", ruleReq, {
+		const response = await axios.post("http://localhost:7140/api/Rules/CheckIfClash", ruleReq, {
 			headers: {
 				"Content-Type": "application/json",
 			},
@@ -56,7 +56,7 @@ export default function SchRule() {
 	}
 
 	async function OverwriteRules(ruleReq) {
-		const response = await axios.post("https://localhost:7140/api/Rules/OverWrite", ruleReq, {
+		const response = await axios.post("http://localhost:7140/api/Rules/OverWrite", ruleReq, {
 			headers: {
 				"Content-Type": "application/json",
 			},
@@ -127,6 +127,7 @@ export default function SchRule() {
 	const handleSubmit = async () => {
 		let returnCode = ""
 		let clashedTitle = ""
+		console.log(ruleDetail);
 		await checkIfClash(ruleDetail).then(() => {
 		}).catch((err) => {
 			console.error(err)
