@@ -61,6 +61,13 @@ namespace SmartHomeManager.API.Controllers.HomeSecurityAPI
             return _homeSecurityService.getTriggeredDeviceLogs(accountId);
         }
 
+        // GET: api/HomeSecurity
+        [HttpGet("GetAllPoliceContactedList")]
+        public IEnumerable<string> getPoliceContactedList(Guid accountId)
+        {
+            return _homeSecurityService.getPoliceContacted(accountId);
+        }
+
         // PUT: api/HomeSecurity
         [HttpPut("PutSecurityMode/{accountId}")]
         public async Task<bool> PutSecurityMode(Guid accountId, PutSecurityModeRequest securityModeWebRequest)
@@ -88,6 +95,13 @@ namespace SmartHomeManager.API.Controllers.HomeSecurityAPI
         public void PutLockDownState(Guid accountId, PutSecurityModeRequest securityModeWebRequest)
         {
             _homeSecurityService.setLockdownState(accountId, securityModeWebRequest.SecurityMode);
+        }
+
+        // PUT: api/HomeSecurity
+        [HttpPut("PutPoliceContactedLog/{accountId}")]
+        public void PutHomeSecurityTrigger(Guid accountId)
+        {
+            _homeSecurityService.setPoliceContacted(accountId);
         }
     }
 }

@@ -41,6 +41,10 @@ namespace SmartHomeManager.DataSource
             context.APIKeys.RemoveRange(context.APIKeys);
             context.APIValues.RemoveRange(context.APIValues);
 
+            context.HomeSecurities.RemoveRange(context.HomeSecurities);
+            context.HomeSecuritySettings.RemoveRange(context.HomeSecuritySettings);
+            context.HomeSecurityDeviceDefinitions.RemoveRange(context.HomeSecurityDeviceDefinitions);
+
             await context.SaveChangesAsync();
 
             // create objects

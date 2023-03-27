@@ -20,6 +20,8 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
     {
         private static List<Guid> alertedAccounts = new List<Guid>();
         private static List<Guid> lockedDownAccounts = new List<Guid>();
+        private static List<KeyValuePair<Guid, string>> policeContacted = new List<KeyValuePair<Guid, string>>();
+
         private static List<KeyValuePair<Guid, string>> triggeredDeviceLog = new List<KeyValuePair<Guid, string>>();
         private IEnumerable<HomeSecurityDeviceDefinition>? homeSecurityDeviceDefinitions;
         List<string> detectorDeviceGroups = new List<string>() {
@@ -268,6 +270,31 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
                 }
             }
             
+        }
+
+        /*
+         * Called by Frontend to get a boolean based on if accountId is found in alertedAccounts.
+         */
+        public void setPoliceContacted(Guid accountId)
+        {
+            policeContacted.Add(new KeyValuePair<Guid, string>(accountId, "Police has been contacted!"));
+        }
+
+        /*
+         * Called by Frontend to get a boolean based on if accountId is found in alertedAccounts.
+         */
+        public IEnumerable<string> getPoliceContacted(Guid accountId)
+        {
+            List<string> policeContactedLogs = new List<string>();
+            foreach (KeyValuePair<Guid, string> contactedLog in policeContacted)
+            {
+                if (contactedLog.Key == accountId)
+                {
+                    policeContactedLogs.Add(contactedLog.Value);
+                    Console.WriteLine(contactedLog.Value);
+                }
+            }
+            return policeContactedLogs;
         }
     }
 }
