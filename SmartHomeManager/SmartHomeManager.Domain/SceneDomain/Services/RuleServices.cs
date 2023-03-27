@@ -69,28 +69,28 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
         public async Task<IEnumerable<RuleRequest?>> GetAllRulesRequestByScenarioIdAsync(Guid ScenarioId)
         {
             var rules = await _getRuleRepository.GetAllRulesByScenarioIdAsync(ScenarioId);
-            var resp = rules.Select(rule=> _ruleAdapter.ToRuleRequest(rule)).ToList();
+            var resp = rules.Select(rule => _ruleAdapter.ToRuleRequest(rule)).ToList();
             return resp;
         }
 
         public async Task<IEnumerable<RuleRequest?>> GetEventsByScenarioIdAsync(Guid ScenarioId)
         {
             var rules = await _getRuleRepository.GetEventsByScenarioIdAsync(ScenarioId);
-            var resp = rules.Select(rule=> _ruleAdapter.ToRuleRequest(rule)).ToList();
+            var resp = rules.Select(rule => _ruleAdapter.ToRuleRequest(rule)).ToList();
             return resp;
         }
 
         public async Task<IEnumerable<RuleRequest?>> GetApisByScenarioIdAsync(Guid ScenarioId)
         {
             var rules = await _getRuleRepository.GetApiByScenarioIdAsync(ScenarioId);
-            var resp = rules.Select(rule=> _ruleAdapter.ToRuleRequest(rule)).ToList();
+            var resp = rules.Select(rule => _ruleAdapter.ToRuleRequest(rule)).ToList();
             return resp;
         }
 
         public async Task<IEnumerable<RuleRequest?>> GetSchedulesByScenarioIdAsync(Guid ScenarioId)
         {
             var rules = await _getRuleRepository.GetSchedulesByScenarioIdAsync(ScenarioId);
-            var resp = rules.Select(rule=> _ruleAdapter.ToRuleRequest(rule)).ToList();
+            var resp = rules.Select(rule => _ruleAdapter.ToRuleRequest(rule)).ToList();
             return resp;
         }
 
@@ -99,7 +99,8 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
         public async Task<RuleRequest?> GetRuleRequestByIdAsync(Guid id)
         {
             var rule = await _ruleRepository.GetByIdAsync(id);
-            if(rule == null){
+            if (rule == null)
+            {
                 return null;
             }
             return _ruleAdapter.ToRuleRequest(rule);
@@ -109,7 +110,7 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
         public async Task<IEnumerable<RuleRequest>> GetAllRulesRequestAsync()
         {
             var rules = await _ruleRepository.GetAllAsync();
-            var resp = rules.Select(rule=> _ruleAdapter.ToRuleRequest(rule)).ToList();
+            var resp = rules.Select(rule => _ruleAdapter.ToRuleRequest(rule)).ToList();
             return resp;
         }
         #endregion

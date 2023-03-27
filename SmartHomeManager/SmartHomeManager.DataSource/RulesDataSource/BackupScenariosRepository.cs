@@ -12,21 +12,17 @@ namespace SmartHomeManager.DataSource.RulesDataSource
         {
             _applicationDbContext = applicationDbContext;
         }
-
-
-        public async Task<bool> LoadScenariosBackup(Guid profileId, IEnumerable<Scenario> rules)
+        public async Task<bool> DeleteScenario(Scenario scenario)
         {
-            IEnumerable<Domain.SceneDomain.Entities.Scenario> allScenarios = await _applicationDbContext.Scenarios.ToListAsync();
-            foreach (var scenario in allScenarios)
-            {
-                _applicationDbContext.Scenarios.Remove(scenario);
-                await _applicationDbContext.SaveChangesAsync();
-            }
-            foreach (var scenario in allScenarios)
-            {
-                await _applicationDbContext.AddRangeAsync(scenario);
-                await _applicationDbContext.SaveChangesAsync();
-            }
+            _applicationDbContext.Scenarios.Remove(scenario);
+            await _applicationDbContext.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> CreateScenario(Scenario scenario)
+        {
+            await _applicationDbContext.AddRangeAsync(scenario);
+            await _applicationDbContext.SaveChangesAsync();
             return true;
         }
     }

@@ -13,24 +13,20 @@ namespace SmartHomeManager.DataSource.RulesDataSource
 		{
             _applicationDbContext = applicationDbContext;
 		}
-
-        public async Task<bool> LoadRulesBackup(Guid profileId, IEnumerable<Domain.SceneDomain.Entities.Rule> rules)
+        
+        public async Task<bool> DeleteRule(Domain.SceneDomain.Entities.Rule rule)
         {
-            // Get all rules based on profile Id
-            IEnumerable<Domain.SceneDomain.Entities.Rule> allRules = await _applicationDbContext.Rules.Include(d => d.Device).Include(s => s.Scenario).AsNoTracking().ToListAsync();
-            // Delete them
-            foreach(var rule in allRules)
-            {
-                 _applicationDbContext.Rules.Remove(rule);
-                await _applicationDbContext.SaveChangesAsync();
-            }
-            foreach(var rule in allRules)
-            {
-                await _applicationDbContext.AddRangeAsync(rule);
-                await _applicationDbContext.SaveChangesAsync();
-            }
+            _applicationDbContext.Rules.Remove(rule);
+            await _applicationDbContext.SaveChangesAsync();
             return true;
-        }        
+        }
+
+        public async Task<bool> CreateRule(Domain.SceneDomain.Entities.Rule rule)
+        {
+            await _applicationDbContext.AddRangeAsync(rule);
+            await _applicationDbContext.SaveChangesAsync();
+            return true;
+        }
     }
 }
 

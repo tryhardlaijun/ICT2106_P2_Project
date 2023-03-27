@@ -4,7 +4,9 @@ namespace SmartHomeManager.Domain.SceneDomain.Interfaces
 {
 	public interface IBackupScenariosRepository
 	{
-        Task<bool> LoadScenariosBackup(Guid profileId, IEnumerable<Scenario> rules);
+        Task<bool> DeleteScenario(Scenario scenario);
+
+        Task<bool> CreateScenario(Scenario scenario);
     }
 }
 
