@@ -91,7 +91,8 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
         {
             var now = DateTime.Now;
             var timediff = Math.Floor((now - timeMark).TotalMinutes);
-            if (timediff > 0) {
+            if (timediff > 0)
+            {
                 timeMark = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0);
                 return true;
             }
@@ -100,15 +101,16 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
 
         private bool BackupTimeCheck()
         {
-            var now = Int16.Parse(DateTime.Now.ToString("mm"));         
-            if(now == 49)
+            var now = Int16.Parse(DateTime.Now.ToString("mm"));
+            if (now == 49)
             {
                 if (!backUpFlag)
                 {
                     backUpFlag = !backUpFlag;
                     return true;
                 }
-            } else backUpFlag = false;
+            }
+            else backUpFlag = false;
             return false;
         }
 
@@ -123,7 +125,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
                 var rLength = ruleListClone.Count();
                 var now = DateTime.Now.ToString("HH:mm");
                 foreach (var rule in ruleListClone)
-                {                    
+                {
                     // Check if rule's scenario is Active
                     if (!rule.Scenario.isActive) continue;
 
@@ -148,7 +150,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
                     }
 
                     // Check if user set an API trigger
-                    if (rule.APIKey != null) 
+                    if (rule.APIKey != null)
                     {
                         // Check if API value is triggered
                         string value;
@@ -203,7 +205,8 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
                             DeviceConfiguration = configMeaning
                         };
                         await _ruleHistoryRepository.AddAsync(rh);
-                    } else if (!checkIfRuleMatch(rule, storedRule))
+                    }
+                    else if (!checkIfRuleMatch(rule, storedRule))
                     {
                         Console.WriteLine("Stored not matching!");
                         ruleHistoryId = Guid.NewGuid();
@@ -211,7 +214,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
                         {
                             RuleHistoryId = ruleHistoryId,
                             RuleId = rule.RuleId,
-                            RuleIndex = storedRule.RuleIndex+1,
+                            RuleIndex = storedRule.RuleIndex + 1,
                             RuleName = rule.RuleName,
                             RuleStartTime = rule.StartTime,
                             RuleEndTime = rule.EndTime,
@@ -241,7 +244,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
 
                     await _historyRepository.AddAsync(h);
                 }
-            }            
+            }
         }
 
         public bool checkIfRuleMatch(Rule rule, RuleHistory ruleHistory)
@@ -334,7 +337,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
                 (accountId, homeSecurityDeviceDefinition.DeviceGroup, homeSecurityDeviceDefinition.ConfigurationKey, homeSecurityDeviceDefinition.ConfigurationOffValue);
             }
 
-            if(successState)
+            if (successState)
             {
                 Console.WriteLine(string.Format("Successfully executed security protocol for: {0} - {1} from {2} to {3}!",
                     accountId, homeSecurityDeviceDefinition.DeviceGroup,

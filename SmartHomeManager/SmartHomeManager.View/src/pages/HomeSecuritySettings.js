@@ -222,6 +222,10 @@ export default function HomeSecuritySettings() {
         const { isOpen, onOpen, onClose } = useDisclosure({ defaultIsOpen: true })
         const cancelRef = React.useRef()
 
+        if (!dataLoaded) {
+            return (<></>)
+        }
+
         if (dataLoaded && !alertedState) {
             return (<></>)
         }

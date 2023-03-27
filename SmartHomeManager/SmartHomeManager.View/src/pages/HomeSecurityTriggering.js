@@ -50,11 +50,11 @@ export default function HomeSecurityTriggering() {
     };
 
     function OnClickCamera(event) {
-        PutSecurityMode(accountId, "camera", "motion", 1);
+        PutSecurityMode(accountId, "Camera", "MOTION", 1);
     }
 
     function OnClickMicrophone(event) {
-        PutSecurityMode(accountId, "microphone", "audio", 1);
+        PutSecurityMode(accountId, "Microphone", "AUDIO", 1);
     }
 
     return (
