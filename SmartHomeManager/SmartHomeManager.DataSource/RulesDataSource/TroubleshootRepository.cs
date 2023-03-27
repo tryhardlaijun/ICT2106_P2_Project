@@ -108,10 +108,6 @@ namespace SmartHomeManager.DataSource.RulesDataSource
                 return false;
             }
         }
-        
-        public async Task<Troubleshooter?> GetByNameAsync(string name)
-        {
-            throw new NotImplementedException();
-        }
+       
     }
 }

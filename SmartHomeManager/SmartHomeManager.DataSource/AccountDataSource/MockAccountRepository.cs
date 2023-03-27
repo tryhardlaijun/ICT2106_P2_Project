@@ -63,9 +63,5 @@ namespace SmartHomeManager.DataSource.AccountDataSource
             throw new NotImplementedException();
         }
         
-        public async Task<Account?> GetByNameAsync(string name)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

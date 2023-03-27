@@ -5,9 +5,11 @@ using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.RoomDomain.Entities;
 using SmartHomeManager.Domain.SceneDomain.Entities;
+using SmartHomeManager.Domain.SceneDomain.Interfaces;
+
 namespace SmartHomeManager.DataSource.RulesDataSource
 {
-	public class ScenarioRepository: IGenericRepository<Scenario>
+	public class ScenarioRepository: IScenarioRepository<Scenario>
 	{
         private readonly ApplicationDbContext _applicationDbContext;
         protected DbSet<Scenario> _dbSet;

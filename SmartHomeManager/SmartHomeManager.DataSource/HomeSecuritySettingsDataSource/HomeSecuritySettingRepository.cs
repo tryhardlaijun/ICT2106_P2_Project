@@ -69,9 +69,5 @@ namespace SmartHomeManager.DataSource.HomeSecuritySettingsDataSource
             }
         }
         
-        public async Task<HomeSecuritySetting?> GetByNameAsync(string name)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

@@ -107,11 +107,6 @@ namespace SmartHomeManager.DataSource.NotificationDataSource
             throw new NotImplementedException();
         }
 
-        
-        public async Task<Notification?> GetByNameAsync(string name)
-        {
-            throw new NotImplementedException();
-        }
        
     }
 }

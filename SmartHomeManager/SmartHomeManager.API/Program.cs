@@ -70,7 +70,7 @@ public class Program
         builder.Services.AddScoped<IGenericRepository<Rule>, RuleRepository>();
         builder.Services.AddScoped<IGetRulesRepository, GetRulesRepository>();
         builder.Services.AddScoped<IGetRulesService, GetRulesService>();
-        builder.Services.AddScoped<IGenericRepository<Scenario>, ScenarioRepository>();
+        builder.Services.AddScoped<IScenarioRepository<Scenario>, ScenarioRepository>();
         builder.Services.AddScoped<IGetScenariosService, GetScenariosService>();
         builder.Services.AddScoped<IGenericRepository<Troubleshooter>, TroubleshootRepository>();
         builder.Services.AddScoped<IGetTroubleshooterService, GetTroubleshooterServices>();

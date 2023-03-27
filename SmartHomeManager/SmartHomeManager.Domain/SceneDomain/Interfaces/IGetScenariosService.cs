@@ -1,13 +1,12 @@
-﻿using SmartHomeManager.Domain.SceneDomain.Entities;
+﻿using SmartHomeManager.Domain.Common;
+using SmartHomeManager.Domain.SceneDomain.Entities;
 
 namespace SmartHomeManager.Domain.SceneDomain.Interfaces
-{
-	public interface IGetScenariosService
-	{
-        // get all rules on startup and when director is informed
-        Task<IEnumerable<Scenario>> GetAllScenarios();
-
-        Task<Scenario> GetScenarioById(Guid id);
+{ 
+	public interface IScenarioRepository <T> : IGenericRepository<T> where T : class
+    {
+        // Get Name by async
+        public Task<T?> GetByNameAsync(string name);
     }
 }
 

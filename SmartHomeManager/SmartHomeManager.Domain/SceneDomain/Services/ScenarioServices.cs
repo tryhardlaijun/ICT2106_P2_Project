@@ -5,9 +5,9 @@ using SmartHomeManager.Domain.SceneDomain.Interfaces;
 
 namespace SmartHomeManager.Domain.SceneDomain.Services
 {
-	public class ScenarioServices 
-    {
-		private readonly IGenericRepository<Scenario> _scenarioRepository;
+	public class ScenarioServices
+	{
+		private readonly IScenarioRepository<Scenario> _scenarioRepository;
         private readonly IInformDirectorServices _informDirectorServices;
 		public ScenarioServices(IGenericRepository<Scenario> scenarioRepository, IInformDirectorServices informDirectorServices)
 		{
