@@ -28,6 +28,8 @@ import Report from "pages/Analytics";
 import Troubleshooter from "./pages/troubleshooter/Troubleshooter";
 import CreateRuleDialogue from "pages/rules/CreateRuleDialogue";
 import ApiRule from "pages/rules/ApiRule";
+import CreateScenarioDialogue from "pages/scenarios/CreateScenarioDialogue";
+import EditScenarioDialogue from "pages/scenarios/EditScenarioDialogue";
 
 export function App() {
   return (
@@ -88,6 +90,14 @@ export function App() {
             />
             <Route path="/config" element={<DeviceConfig />} />
             <Route path="/analytics" element={<Report />} />
+            <Route
+              path="/scenario/create/create-dialogue-scenario"
+              element={<CreateScenarioDialogue/>}
+            />
+            <Route
+              path="/scenario/edit/edit-dialogue-scenario"
+              element={<EditScenarioDialogue/>}
+            />
           </Routes>
         </Container>
       </Router>

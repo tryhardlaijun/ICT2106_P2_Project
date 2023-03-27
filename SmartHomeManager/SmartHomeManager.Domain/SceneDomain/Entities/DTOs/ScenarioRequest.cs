@@ -10,7 +10,7 @@ namespace SmartHomeManager.Domain.SceneDomain.Entities.DTOs
         public Guid ScenarioId { get; set; }
 
         [Required]
-        public string ScenarioName { get; set; }
+        public String ScenarioName { get; set; } = default!;
 
         [Required]
         public Guid ProfileId { get; set; }

@@ -58,5 +58,11 @@ namespace SmartHomeManager.DataSource.HistoryDataSource
         {
             throw new NotImplementedException();
         }
+        
+        public async Task<History?> GetByNameAsync(string name)
+        {
+            throw new NotImplementedException();
+        }
+        
     }
 }

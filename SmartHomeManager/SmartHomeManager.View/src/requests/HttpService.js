@@ -3,7 +3,7 @@ import axios from "axios";
 // Add a request interceptor
 axios.interceptors.request.use(
   function (config) {
-    config.baseURL = `https://localhost:7140/`;
+    config.baseURL = `http://localhost:7140/`;
     return config;
   },
   function (error) {
