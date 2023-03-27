@@ -138,8 +138,6 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
 
                     triggeredDevice = deviceGroup.Substring(0, 1).ToUpper() + deviceGroup.Substring(1);
                     correspondingKey = configurationKey.Substring(0, 1).ToUpper() + configurationKey.Substring(1);
-                    if (deviceGroup == "microphone")
-                        correspondingKey = "Sound";
 
                     finalString = triggeredDevice + " has detected " + correspondingKey + "!";
                     triggeredDeviceLog.Add(new KeyValuePair<Guid, string>(accountID, finalString));

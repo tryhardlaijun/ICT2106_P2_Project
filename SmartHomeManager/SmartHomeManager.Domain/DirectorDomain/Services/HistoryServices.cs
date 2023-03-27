@@ -10,8 +10,8 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
 {
     public class HistoryServices
     {
-        private readonly IGenericRepository<History> _historyRepository;
-        public HistoryServices(IGenericRepository<History> historyRepository)
+        private readonly Interfaces.IHistoryRepository _historyRepository;
+        public HistoryServices(Interfaces.IHistoryRepository historyRepository)
         {
             _historyRepository = historyRepository;
         }

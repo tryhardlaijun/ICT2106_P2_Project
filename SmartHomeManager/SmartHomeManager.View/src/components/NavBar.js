@@ -168,4 +168,16 @@ const NAV_ITEMS = [
         label: "Home Security Settings",
         href: "/homesecuritysettings",
     },
+    {
+        label: "Backup",
+        href: "/backup",
+    },
+    {
+        label: "Energy Profile",
+        href: "/energyProfile",
+    },
+    {
+        label: "API Data",
+        href: "/API",
+    }
 ];

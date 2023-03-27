@@ -18,7 +18,7 @@ namespace SmartHomeManager.API.Controllers.HistoryAPIs
     {
         private readonly HistoryServices _ruleHistoryService;
 
-        public HistoryController(IGenericRepository<History> historyRepo)
+        public HistoryController(Domain.DirectorDomain.Interfaces.IHistoryRepository historyRepo)
         {
             _ruleHistoryService = new(historyRepo);
         }

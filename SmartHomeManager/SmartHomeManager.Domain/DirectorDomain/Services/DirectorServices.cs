@@ -82,7 +82,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
             while (!stoppingToken.IsCancellationRequested)
             {
                 if (TriggerTimeCheck()) CheckIfRuleTriggered();
-                if (BackupTimeCheck()) _backupInterface.createBackup(ruleList!.Clone().getRuleList(), scenarioList!.Clone().getScenarioList());
+                //if (BackupTimeCheck()) _backupInterface.createBackup(ruleList!.Clone().getRuleList(), scenarioList!.Clone().getScenarioList());
                 await Task.Delay(10000);
             }
         }
