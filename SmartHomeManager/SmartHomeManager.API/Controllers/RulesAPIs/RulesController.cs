@@ -32,28 +32,14 @@ public class RulesController : ControllerBase
         var rules = await _registerRuleService.GetAllRulesAsync();
         if (rules != null)
         {
-            var resp = rules.Select(rule => new RuleRequest
-            {
-                RuleId = rule.RuleId,
-                ScenarioId = rule.ScenarioId,
-                ConfigurationKey = rule.ConfigurationKey,
-                ConfigurationValue = rule.ConfigurationValue,
-                ActionTrigger = rule.ActionTrigger,
-                RuleName = rule.RuleName,
-                StartTime = (rule.StartTime != null) ? Convert.ToDateTime(rule.StartTime) : null,
-                EndTime = (rule.EndTime != null) ? Convert.ToDateTime(rule.EndTime) : null,
-                DeviceId = rule.DeviceId,
-                APIKey = rule.APIKey,
-                ApiValue = rule.ApiValue,
-            }).ToList();
-            return StatusCode(200,resp);
+            return StatusCode(200,rules);
         }
         return StatusCode(404, "rule not exist");
     }
 
     // GET api/Rules/1
     [HttpGet("{id}")]
-    public async Task<ActionResult<Rule>> GetRule(Guid id)
+    public async Task<ActionResult<RuleRequest>> GetRule(Guid id)
     {
         var rule = await _registerRuleService.GetRuleByIdAsync(id);
         if(rule != null)
@@ -67,21 +53,7 @@ public class RulesController : ControllerBase
     [HttpPost("CreateRule")]
     public async Task<ActionResult> CreateRule([FromBody] RuleRequest ruleRequest)
     {
-        var rule = new Rule
-        {
-            RuleId = ruleRequest.RuleId,
-            ScenarioId = ruleRequest.ScenarioId,
-            ConfigurationKey = ruleRequest.ConfigurationKey,
-            ConfigurationValue = ruleRequest.ConfigurationValue,
-            ActionTrigger = ruleRequest.ActionTrigger,
-            RuleName = ruleRequest.RuleName,
-            StartTime = (ruleRequest.StartTime != null)?Convert.ToDateTime(ruleRequest.StartTime): null,
-            EndTime = (ruleRequest.EndTime != null) ? Convert.ToDateTime(ruleRequest.EndTime) : null,
-            DeviceId = ruleRequest.DeviceId,
-            APIKey = ruleRequest.APIKey,
-            ApiValue = ruleRequest.ApiValue,
-        };
-        if(await _registerRuleService.CreateRuleAsync(rule))
+        if(await _registerRuleService.CreateRuleAsync(ruleRequest))
             return StatusCode(200, ruleRequest);
         return StatusCode(500, ruleRequest);
     }
@@ -90,23 +62,9 @@ public class RulesController : ControllerBase
     [HttpPut("EditRule")]
     public async Task<ActionResult> EditRule(RuleRequest ruleRequest)
     {
-        var rule = new Rule
-        {
-            RuleId = ruleRequest.RuleId,
-            ScenarioId = ruleRequest.ScenarioId,
-            ConfigurationKey = ruleRequest.ConfigurationKey,
-            ConfigurationValue = ruleRequest.ConfigurationValue,
-            ActionTrigger = ruleRequest.ActionTrigger,
-            RuleName = ruleRequest.RuleName,
-            StartTime = (ruleRequest.StartTime != null) ? Convert.ToDateTime(ruleRequest.StartTime) : null,
-            EndTime = (ruleRequest.EndTime != null) ? Convert.ToDateTime(ruleRequest.EndTime) : null,
-            DeviceId = ruleRequest.DeviceId,
-            APIKey = ruleRequest.APIKey,
-            ApiValue = ruleRequest.ApiValue,
-        };
-        if(await _registerRuleService.EditRuleAsync(rule))
-            return StatusCode(200, rule);
-        return StatusCode(500, rule);
+        if(await _registerRuleService.EditRuleAsync(ruleRequest))
+            return StatusCode(200, ruleRequest);
+        return StatusCode(500, ruleRequest);
     }
 
     // DELETE api/Rules/1
@@ -129,21 +87,7 @@ public class RulesController : ControllerBase
         var rules = await _registerRuleService.GetAllRulesByScenarioIdAsync(id);
         if (rules != null)
         {
-            var resp = rules.Select(rule => new RuleRequest
-            {
-                RuleId = rule.RuleId,
-                ScenarioId = rule.ScenarioId,
-                ConfigurationKey = rule.ConfigurationKey,
-                ConfigurationValue = rule.ConfigurationValue,
-                ActionTrigger = rule.ActionTrigger,
-                RuleName = rule.RuleName,
-                StartTime = (rule.StartTime != null) ? Convert.ToDateTime(rule.StartTime) : null,
-                EndTime = (rule.EndTime != null) ? Convert.ToDateTime(rule.EndTime) : null,
-                DeviceId = rule.DeviceId,
-                APIKey = rule.APIKey,
-                ApiValue = rule.ApiValue,
-            }).ToList();
-            return StatusCode(200,resp);
+            return StatusCode(200,rules);
         }
         return StatusCode(404, "rule not exist");
     }
@@ -155,21 +99,7 @@ public class RulesController : ControllerBase
         var rules = await _registerRuleService.GetSchedulesByScenarioIdAsync(id);
         if (rules != null)
         {
-            var resp = rules.Select(rule => new RuleRequest
-            {
-                RuleId = rule.RuleId,
-                ScenarioId = rule.ScenarioId,
-                ConfigurationKey = rule.ConfigurationKey,
-                ConfigurationValue = rule.ConfigurationValue,
-                ActionTrigger = rule.ActionTrigger,
-                RuleName = rule.RuleName,
-                StartTime = (rule.StartTime != null) ? Convert.ToDateTime(rule.StartTime) : null,
-                EndTime = (rule.EndTime != null) ? Convert.ToDateTime(rule.EndTime) : null,
-                DeviceId = rule.DeviceId,
-                APIKey = rule.APIKey,
-                ApiValue = rule.ApiValue,
-            }).ToList();
-            return StatusCode(200, resp);
+            return StatusCode(200, rules);
         }
         return StatusCode(404, "Schedule not exist");
     }
@@ -180,21 +110,7 @@ public class RulesController : ControllerBase
         var rules = await _registerRuleService.GetEventsByScenarioIdAsync(id);
         if (rules != null)
         {
-            var resp = rules.Select(rule => new RuleRequest
-            {
-                RuleId = rule.RuleId,
-                ScenarioId = rule.ScenarioId,
-                ConfigurationKey = rule.ConfigurationKey,
-                ConfigurationValue = rule.ConfigurationValue,
-                ActionTrigger = rule.ActionTrigger,
-                RuleName = rule.RuleName,
-                StartTime = (rule.StartTime != null) ? Convert.ToDateTime(rule.StartTime) : null,
-                EndTime = (rule.EndTime != null) ? Convert.ToDateTime(rule.EndTime) : null,
-                DeviceId = rule.DeviceId,
-                APIKey = rule.APIKey,
-                ApiValue = rule.ApiValue,
-            }).ToList();
-            return StatusCode(200, resp);
+            return StatusCode(200, rules);
         }
         return StatusCode(404, "Events not exist");
     }
@@ -205,21 +121,7 @@ public class RulesController : ControllerBase
         var rules = await _registerRuleService.GetApisByScenarioIdAsync(id);
         if (rules != null)
         {
-            var resp = rules.Select(rule => new RuleRequest
-            {
-                RuleId = rule.RuleId,
-                ScenarioId = rule.ScenarioId,
-                ConfigurationKey = rule.ConfigurationKey,
-                ConfigurationValue = rule.ConfigurationValue,
-                ActionTrigger = rule.ActionTrigger,
-                RuleName = rule.RuleName,
-                StartTime = (rule.StartTime != null) ? Convert.ToDateTime(rule.StartTime) : null,
-                EndTime = (rule.EndTime != null) ? Convert.ToDateTime(rule.EndTime) : null,
-                DeviceId = rule.DeviceId,
-                APIKey = rule.APIKey,
-                ApiValue = rule.ApiValue,
-            }).ToList();
-            return StatusCode(200, resp);
+            return StatusCode(200, rules);
         }
         return StatusCode(404, "Apis not exist");
     }
