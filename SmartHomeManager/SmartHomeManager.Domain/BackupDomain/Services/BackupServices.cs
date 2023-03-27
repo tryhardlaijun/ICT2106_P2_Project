@@ -25,7 +25,7 @@ namespace SmartHomeManager.Domain.BackupDomain.Services
         //used in director
         public async void createBackup(List<Rule> rulesList, List<Scenario> scenarioList)
         {
-            var now = DateTime.Now;
+            var now = DateTime.UtcNow;
             Guid backupId = Guid.NewGuid();
             Console.WriteLine("Backing up rules and scenarios...");
 

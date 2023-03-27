@@ -114,16 +114,17 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
 
         private async void CheckIfRuleTriggered()
         {
-            Console.WriteLine(string.Format("System Time: {0}", DateTime.Now.ToString("HH:mm:ss.fff")));
+            Console.WriteLine(string.Format("System Time: {0}", DateTime.UtcNow.ToString("HH:mm:ss.fff")));
             var ruleListClone = ruleList!.Clone().getRuleList();
             var apiData = await _apiInterface.getAPIData();
 
             if (ruleListClone.Any())
             {
                 var rLength = ruleListClone.Count();
-                var now = DateTime.Now.ToString("HH:mm");
+                var now = DateTime.UtcNow.ToString("HH:mm");
                 foreach (var rule in ruleListClone)
-                {                    
+                {
+                    
                     // Check if rule's scenario is Active
                     if (!rule.Scenario.isActive) continue;
 
@@ -233,7 +234,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
                     History h = new History
                     {
                         Message = configMeaning,
-                        Timestamp = DateTime.Now,
+                        Timestamp = DateTime.UtcNow,
                         DeviceAdjustedConfiguration = adjustedConfigValue,
                         ProfileId = rule.Scenario.ProfileId,
                         RuleHistoryId = ruleHistoryId,
