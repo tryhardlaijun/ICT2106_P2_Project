@@ -437,7 +437,7 @@ namespace SmartHomeManager.DataSource
                 },
             };
 
-            await context.APIKeys.AddRangeAsync(apiKey);
+            await context.HomeSecurityDeviceDefinitions.AddRangeAsync(homeSecurityDeviceDefinitions);
             await context.SaveChangesAsync();
 
 
