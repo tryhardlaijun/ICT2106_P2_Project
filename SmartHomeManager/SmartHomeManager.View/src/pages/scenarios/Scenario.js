@@ -16,6 +16,7 @@ import MenuItems from "components/Rules/MenuItems";
 import axios from "axios";
 import UploadModalButton from "components/Rules/UploadModal";
 import CreateRuleDialogue from "pages/rules/CreateRuleDialogue";
+import { v4 as uuidv4 } from "uuid";
 
 export default function Scenarios() {
 	const [ allRules, setAllRules] = useState([])
@@ -26,10 +27,17 @@ export default function Scenarios() {
 	const [typesOfRuleButton, setTypesOfRuleButton] = useState("Schedule")
 	let [searchParams, setSearchParams] = useSearchParams();
 	const [showRuleOption, setShowRuleOption] = useState(false);
-	
+	const [inputValue, setInputValue] = useState("");
+
 	const toast = useToast();
 	const deviceTypeFilter = "Fan";
 	const configurationKeyFilter = "Unable to oscillate";
+	const [scenarioDetail, setScenarioDetail] = useState({
+		ScenarioId: uuidv4(),
+		ScenarioName: "",
+		ProfileId: "22222222-2222-2222-2222-222222222222",
+		isActive: false,
+	});
 
 	/**
 	 * @param {string} id
@@ -141,6 +149,32 @@ export default function Scenarios() {
 		setTypesOfRuleButton(type.name)
 		getRulesBasedOnTypes(currentScenario , type.name)
 	}
+	
+	function handleVoiceInput(value) {
+		return setScenarioDetail((prev) => {
+			return { ...prev, ...value };
+		});
+		
+	}
+	// function updateDetails(value) {
+	// 	return setRuleDetail((prev) => {
+	// 		return { ...prev, ...value };
+	// 	});
+	// }
+	
+	async function handleVoiceSubmit() {
+		const newScenario = {...scenarioDetail}
+		console.log(newScenario.ScenarioName)
+		try {
+			await axios.post('http://localhost:7140/api/Scenarios/VoiceInput',
+				newScenario.ScenarioName,
+				{ headers:{
+					'Content-Type': 'application/json' }})
+		} catch (error) {
+			console.error(error);
+			makeToast('Error', 'Failed to process voice input. Please try again.');
+		}
+	}
 
 	/**
 	 * Deletes the rule with the ruleID
@@ -173,7 +207,6 @@ export default function Scenarios() {
 				data: scenarioID,
 			});
 			setAllScenario(allScenario.filter(scenario => scenario.ScenarioId !== scenarioID));
-			window.location.reload();
 			setCurrentScenario(currentScenario);
 		} catch (error) {
 			console.error(error);
@@ -198,12 +231,20 @@ export default function Scenarios() {
 		  }
 		};
 		fetchData();
-	  }, []);
+	  }, [allScenario]);
+	
 
 	return (
 		<Box padding="16">
 			<Heading alignContent="center">Profile : Wen Jun</Heading>
-			<Input placeholder="Voice Control" display="inline-block" />
+			
+			{/*<Input placeholder="Voice Control" display="inline-block" />*/}
+			<Box display="flex">
+				<Input placeholder="Voice Control" display="inline-block" onChange={(e)=>{handleVoiceInput({ScenarioName: e.target.value})}} value={scenarioDetail.ScenarioName} />
+				<Button onClick={handleVoiceSubmit}>
+					Submit
+				</Button>
+			</Box>
 
 			<Box width="50%" display="flex" justifyContent="flex-start">
 				{/* This will be the list of scenarios */}

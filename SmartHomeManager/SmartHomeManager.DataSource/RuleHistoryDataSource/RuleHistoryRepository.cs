@@ -78,5 +78,10 @@ namespace SmartHomeManager.DataSource.RuleHistoryDataSource
         {
             return await _applicationDbContext.RuleHistories.CountAsync();
         }
+        
+        public async Task<RuleHistory?> GetByNameAsync(string name)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

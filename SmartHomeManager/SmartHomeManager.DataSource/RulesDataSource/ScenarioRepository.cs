@@ -98,6 +98,21 @@ namespace SmartHomeManager.DataSource.RulesDataSource
                 return false;
             }
         }
+        
+        public async Task<Scenario?> GetByNameAsync(string name)
+        {
+            try
+            {
+                var scenario = await _applicationDbContext.Scenarios.FirstOrDefaultAsync(s => s.ScenarioName == name);
+                Console.WriteLine(scenario.ScenarioName);
+                return scenario;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+        
     }
 }
 
