@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SmartHomeManager.Domain.BackupDomain.Interfaces
 {
-    public interface IBackupService
+    public interface ICreateBackupService
     {
         void createBackup(List<Rule> rulesList, List<Scenario> scenarioList);
     }

@@ -43,7 +43,7 @@ export default function Scenarios() {
 	 * @param {string} id
 	 */
 	async function getAllRules(id){
-		const { data: ruleData } = await axios.get(`http://localhost:7140/api/Rules/schedulesByScenarioId/${id}`)
+		const { data: ruleData } = await axios.get(`https://localhost:7140/api/Rules/schedulesByScenarioId/${id}`)
 		setAllRules(ruleData)
 	}
 
@@ -53,15 +53,15 @@ export default function Scenarios() {
 	async function getRulesBasedOnTypes(currentScenario, type){
 		switch(type){
 			case "Schedule":
-				const { data: scheduleData } = await axios.get(`http://localhost:7140/api/Rules/schedulesByScenarioId/${currentScenario.scenarioId}`)
+				const { data: scheduleData } = await axios.get(`https://localhost:7140/api/Rules/schedulesByScenarioId/${currentScenario.scenarioId}`)
 				setAllRules(scheduleData)
 				break;
 			case "Event":
-				const { data: eventData } = await axios.get(`http://localhost:7140/api/Rules/eventsByScenarioId/${currentScenario.scenarioId}`)
+				const { data: eventData } = await axios.get(`https://localhost:7140/api/Rules/eventsByScenarioId/${currentScenario.scenarioId}`)
 				setAllRules(eventData)
 				break;
 			case "API":
-				const { data: apiData } = await axios.get(`http://localhost:7140/api/Rules/apisByScenarioId/${currentScenario.scenarioId}`)
+				const { data: apiData } = await axios.get(`https://localhost:7140/api/Rules/apisByScenarioId/${currentScenario.scenarioId}`)
 				setAllRules(apiData)
 				break;
 		}
@@ -166,7 +166,7 @@ export default function Scenarios() {
 		const newScenario = {...scenarioDetail}
 		console.log(newScenario.ScenarioName)
 		try {
-			await axios.post('http://localhost:7140/api/Scenarios/VoiceInput',
+			await axios.post('https://localhost:7140/api/Scenarios/VoiceInput',
 				newScenario.ScenarioName,
 				{ headers:{
 					'Content-Type': 'application/json' }})
@@ -182,7 +182,7 @@ export default function Scenarios() {
 	 */
 	async function deleteRule(ruleID) {
 		try {
-			await axios.delete(`http://localhost:7140/api/Rules/${ruleID}`, {
+			await axios.delete(`https://localhost:7140/api/Rules/${ruleID}`, {
 				headers: {
 					"Content-Type": "application/json",
 				},
@@ -200,7 +200,7 @@ export default function Scenarios() {
 	 */
     async function deleteScenario(scenarioID){
 		try {
-			await axios.delete(`http://localhost:7140/api/Scenarios/${scenarioID}`, {
+			await axios.delete(`https://localhost:7140/api/Scenarios/${scenarioID}`, {
 				headers: {
 					"Content-Type": "application/json",
 				},
@@ -216,10 +216,12 @@ export default function Scenarios() {
 	useEffect(() => {
 		const fetchData = async () => {
 		  try {
-			const { data: scenarioData } = await axios.get(`http://localhost:7140/api/Scenarios/GetAllScenarios`);
-			setAllScenario(scenarioData);
+			const { data: scenarioData } = await axios.get(`https://localhost:7140/api/Scenarios/GetAllScenarios`);
+			  setAllScenario(scenarioData);
+			  console.log(scenarioData.length)
 			if (scenarioData.length > 0) {
-			  const currentScenario = scenarioData[scenarioData.length-1];
+				const currentScenario = scenarioData[scenarioData.length - 1];
+				console.log(scenarioData[scenarioData.length - 1])
 			  setCurrentScenario(currentScenario);
 			  setButtonName(currentScenario.scenarioName);
 			  getAllRules(currentScenario.scenarioId)
@@ -307,7 +309,7 @@ export default function Scenarios() {
 				<Box width="50%" display="flex" justifyContent="flex-start">
 					<Button ml={2} colorScheme="whatsapp">
 						{currentScenario?(
-							<Link to={`http://localhost:7140/api/Rules/DownloadRules?ScenarioId=${currentScenario.scenarioId}`}>Export Rules</Link>
+							<Link to={`https://localhost:7140/api/Rules/DownloadRules?ScenarioId=${currentScenario.scenarioId}`}>Export Rules</Link>
 						): "Export Rules"}
 					</Button>
 					<UploadModalButton title={"test"} text={"Import Rules"} action={getAllRules}/>

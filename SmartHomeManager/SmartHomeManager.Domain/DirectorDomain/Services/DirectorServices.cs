@@ -29,7 +29,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
         private readonly IGetRulesService _ruleInterface;
         private readonly IGetScenariosService _scenarioInterface;
         private readonly IEnergyProfileServices _energyProfileInterface;
-        private readonly IBackupService _backupInterface;
+        private readonly ICreateBackupService _backupInterface;
         private readonly IAPIDataService _apiInterface;
 
         private readonly IRuleHistoryRepository _ruleHistoryRepository;
@@ -57,7 +57,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
             _scenarioInterface = scope.ServiceProvider.GetRequiredService<IGetScenariosService>();
             _ruleInterface = scope.ServiceProvider.GetRequiredService<IGetRulesService>();
             _energyProfileInterface = scope.ServiceProvider.GetRequiredService<IEnergyProfileServices>();
-            _backupInterface = scope.ServiceProvider.GetRequiredService<IBackupService>();
+            _backupInterface = scope.ServiceProvider.GetRequiredService<ICreateBackupService>();
             _directorControlDeviceInterface = scope.ServiceProvider.GetRequiredService<IDirectorControlDeviceService>();
             _troubleshooterInterface = scope.ServiceProvider.GetRequiredService<ITroubleshooterServices>();
             _apiInterface = scope.ServiceProvider.GetRequiredService<IAPIDataService>();
@@ -74,6 +74,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
         {
             scenarioList = new ScenarioList((await _scenarioInterface.GetAllScenarios()).ToList());
             ruleList = new RuleList((await _ruleInterface.GetAllRulesAsync()).ToList());
+
 
 
             //_backupInterface.createBackup(rules, scenarios);
@@ -102,7 +103,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
         private bool BackupTimeCheck()
         {
             var now = Int16.Parse(DateTime.Now.ToString("mm"));
-            if (now == 49)
+            if (now == 2)
             {
                 if (!backUpFlag)
                 {

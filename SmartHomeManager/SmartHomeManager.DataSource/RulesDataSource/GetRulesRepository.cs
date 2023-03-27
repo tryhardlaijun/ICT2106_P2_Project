@@ -14,12 +14,12 @@ namespace SmartHomeManager.DataSource.RulesDataSource
 
         public async Task<IEnumerable<Rule?>> GetAllRules()
         {
-            return await _applicationDbContext.Rules.ToListAsync();
+            return await _applicationDbContext.Rules.Include(d => d.Device).Include(s => s.Scenario).ToListAsync();
         }
 
         public async Task<IEnumerable<Rule?>> GetAllRulesByScenarioIdAsync(Guid ScenarioId)
         {
-            return await _applicationDbContext.Rules.Where(r => r.ScenarioId == ScenarioId).ToListAsync();
+            return await _applicationDbContext.Rules.Where(r => r.ScenarioId == ScenarioId).Include(d => d.Device).Include(s => s.Scenario).ToListAsync();
         }
         public async Task<IEnumerable<Rule>> GetSchedulesByScenarioIdAsync(Guid ScenarioId)
         {

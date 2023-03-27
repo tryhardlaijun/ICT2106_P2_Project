@@ -66,7 +66,7 @@ namespace SmartHomeManager.DataSource.RulesDataSource
         {
             try
             {
-                var scenario = await _applicationDbContext.Scenarios.FindAsync(id);
+                var scenario = await _applicationDbContext.Scenarios.Include(p => p.Profile).FirstAsync(s => s.ScenarioId == id);
                 return scenario;
             }
             catch

@@ -65,6 +65,8 @@ public class Program
             options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
         });
 
+        builder.Services.AddTransient(typeof(Lazy<>));
+
         // MODULE 3
         //3
         builder.Services.AddScoped<IGenericRepository<Rule>, RuleRepository>();
@@ -78,6 +80,7 @@ public class Program
         builder.Services.AddScoped<IBackupScenariosRepository, BackupScenariosRepository>();
         builder.Services.AddScoped<IBackupRulesService, BackupRulesService>();
         builder.Services.AddScoped<IBackupScenariosService, BackupScenariosService>();
+        builder.Services.AddScoped<ITroubleshooterServices, TroubleshooterServices>();
 
 
         // TEAM 1
@@ -98,7 +101,7 @@ public class Program
         builder.Services.AddScoped<IEnergyProfileServices, EnergyProfileServices>();
         builder.Services.AddScoped<IEnergyProfileServices, EnergyProfileServices>();        
         //builder.Services.AddScoped<IUpdateBackupService, BackupServices>();
-        builder.Services.AddScoped<IBackupService, BackupServices>();
+        builder.Services.AddScoped<ICreateBackupService, CreateBackupServices>();
         builder.Services.AddScoped<IAPIDataService, APIDataServices>();
 
         builder.Services.AddScoped<IDirectorControlDeviceService, DirectorControlDeviceService>();       
