@@ -20,7 +20,7 @@ function jsonToTable({ruleData, deleteRule, editButton}) {
                 <Td>{info.ruleName}</Td>
                 <Td>{returnDeviceName(info.deviceId)}</Td>
                 <Td>{info.configurationKey}</Td>
-                <Buttons props={info} deleteRule= {deleteRule} editButton={editButton} />
+                <Buttons props={info} deleteRule= {deleteRule} editButton={editButton} deviceName={returnDeviceName(info.deviceId)} />
             </Tr>
         );
     });
