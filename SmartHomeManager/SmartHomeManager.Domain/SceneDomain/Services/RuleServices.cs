@@ -11,7 +11,7 @@ using Rule = SmartHomeManager.Domain.SceneDomain.Entities.Rule;
 
 namespace SmartHomeManager.Domain.SceneDomain.Services
 {
-    public class RuleServices: IGetRulesService
+    public class RuleServices
     {
         private readonly IGenericRepository<Rule> _ruleRepository;
         private readonly IGetRulesRepository _getRuleRepository;

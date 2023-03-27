@@ -69,7 +69,7 @@ public class Program
         //3
         builder.Services.AddScoped<IGenericRepository<Rule>, RuleRepository>();
         builder.Services.AddScoped<IGetRulesRepository, GetRulesRepository>();
-        builder.Services.AddScoped<IGetRulesService, RuleServices>();
+        builder.Services.AddScoped<IGetRulesService, GetRulesService>();
         builder.Services.AddScoped<IGenericRepository<Scenario>, ScenarioRepository>();
         builder.Services.AddScoped<IGetScenariosService, GetScenariosService>();
         builder.Services.AddScoped<IGenericRepository<Troubleshooter>, TroubleshootRepository>();
