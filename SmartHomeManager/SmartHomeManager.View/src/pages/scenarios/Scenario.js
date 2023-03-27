@@ -231,7 +231,7 @@ export default function Scenarios() {
 		  }
 		};
 		fetchData();
-	  }, [allScenario]);
+	  }, []);
 	
 
 	return (
