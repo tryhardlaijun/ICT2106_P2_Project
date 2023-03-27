@@ -137,6 +137,10 @@ namespace SmartHomeManager.DataSource.EnergyProfileDataSource
         {
             throw new NotImplementedException();
         }
-        
+
+        public Task<bool> SaveAsync()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

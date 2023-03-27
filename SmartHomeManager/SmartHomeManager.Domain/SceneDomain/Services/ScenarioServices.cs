@@ -9,7 +9,7 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
 	{
 		private readonly IScenarioRepository<Scenario> _scenarioRepository;
         private readonly IInformDirectorServices _informDirectorServices;
-		public ScenarioServices(IGenericRepository<Scenario> scenarioRepository, IInformDirectorServices informDirectorServices)
+		public ScenarioServices(IScenarioRepository<Scenario> scenarioRepository, IInformDirectorServices informDirectorServices)
 		{
 			_scenarioRepository = scenarioRepository;
             _informDirectorServices = informDirectorServices;
