@@ -250,30 +250,3 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
 
     }
 }
-
-
-//bool timeOverlap = (
-//    // This checks for a standard overlap, e.g., existing rule from 12:00 to 12:30 (12:00 PM to 12:30 PM) overlaps with requested rule from 11:00 to 13:00 (11:00 AM to 1:00 PM)
-//    (existingRule.StartTime < ruleReq.EndTime && existingRule.EndTime > ruleReq.StartTime) ||
-
-//    // This checks if the existing rule starts within the requested rule, e.g., existing rule from 12:00 to 13:30 (12:00 PM to 1:30 PM) overlaps with requested rule from 11:00 to 13:00 (11:00 AM to 1:00 PM)
-//    (existingRule.StartTime >= ruleReq.StartTime && existingRule.StartTime < ruleReq.EndTime) ||
-
-//    // This checks if the existing rule ends within the requested rule, e.g., existing rule from 10:30 to 12:30 (10:30 AM to 12:30 PM) overlaps with requested rule from 11:00 to 13:00 (11:00 AM to 1:00 PM)
-//    (existingRule.EndTime > ruleReq.StartTime && existingRule.EndTime <= ruleReq.EndTime) ||
-
-//    // To account for the overlap across midnight when both rules cross midnight
-//    // Example: existing rule from 23:00 to 2:00 (11:00 PM to 2:00 AM) overlaps with requested rule from 1:00 to 4:00 (1:00 AM to 4:00 AM)
-//    ((ruleReq.StartTime > ruleReq.EndTime && existingRule.StartTime > existingRule.EndTime) &&
-//        ((existingRule.StartTime < ruleReq.EndTime) || (existingRule.EndTime > ruleReq.StartTime))) ||
-
-//    // To account for the overlap when only the existing rule crosses midnight
-//    // Example: existing rule from 23:00 to 1:00 (11:00 PM to 1:00 AM) overlaps with requested rule from 0:30 to 2:30 (12:30 AM to 2:30 AM)
-//    (existingRule.StartTime > existingRule.EndTime &&
-//        ((existingRule.StartTime < ruleReq.EndTime) || (existingRule.EndTime > ruleReq.StartTime && existingRule.EndTime <= ruleReq.EndTime))) ||
-
-//    // To account for the overlap when only the requested rule crosses midnight
-//    // Example: existing rule from 0:30 to 2:30 (12:30 AM to 2:30 AM) overlaps with requested rule from 23:00 to 1:00 (11:00 PM to 1:00 AM)
-//    (ruleReq.StartTime > ruleReq.EndTime &&
-//        ((ruleReq.StartTime < existingRule.EndTime) || (ruleReq.EndTime > existingRule.StartTime && ruleReq.EndTime <= existingRule.EndTime)))
-//);

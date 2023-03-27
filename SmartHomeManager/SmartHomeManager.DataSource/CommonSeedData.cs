@@ -1,8 +1,11 @@
-﻿using SmartHomeManager.Domain.AccountDomain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using SmartHomeManager.Domain.AccountDomain.Entities;
+using SmartHomeManager.Domain.APIDomain.Entities;
 using SmartHomeManager.Domain.DeviceDomain.Entities;
 using SmartHomeManager.Domain.DeviceLoggingDomain.Entities;
 using SmartHomeManager.Domain.DeviceStoreDomain.Entities;
 using SmartHomeManager.Domain.DirectorDomain.Entities;
+using SmartHomeManager.Domain.HomeSecurityDomain.Entities;
 using SmartHomeManager.Domain.NotificationDomain.Entities;
 using SmartHomeManager.Domain.RoomDomain.Entities;
 using SmartHomeManager.Domain.SceneDomain.Entities;
@@ -33,6 +36,14 @@ namespace SmartHomeManager.DataSource
 
             context.RuleHistories.RemoveRange(context.RuleHistories);
             context.DeviceProducts.RemoveRange(context.DeviceProducts);
+
+            context.APIDatas.RemoveRange(context.APIDatas);
+            context.APIKeys.RemoveRange(context.APIKeys);
+            context.APIValues.RemoveRange(context.APIValues);
+
+            context.HomeSecurities.RemoveRange(context.HomeSecurities);
+            context.HomeSecuritySettings.RemoveRange(context.HomeSecuritySettings);
+            context.HomeSecurityDeviceDefinitions.RemoveRange(context.HomeSecurityDeviceDefinitions);
 
             await context.SaveChangesAsync();
 
@@ -287,40 +298,168 @@ namespace SmartHomeManager.DataSource
             await context.Rules.AddRangeAsync(rules);
             await context.SaveChangesAsync();
 
-            var ruleHistory = new List<RuleHistory>
-            {
-                new RuleHistory
-                {            
-                    RuleHistoryId = Guid.NewGuid(),
-                    RuleId = rules[0].RuleId,
-                    RuleIndex = 0,
-                    RuleName = rules[0].RuleName,
-                    RuleStartTime = rules[0].StartTime,
-                    RuleEndTime = rules[0].EndTime,
-                    RuleActionTrigger = rules[0].ActionTrigger,
-                    ScenarioName = rules[0].Scenario.ScenarioName,
-                    DeviceName = rules[0].Device.DeviceName,
-                    DeviceConfiguration = string.Format("{0} triggering ...", rules[0].Device.DeviceName)
-                }
-            };
+			var apiKey = new List<APIKey>
+			{
+				new APIKey
+				{
+					APIKeyType = "temperature_less_than",
+					APILabelText = "Temperature less than"
 
-            await context.RuleHistories.AddRangeAsync(ruleHistory);
-            await context.SaveChangesAsync();
+				},
+				new APIKey
+				{
+					APIKeyType = "temperature_equals_to",
+					APILabelText = "Temperature Equals to"
 
-            var history = new List<History>
+				},
+				new APIKey
+				{
+					APIKeyType = "temperature_more_than",
+					APILabelText = "Temperature More than"
+
+				},
+				new APIKey
+				{
+					APIKeyType = "weather",
+					APILabelText = "Weather"
+
+				},
+			};
+
+			await context.APIKeys.AddRangeAsync(apiKey);
+			await context.SaveChangesAsync();
+
+            var apiValue = new List<APIValue>
             {
-                new History
+                new APIValue
                 {
-                    Message = string.Format("{0} is triggered", rules[0].Device.DeviceName),
-                    Timestamp = Convert.ToDateTime("2023-02-04T07:21:26.934Z"),
-                    DeviceAdjustedConfiguration = 1,
-                    ProfileId = profiles[0].ProfileId,
-                    RuleHistoryId = ruleHistory[0].RuleHistoryId
+                    APIValueId = new Guid(),
+                    APIKeyType = apiKey[0].APIKeyType,
+                    APIValues = string.Empty
+
+                },
+                new APIValue
+                {
+                    APIValueId = new Guid(),
+                    APIKeyType = apiKey[1].APIKeyType,
+                    APIValues = string.Empty
+
+                },
+                new APIValue
+                {
+                    APIValueId = new Guid(),
+                    APIKeyType = apiKey[2].APIKeyType,
+                    APIValues = string.Empty
+
+                },
+                new APIValue
+                {
+                    APIValueId = new Guid(),
+                    APIKeyType = apiKey[3].APIKeyType,
+                    APIValues = "Sunny"
+
+                },
+                new APIValue
+                {
+                    APIValueId = new Guid(),
+                    APIKeyType = apiKey[3].APIKeyType,
+                    APIValues = "Showers"
+
+                },
+                new APIValue
+                {
+                    APIValueId = new Guid(),
+                    APIKeyType = apiKey[3].APIKeyType,
+                    APIValues = "Thundery Showers"
+
+                },
+                new APIValue
+                {
+                    APIValueId = new Guid(),
+                    APIKeyType = apiKey[3].APIKeyType,
+                    APIValues = "Cloudy"
+
+                },
+                new APIValue
+                {
+                    APIValueId = new Guid(),
+                    APIKeyType = apiKey[3].APIKeyType,
+                    APIValues = "Partly Cloudy"
+
+                },
+                new APIValue
+                {
+                    APIValueId = new Guid(),
+                    APIKeyType = apiKey[3].APIKeyType,
+                    APIValues = "Light Rain"
+
+                },
+                new APIValue
+                {
+                    APIValueId = new Guid(),
+                    APIKeyType = apiKey[3].APIKeyType,
+                    APIValues = "Moderate Rain"
+
                 }
             };
 
-            await context.Histories.AddRangeAsync(history);
+            await context.APIValues.AddRangeAsync(apiValue);
             await context.SaveChangesAsync();
+
+            var homeSecurityDeviceDefinitions = new List<HomeSecurityDeviceDefinition>
+            {
+                new HomeSecurityDeviceDefinition
+                {
+                    DeviceGroup = "Door",
+                    ConfigurationKey = "LOCKED",
+                    ConfigurationOffValue = 0,
+                    ConfigurationOnValue = 1
+                },
+                new HomeSecurityDeviceDefinition
+                {
+                    DeviceGroup = "Window",
+                    ConfigurationKey = "CLOSED",
+                    ConfigurationOffValue = 0,
+                    ConfigurationOnValue = 1
+
+                },
+                new HomeSecurityDeviceDefinition
+                {
+                    DeviceGroup = "Alarm",
+                    ConfigurationKey = "ACTIVE",
+                    ConfigurationOffValue = 0,
+                    ConfigurationOnValue = 1
+
+                },
+                new HomeSecurityDeviceDefinition
+                {
+                    DeviceGroup = "Gate",
+                    ConfigurationKey = "LOCKED",
+                    ConfigurationOffValue = 0,
+                    ConfigurationOnValue = 1
+
+                },
+                new HomeSecurityDeviceDefinition
+                {
+                    DeviceGroup = "Camera",
+                    ConfigurationKey = "MOTION",
+                    ConfigurationOffValue = 0,
+                    ConfigurationOnValue = 1
+
+                },
+               new HomeSecurityDeviceDefinition
+                {
+                    DeviceGroup = "Microphone",
+                    ConfigurationKey = "AUDIO",
+                    ConfigurationOffValue = 0,
+                    ConfigurationOnValue = 1
+
+                },
+            };
+
+            await context.HomeSecurityDeviceDefinitions.AddRangeAsync(homeSecurityDeviceDefinitions);
+            await context.SaveChangesAsync();
+
 
             Random rnd = new Random();
             var DeviceLogs = new List<DeviceLog>();

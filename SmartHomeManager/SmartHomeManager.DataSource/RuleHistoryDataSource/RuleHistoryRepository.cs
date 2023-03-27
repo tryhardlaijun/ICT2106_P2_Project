@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace SmartHomeManager.DataSource.RuleHistoryDataSource
 {
-    public class RuleHistoryRepository : IRuleHistoryRepository<RuleHistory>
+    public class RuleHistoryRepository : IRuleHistoryRepository
     {
         private readonly ApplicationDbContext _applicationDbContext;
 
@@ -35,16 +35,6 @@ namespace SmartHomeManager.DataSource.RuleHistoryDataSource
             }
         }
 
-        public Task<bool> DeleteAsync(RuleHistory entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> DeleteByIdAsync(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<IEnumerable<RuleHistory>> GetAllAsync()
         {
             return await _applicationDbContext.RuleHistories.ToListAsync();
@@ -52,22 +42,9 @@ namespace SmartHomeManager.DataSource.RuleHistoryDataSource
 
         public async Task<RuleHistory?> GetByRuleIdAsync(Guid ruleId)
         {
-            return await _applicationDbContext.RuleHistories.Where(r => r.RuleId == ruleId).OrderByDescending(r => r.RuleIndex).FirstAsync();
-        }
-
-        public Task<RuleHistory?> GetByIdAsync(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> SaveAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> UpdateAsync(RuleHistory entity)
-        {
-            throw new NotImplementedException();
+            IEnumerable<RuleHistory> rh = await _applicationDbContext.RuleHistories.Where(r => r.RuleId == ruleId).ToListAsync();
+            if (rh.Any()) return rh.OrderByDescending(r => r.RuleIndex).First();
+            return null;
         }
 
         public async Task<int> GetRuleIndexLimitAsync()

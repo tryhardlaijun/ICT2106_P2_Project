@@ -59,13 +59,20 @@ namespace SmartHomeManager.DataSource.Migrations
 
             modelBuilder.Entity("SmartHomeManager.Domain.APIDomain.Entities.APIValue", b =>
                 {
+                    b.Property<Guid>("APIValueId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("APIKeyType")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("APIValues")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("APIKeyType");
+                    b.HasKey("APIValueId");
+
+                    b.HasIndex("APIKeyType");
 
                     b.ToTable("APIValues");
                 });
@@ -230,6 +237,74 @@ namespace SmartHomeManager.DataSource.Migrations
                     b.HasIndex("ForecastChartId");
 
                     b.ToTable("ForecastChartsData");
+                });
+
+            modelBuilder.Entity("SmartHomeManager.Domain.BackupDomain.Entities.BackupRule", b =>
+                {
+                    b.Property<Guid>("BackupId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("ScenarioId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("RuleId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("APIKey")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ActionTrigger")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ApiValue")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ConfigurationKey")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ConfigurationValue")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("DeviceId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("EndTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RuleName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("StartTime")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("BackupId", "ScenarioId", "RuleId");
+
+                    b.ToTable("BackupRules");
+                });
+
+            modelBuilder.Entity("SmartHomeManager.Domain.BackupDomain.Entities.BackupScenario", b =>
+                {
+                    b.Property<Guid>("BackupId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("ScenarioId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("ProfileId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ScenarioName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("BackupId", "ScenarioId");
+
+                    b.ToTable("BackupScenarios");
                 });
 
             modelBuilder.Entity("SmartHomeManager.Domain.DeviceDomain.Entities.Device", b =>
@@ -534,7 +609,7 @@ namespace SmartHomeManager.DataSource.Migrations
                     b.Property<Guid>("AccountId")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("SecurityModeState")
+                    b.Property<bool>("SecurityModeState")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("HomeSecurityId");

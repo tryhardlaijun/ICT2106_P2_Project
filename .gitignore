@@ -215,6 +215,7 @@ Generated_Code/
 # because we have git ;-)
 _UpgradeReport_Files/
 Backup*/
+!BackupDomain
 UpgradeLog*.XML
 UpgradeLog*.htm
 

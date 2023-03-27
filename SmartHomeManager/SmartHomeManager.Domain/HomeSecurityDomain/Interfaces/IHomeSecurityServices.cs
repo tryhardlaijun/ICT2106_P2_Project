@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace SmartHomeManager.Domain.HomeSecurityDomain.Interfaces
 {
-    internal interface IHomeSecurityServices
+    public interface IHomeSecurityServices
     {
-        List<string> getHomeSecurityCompatibleDevices();
-        void processEvent(Guid accountID);
+        void processEventAsync(Guid accountID, String deviceGroup, String configurationKey, int configurationValue);
     }
 }

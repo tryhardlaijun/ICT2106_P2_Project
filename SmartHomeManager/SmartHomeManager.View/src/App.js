@@ -6,14 +6,15 @@ import Devices from "./pages/Devices";
 import Profiles from "./pages/Profiles";
 import Director from "./pages/Director";
 import Backup from "./pages/Backup";
-import Intruder from "./pages/Intruder";
+import HomeSecuritySettings from "./pages/HomeSecuritySettings";
+import HomeSecurityTriggering from "./pages/HomeSecurityTriggering";
 import Configuration from "./pages/Configuration";
 import EnergyProfile from "./pages/EnergyProfile";
 import Scenario from "./pages/scenarios/Scenario";
 import SchRule from "pages/rules/SchRule";
 import ActionRule from "pages/rules/ActionRule";
 import Rooms from "./pages/Rooms";
-import { Container } from "@chakra-ui/react";
+import { Container, useToast } from "@chakra-ui/react";
 import Register from "./pages/account/Register";
 import ForgetPassword from "./pages/account/ForgetPassword";
 import Login from "./pages/account/Login";
@@ -28,28 +29,25 @@ import Report from "pages/Analytics";
 import Troubleshooter from "./pages/troubleshooter/Troubleshooter";
 import CreateRuleDialogue from "pages/rules/CreateRuleDialogue";
 import ApiRule from "pages/rules/ApiRule";
+import API from "./pages/API";
+
+import { useEffect, useState } from 'react';
 
 export function App() {
-  return (
-    <>
-      <Router>
-        <NavBar />
-        <Container maxW={"6xl"} py={4}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/devices" element={<Devices />} />
-            <Route path="/rooms" element={<Rooms />} />
-            <Route path="/profiles" element={<Profiles />} />
-            <Route path="/forgetpw" element={<ForgetPassword />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/myaccount" element={<MyAccount />} />
-            <Route path="/account-created" element={<RegisterOK />} />
-            <Route path="/edit-profile" element={<UserProfileEdit />} />
-            <Route path="/profile-landing" element={<ProfileLanding />} />
-            <Route path="/register" element={<Register />} />
+    const [accountId, setAccountId] = useState("11111111-1111-1111-1111-111111111111")
 
-            <Route path="/selectnearbydevice" element={<SelectNearbyDevice />} />
-            <Route path="/registerdevice" element={<RegisterDevice />} />
+    async function getIsAccountAlerted() {
+        console.log("checking.")
+        try {
+            const response = await fetch(`https://localhost:7140/api/HomeSecurity/IsAccountAlerted?AccountId=${accountId}`)
+            if (response.status == 200) {
+                return response.json()
+            }
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
 
             <Route path="/director" element={<Director />} />
             <Route path="/backup" element={<Backup />} />
@@ -93,5 +91,69 @@ export function App() {
       </Router>
     </>
   );
+  //////////////////
+    const toast = useToast();
+    useEffect(() => {
+    }, []);
+
+    setInterval(async () => {         
+        if (await getIsAccountAlerted()) {
+            toast({
+                title: "Potential Intrusion Detected!",
+                description: "Click to head to Intrusion Page",
+                status: "error",
+                duration: 5000,
+                isClosable: true,
+            });
+        }
+    }, 5000);
+
+
+    return (
+        <>
+            <Router>
+                <NavBar />
+                <Container maxW={"6xl"} py={4}>
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/devices" element={<Devices />} />
+                        <Route path="/rooms" element={<Rooms />} />
+                        <Route path="/profiles" element={<Profiles />} />
+                        <Route path="/forgetpw" element={<ForgetPassword />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/myaccount" element={<MyAccount />} />
+                        <Route path="/account-created" element={<RegisterOK />} />
+                        <Route path="/edit-profile" element={<UserProfileEdit />} />
+                        <Route path="/profile-landing" element={<ProfileLanding />} />
+                        <Route path="/register" element={<Register />} />
+                        <Route path="/selectnearbydevice" element={<SelectNearbyDevice />} />
+                        <Route path="/registerdevice" element={<RegisterDevice />} />
+                        <Route path="/director" element={<Director />} />
+                        <Route path="/backup" element={<Backup />} />
+                        <Route path="/homesecuritysettings" element={<HomeSecuritySettings />} />
+                        <Route path="/homesecuritytriggering" element={<HomeSecurityTriggering />} />
+                        <Route path="/configuration" element={<Configuration />} />
+                        <Route path="/energyProfile" element={<EnergyProfile />} />
+                        <Route path="/scenario" element={<Scenario />} />
+                        <Route path="/API" element={<API />} />
+                        <Route
+                            path="/scenario/create/action-rule"
+                            element={<ActionRule />}
+                        />
+                        <Route
+                            path="/scenario/create/time-rule"
+                            element={<SchRule />}
+                        />
+                        <Route
+                            path="/scenario/edit/:id"
+                            element={<SchRule />}
+                        />
+                        <Route path="/config" element={<DeviceConfig />} />
+                        <Route path="/analytics" element={<Report />} />
+                    </Routes>
+                </Container>
+            </Router>
+        </>
+    );
 }
 export default App;

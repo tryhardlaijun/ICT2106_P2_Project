@@ -19,9 +19,9 @@ namespace SmartHomeManager.DataSource.HomeSecurityDeviceDefinitionsDataSource
             _applicationDbContext = applicationDbContext;
         }
 
-        public async Task<HomeSecurityDeviceDefinition?> GetByDeviceGroup(string deviceGroup)
+        public async Task<IEnumerable<HomeSecurityDeviceDefinition>?> GetAllAsync()
         {
-            return await _applicationDbContext.HomeSecurityDeviceDefinitions.Where(r => r.DeviceGroup == deviceGroup).LastAsync();
+            return await _applicationDbContext.HomeSecurityDeviceDefinitions.ToListAsync();
         }
     }
 }

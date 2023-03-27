@@ -16,7 +16,7 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid HomeSecurityId { get; set; }
 
-        [Required] public int SecurityModeState { get; set; }
+        [Required] public bool SecurityModeState { get; set; }
 
         [Required] public Guid AccountId { get; set; }
     }

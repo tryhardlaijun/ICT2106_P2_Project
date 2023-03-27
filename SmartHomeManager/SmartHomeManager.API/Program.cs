@@ -1,9 +1,7 @@
 using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Migrations;
 using SmartHomeManager.DataSource;
 using SmartHomeManager.DataSource.EnergyProfileDataSource;
-using SmartHomeManager.DataSource.HistoryDataSource;
 using SmartHomeManager.DataSource.HomeSecurityDataSource;
 using SmartHomeManager.DataSource.HomeSecurityDeviceDefinitionsDataSource;
 using SmartHomeManager.DataSource.HomeSecuritySettingsDataSource;
@@ -12,7 +10,6 @@ using SmartHomeManager.DataSource.RuleHistoryDataSource;
 using SmartHomeManager.DataSource.RulesDataSource;
 using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.Common;
-using SmartHomeManager.Domain.DeviceDomain.Entities;
 using SmartHomeManager.Domain.DirectorDomain.Entities;
 using SmartHomeManager.Domain.DirectorDomain.Interfaces;
 using SmartHomeManager.Domain.DirectorDomain.Services;
@@ -26,33 +23,31 @@ using SmartHomeManager.Domain.SceneDomain.Interfaces;
 using SmartHomeManager.Domain.SceneDomain.Services;
 using SmartHomeManager.DataSource.AccountDataSource;
 using SmartHomeManager.DataSource.DeviceDataSource;
-using SmartHomeManager.DataSource.ProfileDataSource;
 using SmartHomeManager.DataSource.RoomDataSource;
 using SmartHomeManager.DataSource.RoomDataSource.Mocks;
 using SmartHomeManager.Domain.AccountDomain.Interfaces;
 using SmartHomeManager.Domain.AccountDomain.Services;
-using SmartHomeManager.Domain.Common;
-using SmartHomeManager.Domain.DeviceDomain.Entities;
 using SmartHomeManager.Domain.DeviceDomain.Interfaces;
 using SmartHomeManager.Domain.RoomDomain.Interfaces;
 using SmartHomeManager.Domain.RoomDomain.Mocks;
 using SmartHomeManager.DataSource.DeviceLogDataSource;
-using SmartHomeManager.DataSource.DeviceLogDataSource.Mocks;
 using SmartHomeManager.Domain.DeviceLoggingDomain.Interfaces;
-using SmartHomeManager.Domain.DeviceLoggingDomain.Mocks;
-using SmartHomeManager.DataSource.AccountDataSource;
 using SmartHomeManager.DataSource.NotificationDataSource;
-using SmartHomeManager.Domain.AccountDomain.Entities;
-using SmartHomeManager.Domain.Common;
-using SmartHomeManager.Domain.NotificationDomain.Entities;
 using SmartHomeManager.Domain.NotificationDomain.Interfaces;
+using SmartHomeManager.DataSource.BackupDataSource;
+using SmartHomeManager.Domain.BackupDomain.Interfaces;
+using SmartHomeManager.Domain.BackupDomain.Services;
+using SmartHomeManager.Domain.DeviceDomain.Services;
+using SmartHomeManager.Domain.APIDomain.Interface;
+using SmartHomeManager.Domain.APIDomain.Service;
+using SmartHomeManager.DataSource.APIDataSource;
 
 namespace SmartHomeManager.API;
 
 public class Program
 {
     public static async Task Main(string[] args)
-    {
+   {
         var builder = WebApplication.CreateBuilder(args);
 
         // For allowing React to communicate with API
@@ -80,28 +75,33 @@ public class Program
         builder.Services.AddScoped<IGenericRepository<Troubleshooter>, TroubleshootRepository>();
         builder.Services.AddScoped<IGetTroubleshooterService, GetTroubleshooterServices>();
 
-
-
-        //1
-        builder.Services.AddScoped<IGenericRepository<History>, DataSource.HistoryDataSource.HistoryRepository>();
-        builder.Services.AddScoped<IRuleHistoryRepository<RuleHistory>, RuleHistoryRepository>();
-        builder.Services.AddScoped<IGenericRepository<EnergyProfile>, EnergyProfileRepository>();
-        builder.Services.AddScoped<IBackupRulesService, BackupRulesService>();
-        builder.Services.AddScoped<IBackupRulesRepository, BackupRulesRepository>();
-        builder.Services.AddScoped<IEnergyProfileServices, EnergyProfileServices>();
-        builder.Services.AddScoped<IGenericRepository<HomeSecurity>, HomeSecurityRepository>();
-        builder.Services.AddScoped<IGenericRepository<HomeSecuritySetting>, HomeSecuritySettingRepository>();
+        // TEAM 1
+        builder.Services.AddScoped<IHistoryRepository, DataSource.HistoryDataSource.HistoryRepository>();
+        builder.Services.AddScoped<IRuleHistoryRepository, RuleHistoryRepository>();
+        builder.Services.AddScoped<IEnergyProfileRepository<EnergyProfile>, EnergyProfileRepository>();
+        builder.Services.AddScoped<IAPIDataRepository, APIDataRepository>();
+        builder.Services.AddScoped<IAPIKeyRepository, APIKeyRepository>();
+        builder.Services.AddScoped<IAPIValueRepository, APIValueRepository>();
+        builder.Services.AddScoped<IHomeSecurityRepository<HomeSecurity>, HomeSecurityRepository>();
+        builder.Services.AddScoped<IHomeSecuritySettingRepository<HomeSecuritySetting>, HomeSecuritySettingRepository>();
         builder.Services.AddScoped<IHomeSecurityDeviceDefinitionRepository<HomeSecurityDeviceDefinition>, HomeSecurityDeviceDefinitionRepository>();
+        builder.Services.AddScoped<IBackupRuleRepository, BackupRuleRepository>();
+        builder.Services.AddScoped<IBackupScenarioRepository, BackupScenarioRepository>();
+
         builder.Services.AddScoped<IInformDirectorServices, DirectorServices>();
+        builder.Services.AddScoped<IDirectorServices, DirectorServices>();
+        builder.Services.AddScoped<IEnergyProfileServices, EnergyProfileServices>();
+        builder.Services.AddScoped<IEnergyProfileServices, EnergyProfileServices>();        
+        //builder.Services.AddScoped<IUpdateBackupService, BackupServices>();
+        builder.Services.AddScoped<IBackupService, BackupServices>();
+        builder.Services.AddScoped<IAPIDataService, APIDataServices>();
+        builder.Services.AddScoped<IDirectorControlDeviceService, DirectorControlDeviceService>();       
 
-
-
-        // builder.Services.AddHostedService<DirectorServices>();
+        builder.Services.AddHostedService<DirectorServices>();
 
         // DEVICE
         builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();
-        builder.Services.AddScoped<IDeviceTypeRepository, DeviceTypeRepository>();
-            
+        builder.Services.AddScoped<IDeviceTypeRepository, DeviceTypeRepository>();            
 
         // DEVICELOG
         builder.Services.AddScoped<IDeviceLogRepository, DeviceLogRepository>();
