@@ -63,6 +63,88 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
             
 			return false;
         }
+		
+        //Get using Name
+        public async Task<Scenario?> GetScenarioByName(string name)
+        {
+            return await _scenarioRepository.GetByNameAsync(name);
+        }
+
+        //Check voice input
+        public async Task<bool> CheckVoiceInput(string input)
+            {
+                if (input.StartsWith("Create"))
+                {
+                    string[] inputArray = input.Split(" ");
+                    if (inputArray.Length > 1)
+                    {
+                        // string scenarioNumberId = "3fa85f64-5717-4562-b3fc-2c963f66afa7";
+                        // Guid guidScenarioIdValue = Guid.Parse(scenarioNumberId);
+                        
+                        Guid guidScenarioIdValue = Guid.NewGuid();
+
+                        string profileId = "22222222-2222-2222-2222-222222222222";
+                        Guid guidProfileIdValue = Guid.Parse(profileId);
+
+                        // Create a new scenario
+                        Scenario createScenario = new Scenario
+                        {
+                            ScenarioId = guidScenarioIdValue,
+                            ScenarioName = inputArray[1],
+                            ProfileId = guidProfileIdValue,
+                            isActive = false
+                        };
+
+                        if (await CreateScenarioAsync(createScenario))
+                        {
+                            return true;
+                        }
+                    }
+                }
+                else if (input.StartsWith("Update"))
+                {
+                    string[] inputArray = input.Split(" ");
+                    if (inputArray.Length == 4)
+                    {
+                        string oldScenarioName = inputArray[1];
+                        string newScenarioName = inputArray[3];
+                        
+                        // Get old scenario name
+                        var scenario = await GetScenarioByName(oldScenarioName);
+                        
+                        // Update to new input scenario name
+                        scenario.ScenarioName = newScenarioName;
+                        
+                        if (await EditScenarioAsync(scenario))
+                        {
+                            return true;
+                        }
+                    }
+                }
+                else if (input.StartsWith("Delete"))
+                {
+                    string[] inputArray = input.Split(" ");
+                    if (inputArray.Length > 1)
+                    {
+                        string scenarioName = inputArray[1];
+
+                        // Get the scenario by name
+                        var scenarioToDelete = await _scenarioRepository.GetByNameAsync(scenarioName);
+                        
+                        // Delete the scenario by id
+                        if (await DeleteScenarioeByIdAsync(scenarioToDelete.ScenarioId))
+                        {
+                            return true;
+                        }
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+                return false;
+            }
+		
     }
 }
 

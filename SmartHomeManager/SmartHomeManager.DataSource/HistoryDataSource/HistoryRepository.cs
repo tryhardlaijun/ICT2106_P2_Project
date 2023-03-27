@@ -35,5 +35,25 @@ namespace SmartHomeManager.DataSource.HistoryDataSource
             return await _applicationDbContext.Histories.Include(r => r.RuleHistory).Include(p => p.Profile).ToListAsync();
         }
 
+        public Task<History?> GetByIdAsync(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> SaveAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> UpdateAsync(History entity)
+        {
+            throw new NotImplementedException();
+        }
+        
+        public async Task<History?> GetByNameAsync(string name)
+        {
+            throw new NotImplementedException();
+        }
+        
     }
 }

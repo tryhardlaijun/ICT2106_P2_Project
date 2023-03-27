@@ -108,6 +108,11 @@ namespace SmartHomeManager.DataSource.RulesDataSource
         {
             throw new NotImplementedException();
         }
+        
+        public async Task<Rule?> GetByNameAsync(string name)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
 
         #region Provided Inteface

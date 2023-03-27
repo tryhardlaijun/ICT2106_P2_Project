@@ -95,6 +95,24 @@ namespace SmartHomeManager.API.Controllers.ScenariosAPIs
             }
             return StatusCode(404, "scenario not exist");
         }
+        
+        [HttpPost("VoiceInput")]
+        public async Task<ActionResult<Scenario>> VoiceInput([FromBody] string input)
+        {
+            await _scenarioServices.CheckVoiceInput(input);
+            return Ok();
+        }
+
+        [HttpGet("GetScenarioByName")]
+        public async Task<ActionResult<Scenario>> GetScenarioByName(string name)
+        {
+            var scenario = await _scenarioServices.GetScenarioByName(name);
+            if(scenario !=null)
+            {
+                return StatusCode(200,scenario);
+            }
+            return StatusCode(404, "scenario not exist");
+        }
     }
 }
 

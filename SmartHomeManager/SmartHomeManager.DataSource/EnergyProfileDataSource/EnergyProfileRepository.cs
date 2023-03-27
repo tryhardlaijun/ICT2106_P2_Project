@@ -142,6 +142,6 @@ namespace SmartHomeManager.DataSource.EnergyProfileDataSource
         {
             throw new NotImplementedException();
         }
-
+        
     }
 }
