@@ -1,6 +1,7 @@
 import { Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, ModalCloseButton, useDisclosure } from "@chakra-ui/react";
 import React from "react";
 import { Link } from "react-router-dom";
+import Troubleshooter from "pages/troubleshooter/Troubleshooter";
 
 function ModalButton(props) {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -23,8 +24,10 @@ function ModalButton(props) {
 
                     <ModalCloseButton />
                     <ModalBody>
-                        {props.text}
+                        {props.text+"\n"}
 
+                    </ModalBody>
+                    <ModalBody>
                     </ModalBody>
                     <ModalFooter>
                         <Button colorScheme='blue' mr={3} onClick={onClose}>
