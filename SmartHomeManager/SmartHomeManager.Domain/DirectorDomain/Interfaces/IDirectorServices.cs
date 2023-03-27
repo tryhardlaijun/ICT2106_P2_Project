@@ -10,6 +10,6 @@ namespace SmartHomeManager.Domain.DirectorDomain.Interfaces
 {
     public interface IDirectorServices
     {
-        void executeSecurityProtocol(Guid accountId, HomeSecurityDeviceDefinition homeSecurityDeviceDefinition);
+        void executeSecurityProtocol(Guid accountId, bool setTo, HomeSecurityDeviceDefinition homeSecurityDeviceDefinition);
     }
 }

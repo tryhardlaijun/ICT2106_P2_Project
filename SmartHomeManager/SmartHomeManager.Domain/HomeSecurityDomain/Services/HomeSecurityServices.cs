@@ -23,7 +23,7 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
         private static List<KeyValuePair<Guid, string>> triggeredDeviceLog = new List<KeyValuePair<Guid, string>>();
         private IEnumerable<HomeSecurityDeviceDefinition>? homeSecurityDeviceDefinitions;
         List<string> detectorDeviceGroups = new List<string>() {
-            "camera", "microphone"
+            "Camera", "Microphone"
         };
 
         private IHomeSecurityRepository<HomeSecurity> _homeSecurityRepository;
@@ -237,9 +237,9 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
          * False: Removes accountID from alertedAccounts & lockedDownAccounts.
          * Finally: Calls director function to trigger all activated devices in accountID's HomeSecuritySettings.
          */
-        public async void setLockdownState(Guid accountID, bool securityModeState)
+        public async void setLockdownState(Guid accountID, bool setTo)
         {
-            if (securityModeState)
+            if (setTo)
             {
                 lockedDownAccounts.Add(accountID);
             }
@@ -261,10 +261,10 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
             IEnumerable<HomeSecuritySetting> enabledSettings = await getHomeSecuritySettings(accountID);
             foreach (HomeSecuritySetting setting in enabledSettings)
             {
-                if(setting.Enabled && securityModeState)
+                if(setting.Enabled)
                 {
                     //Console.WriteLine("Inside Setting Lockdown State " + setting.HomeSecurityDeviceDefinition.DeviceGroup);
-                    _directorInterface.executeSecurityProtocol(accountID, setting.HomeSecurityDeviceDefinition);
+                    _directorInterface.executeSecurityProtocol(accountID, setTo, setting.HomeSecurityDeviceDefinition);
                 }
             }
             

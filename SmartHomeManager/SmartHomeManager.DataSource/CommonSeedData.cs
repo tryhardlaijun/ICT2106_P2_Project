@@ -5,6 +5,7 @@ using SmartHomeManager.Domain.DeviceDomain.Entities;
 using SmartHomeManager.Domain.DeviceLoggingDomain.Entities;
 using SmartHomeManager.Domain.DeviceStoreDomain.Entities;
 using SmartHomeManager.Domain.DirectorDomain.Entities;
+using SmartHomeManager.Domain.HomeSecurityDomain.Entities;
 using SmartHomeManager.Domain.NotificationDomain.Entities;
 using SmartHomeManager.Domain.RoomDomain.Entities;
 using SmartHomeManager.Domain.SceneDomain.Entities;
@@ -277,41 +278,6 @@ namespace SmartHomeManager.DataSource
             await context.Rules.AddRangeAsync(rules);
             await context.SaveChangesAsync();
 
-            var ruleHistory = new List<RuleHistory>
-            {
-                new RuleHistory
-                {            
-                    RuleHistoryId = Guid.NewGuid(),
-                    RuleId = rules[0].RuleId,
-                    RuleIndex = 0,
-                    RuleName = rules[0].RuleName,
-                    RuleStartTime = rules[0].StartTime,
-                    RuleEndTime = rules[0].EndTime,
-                    RuleActionTrigger = rules[0].ActionTrigger,
-                    ScenarioName = rules[0].Scenario.ScenarioName,
-                    DeviceName = rules[0].Device.DeviceName,
-                    DeviceConfiguration = string.Format("{0} triggering ...", rules[0].Device.DeviceName)
-                }
-            };
-
-            await context.RuleHistories.AddRangeAsync(ruleHistory);
-            await context.SaveChangesAsync();
-
-            var history = new List<History>
-            {
-                new History
-                {
-                    Message = string.Format("{0} is triggered", rules[0].Device.DeviceName),
-                    Timestamp = Convert.ToDateTime("2023-02-04T07:21:26.934Z"),
-                    DeviceAdjustedConfiguration = 1,
-                    ProfileId = profiles[0].ProfileId,
-                    RuleHistoryId = ruleHistory[0].RuleHistoryId
-                }
-            };
-
-            await context.Histories.AddRangeAsync(history);
-            await context.SaveChangesAsync();
-
 			var apiKey = new List<APIKey>
 			{
 				new APIKey
@@ -418,6 +384,60 @@ namespace SmartHomeManager.DataSource
             };
 
             await context.APIValues.AddRangeAsync(apiValue);
+            await context.SaveChangesAsync();
+
+            var homeSecurityDeviceDefinitions = new List<HomeSecurityDeviceDefinition>
+            {
+                new HomeSecurityDeviceDefinition
+                {
+                    DeviceGroup = "Door",
+                    ConfigurationKey = "LOCKED",
+                    ConfigurationOffValue = 0,
+                    ConfigurationOnValue = 1
+                },
+                new HomeSecurityDeviceDefinition
+                {
+                    DeviceGroup = "Window",
+                    ConfigurationKey = "CLOSED",
+                    ConfigurationOffValue = 0,
+                    ConfigurationOnValue = 1
+
+                },
+                new HomeSecurityDeviceDefinition
+                {
+                    DeviceGroup = "Alarm",
+                    ConfigurationKey = "ACTIVE",
+                    ConfigurationOffValue = 0,
+                    ConfigurationOnValue = 1
+
+                },
+                new HomeSecurityDeviceDefinition
+                {
+                    DeviceGroup = "Gate",
+                    ConfigurationKey = "LOCKED",
+                    ConfigurationOffValue = 0,
+                    ConfigurationOnValue = 1
+
+                },
+                new HomeSecurityDeviceDefinition
+                {
+                    DeviceGroup = "Camera",
+                    ConfigurationKey = "MOTION",
+                    ConfigurationOffValue = 0,
+                    ConfigurationOnValue = 1
+
+                },
+               new HomeSecurityDeviceDefinition
+                {
+                    DeviceGroup = "Microphone",
+                    ConfigurationKey = "AUDIO",
+                    ConfigurationOffValue = 0,
+                    ConfigurationOnValue = 1
+
+                },
+            };
+
+            await context.APIKeys.AddRangeAsync(apiKey);
             await context.SaveChangesAsync();
 
 

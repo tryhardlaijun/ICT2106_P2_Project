@@ -9,5 +9,6 @@ namespace SmartHomeManager.Domain.DeviceDomain.Interfaces
 {
     public interface IDirectorControlDeviceService : IRuleTriggerObserver
     {
+        public Task<bool> SetDeviceTypeConfiguration(Guid accountId, string deviceTypeName, string configurationKey, int configurationValue);
     }
 }

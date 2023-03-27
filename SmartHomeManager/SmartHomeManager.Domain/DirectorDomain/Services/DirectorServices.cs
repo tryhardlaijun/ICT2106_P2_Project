@@ -320,9 +320,34 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
             scenarioList.replaceScenarioList(scenarioListClone);
         }
 
-        public void executeSecurityProtocol(Guid accountId, HomeSecurityDeviceDefinition homeSecurityDeviceDefinition)
+        public async void executeSecurityProtocol(Guid accountId, bool setTo, HomeSecurityDeviceDefinition homeSecurityDeviceDefinition)
         {
-            //setDeviceTypeConfig(accountId, homeSecurityDeviceDefinition.DeviceGroup, homeSecurityDeviceDefinition.ConfigurationKey, homeSecurityDeviceDefinition.ConfigurationOnValue);
+            bool successState = false;
+            if (setTo)
+            {
+                successState = await _directorControlDeviceInterface.SetDeviceTypeConfiguration
+                (accountId, homeSecurityDeviceDefinition.DeviceGroup, homeSecurityDeviceDefinition.ConfigurationKey, homeSecurityDeviceDefinition.ConfigurationOnValue);
+            }
+            else
+            {
+                successState = await _directorControlDeviceInterface.SetDeviceTypeConfiguration
+                (accountId, homeSecurityDeviceDefinition.DeviceGroup, homeSecurityDeviceDefinition.ConfigurationKey, homeSecurityDeviceDefinition.ConfigurationOffValue);
+            }
+
+            if(successState)
+            {
+                Console.WriteLine(string.Format("Successfully executed security protocol for: {0} - {1} from {2} to {3}!",
+                    accountId, homeSecurityDeviceDefinition.DeviceGroup,
+                    setTo ? homeSecurityDeviceDefinition.ConfigurationOffValue : homeSecurityDeviceDefinition.ConfigurationOnValue,
+                    setTo ? homeSecurityDeviceDefinition.ConfigurationOnValue : homeSecurityDeviceDefinition.ConfigurationOffValue));
+            }
+            else
+            {
+                Console.WriteLine(string.Format("Failed to execute security protocol for: {0} - {1} from {2} to {3}!",
+                    accountId, homeSecurityDeviceDefinition.DeviceGroup,
+                    setTo ? homeSecurityDeviceDefinition.ConfigurationOffValue : homeSecurityDeviceDefinition.ConfigurationOnValue,
+                    setTo ? homeSecurityDeviceDefinition.ConfigurationOnValue : homeSecurityDeviceDefinition.ConfigurationOffValue));
+            }
         }
     }
 }

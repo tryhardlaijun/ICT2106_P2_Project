@@ -88,7 +88,7 @@ public class Program
         builder.Services.AddScoped<IAPIKeyRepository, APIKeyRepository>();
         builder.Services.AddScoped<IAPIValueRepository, APIValueRepository>();
         builder.Services.AddScoped<IAPIDataService, APIDataServices>();
-        builder.Services.AddScoped<IDirectorControlDeviceService, DeviceService>();
+        builder.Services.AddScoped<IDirectorControlDeviceService, DirectorControlDeviceService>();
 
         // TEAM 3
         builder.Services.AddScoped<IGenericRepository<Rule>, RuleRepository>();
@@ -160,7 +160,7 @@ public class Program
         {
             var context = services.GetRequiredService<ApplicationDbContext>();
             // in order to use await in a method, the caller method must be async as well
-            //await CommonSeedData.Seed(context);
+            await CommonSeedData.Seed(context);
         }
         catch (Exception e)
         {

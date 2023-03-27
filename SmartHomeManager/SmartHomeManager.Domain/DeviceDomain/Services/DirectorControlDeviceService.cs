@@ -8,8 +8,13 @@ using System.Threading.Tasks;
 
 namespace SmartHomeManager.Domain.DeviceDomain.Services
 {
-    public class DeviceService : IDirectorControlDeviceService
+    public class DirectorControlDeviceService : IDirectorControlDeviceService
     {
+        public async Task<bool> SetDeviceTypeConfiguration(Guid accountId, string deviceTypeName, string configurationKey, int configurationValue)
+        {
+            return true;
+        }
+
         public void Update(Guid deviceId, string configKey, int configVal)
         {
             Console.WriteLine(string.Format("Setting device's ({0}) [{1}] to [{2}]",deviceId, configKey, configVal));
