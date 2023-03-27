@@ -93,7 +93,7 @@ namespace SmartHomeManager.Domain.BackupDomain.Services
                 
             }
 
-            await _backupRuleInterface.loadRulesBackup(profileId, rulesList);
+            await _backupRuleInterface.LoadRulesBackup(profileId, rulesList);
             return backupRulesList;
         }
 
@@ -118,7 +118,7 @@ namespace SmartHomeManager.Domain.BackupDomain.Services
                 }
             }
 
-            await _backupScenarioInterface.loadScenarioBackup(profileId, scenarioList);
+            await _backupScenarioInterface.LoadScenariosBackup(profileId, scenarioList);
             return backupScenarioList;
         }
 

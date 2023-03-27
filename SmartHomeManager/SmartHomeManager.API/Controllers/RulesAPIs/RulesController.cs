@@ -29,7 +29,7 @@ public class RulesController : ControllerBase
     [HttpGet("GetAllRules")]
     public async Task<ActionResult<IEnumerable<RuleRequest>>> GetAllRules()
     {
-        var rules = await _registerRuleService.GetAllRulesAsync();
+        var rules = await _registerRuleService.GetAllRulesRequestAsync();
         if (rules != null)
         {
             return StatusCode(200,rules);
@@ -41,7 +41,7 @@ public class RulesController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<RuleRequest>> GetRule(Guid id)
     {
-        var rule = await _registerRuleService.GetRuleByIdAsync(id);
+        var rule = await _registerRuleService.GetRuleRequestByIdAsync(id);
         if(rule != null)
         {
             return StatusCode(200, rule);
@@ -71,7 +71,7 @@ public class RulesController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteRule(Guid id)
     {
-        var rule = await _registerRuleService.GetRuleByIdAsync(id);
+        var rule = await _registerRuleService.GetRuleRequestByIdAsync(id);
         if (rule != null)
         {
             await _registerRuleService.DeleteRuleByIdAsync(id);
@@ -84,7 +84,7 @@ public class RulesController : ControllerBase
     [HttpGet("rulesByScenarioId/{id}")]
     public async Task<ActionResult<IEnumerable<RuleRequest?>>> GetRulesByScenarioId(Guid id)
     {
-        var rules = await _registerRuleService.GetAllRulesByScenarioIdAsync(id);
+        var rules = await _registerRuleService.GetAllRulesRequestByScenarioIdAsync(id);
         if (rules != null)
         {
             return StatusCode(200,rules);

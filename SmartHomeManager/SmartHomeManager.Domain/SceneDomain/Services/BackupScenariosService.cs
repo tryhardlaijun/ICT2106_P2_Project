@@ -4,11 +4,11 @@ using SmartHomeManager.Domain.SceneDomain.Interfaces;
 
 namespace SmartHomeManager.Domain.SceneDomain.Services
 {
-	public class BackupScenariosService : IBackupScenarioService
+	public class BackupScenariosService : IBackupScenariosService
 	{
-        private readonly IBackupScenarioRepository _backupScenariosRepository;
+        private readonly IBackupScenariosRepository _backupScenariosRepository;
 
-        public BackupScenariosService(IBackupScenarioRepository backupScenariosRepository)
+        public BackupScenariosService(IBackupScenariosRepository backupScenariosRepository)
         {
             _backupScenariosRepository = backupScenariosRepository;
         }

@@ -54,8 +54,8 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
             _ruleHistoryRepository = scope.ServiceProvider.GetRequiredService<IRuleHistoryRepository>();
             _historyRepository = scope.ServiceProvider.GetRequiredService<IHistoryRepository>();
 
-            //_ruleInterface = scope.ServiceProvider.GetService<IGetRulesService>();
             _scenarioInterface = scope.ServiceProvider.GetRequiredService<IGetScenariosService>();
+            _ruleInterface = scope.ServiceProvider.GetRequiredService<IGetRulesService>();
             _energyProfileInterface = scope.ServiceProvider.GetRequiredService<IEnergyProfileServices>();
             _backupInterface = scope.ServiceProvider.GetRequiredService<IBackupService>();
             _directorControlDeviceInterface = scope.ServiceProvider.GetRequiredService<IDirectorControlDeviceService>();
@@ -68,13 +68,13 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
             ruleTriggerManager = new RuleTriggerManager();
             ruleTriggerManager.Attach(_directorControlDeviceInterface);
             ruleTriggerManager.Attach(_troubleshooterInterface);
-
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             scenarioList = new ScenarioList((await _scenarioInterface.GetAllScenarios()).ToList());
-            ruleList = new RuleList((await _ruleInterface.GetAllRules()).ToList());
+            ruleList = new RuleList((await _ruleInterface.GetAllRulesAsync()).ToList());
+
 
             //_backupInterface.createBackup(rules, scenarios);
             await Task.Delay(1000);
@@ -268,11 +268,11 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
             switch (operation)
             {
                 case 'c':
-                    await addNewRule(await _ruleInterface.GetRuleById(ruleID));
+                    await addNewRule(await _ruleInterface.GetRuleByIdAsync(ruleID));
                     break;
                 case 'u':
                     ruleListClone = ruleListClone.Where(r => r.RuleId != ruleID).ToList();
-                    await addNewRule(await _ruleInterface.GetRuleById(ruleID));
+                    await addNewRule(await _ruleInterface.GetRuleByIdAsync(ruleID));
                     break;
                 case 'd':
                     ruleListClone = ruleListClone.Where(r => r.RuleId != ruleID).ToList();

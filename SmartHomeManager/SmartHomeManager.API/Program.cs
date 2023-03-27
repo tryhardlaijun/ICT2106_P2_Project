@@ -74,6 +74,11 @@ public class Program
         builder.Services.AddScoped<IGetScenariosService, GetScenariosService>();
         builder.Services.AddScoped<IGenericRepository<Troubleshooter>, TroubleshootRepository>();
         builder.Services.AddScoped<IGetTroubleshooterService, GetTroubleshooterServices>();
+        builder.Services.AddScoped<IBackupRulesRepository, BackupRulesRepository>();
+        builder.Services.AddScoped<IBackupScenariosRepository, BackupScenariosRepository>();
+        builder.Services.AddScoped<IBackupRulesService, BackupRulesService>();
+        builder.Services.AddScoped<IBackupScenariosService, BackupScenariosService>();
+
 
         // TEAM 1
         builder.Services.AddScoped<IHistoryRepository, DataSource.HistoryDataSource.HistoryRepository>();
@@ -95,6 +100,7 @@ public class Program
         //builder.Services.AddScoped<IUpdateBackupService, BackupServices>();
         builder.Services.AddScoped<IBackupService, BackupServices>();
         builder.Services.AddScoped<IAPIDataService, APIDataServices>();
+
         builder.Services.AddScoped<IDirectorControlDeviceService, DirectorControlDeviceService>();       
 
         builder.Services.AddHostedService<DirectorServices>();

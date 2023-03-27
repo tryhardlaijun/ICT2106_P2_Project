@@ -1,17 +1,20 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.Domain.SceneDomain.Entities;
+using SmartHomeManager.Domain.SceneDomain.Interfaces;
+
 namespace SmartHomeManager.DataSource.RulesDataSource
 {
-	public class BackupScenarioRepository
+	public class BackupScenariosRepository : IBackupScenariosRepository
 	{
         private readonly ApplicationDbContext _applicationDbContext;
-        public BackupScenarioRepository(ApplicationDbContext applicationDbContext)
+        public BackupScenariosRepository(ApplicationDbContext applicationDbContext)
         {
             _applicationDbContext = applicationDbContext;
         }
 
-        public async Task<bool> LoadRulesBackup(Guid profileId, IEnumerable<Domain.SceneDomain.Entities.Scenario> rules)
+
+        public async Task<bool> LoadScenariosBackup(Guid profileId, IEnumerable<Scenario> rules)
         {
             IEnumerable<Domain.SceneDomain.Entities.Scenario> allScenarios = await _applicationDbContext.Scenarios.ToListAsync();
             foreach (var scenario in allScenarios)

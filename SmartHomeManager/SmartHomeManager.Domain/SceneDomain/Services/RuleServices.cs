@@ -66,7 +66,7 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
 
         #region Provided Interface
         // Get all rules associated with scenario
-        public async Task<IEnumerable<RuleRequest?>> GetAllRulesByScenarioIdAsync(Guid ScenarioId)
+        public async Task<IEnumerable<RuleRequest?>> GetAllRulesRequestByScenarioIdAsync(Guid ScenarioId)
         {
             var rules = await _getRuleRepository.GetAllRulesByScenarioIdAsync(ScenarioId);
             var resp = rules.Select(rule=> _ruleAdapter.ToRuleRequest(rule)).ToList();
@@ -96,7 +96,7 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
 
 
         //Get using id
-        public async Task<RuleRequest?> GetRuleByIdAsync(Guid id)
+        public async Task<RuleRequest?> GetRuleRequestByIdAsync(Guid id)
         {
             var rule = await _ruleRepository.GetByIdAsync(id);
             if(rule == null){
@@ -106,7 +106,7 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
         }
 
         //Get all the rules 
-        public async Task<IEnumerable<RuleRequest>> GetAllRulesAsync()
+        public async Task<IEnumerable<RuleRequest>> GetAllRulesRequestAsync()
         {
             var rules = await _ruleRepository.GetAllAsync();
             var resp = rules.Select(rule=> _ruleAdapter.ToRuleRequest(rule)).ToList();
@@ -119,7 +119,7 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
         // Upload the json file
         public async Task<bool> UploadRules(IFormFile file)
         {
-            var allCurrentRules = await GetAllRulesAsync();
+            var allCurrentRules = await GetAllRulesRequestAsync();
             try
             {
                 using (var stream = new StreamReader(file.OpenReadStream()))
@@ -130,7 +130,7 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
                     {
                         foreach (var rule in newRule)
                         {
-                            var ruleCheck = await GetRuleByIdAsync(rule.RuleId);
+                            var ruleCheck = await GetRuleRequestByIdAsync(rule.RuleId);
                             if (ruleCheck != null)
                             {
                                 Console.WriteLine(rule.RuleName + "already in DB");
@@ -154,7 +154,7 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
 
         public async Task<byte[]> DownloadRules(Guid ScenarioId)
         {
-            var allRules = await GetAllRulesByScenarioIdAsync(ScenarioId);
+            var allRules = await GetAllRulesRequestByScenarioIdAsync(ScenarioId);
             var ruleJson = JsonConvert.SerializeObject(allRules.ToList(), Formatting.Indented);
             return Encoding.UTF8.GetBytes(ruleJson);
         }
@@ -162,7 +162,7 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
         // Detect clashes
         public async Task<RuleRequest?> RuleClashesAsync(RuleRequest ruleReq)
         {
-            var existingRules = await GetAllRulesAsync();
+            var existingRules = await GetAllRulesRequestAsync();
             if (ruleReq.StartTime != null)
             {
                 foreach (var existingRule in existingRules)
@@ -248,5 +248,19 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
             return null; // no clash found
         }
 
+        public async Task<IEnumerable<Rule>> GetAllRulesAsync()
+        {
+            return await _ruleRepository.GetAllAsync();
+        }
+
+        public async Task<Rule> GetRuleByIdAsync(Guid id)
+        {
+            return await _ruleRepository.GetByIdAsync(id);
+        }
+
+        public async Task<IEnumerable<Rule?>> GetAllRulesByScenarioIdAsync(Guid ScenarioId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
