@@ -49,49 +49,6 @@ export function App() {
         }
     }
 
-            <Route path="/director" element={<Director />} />
-            <Route path="/backup" element={<Backup />} />
-            <Route path="/intruder" element={<Intruder />} />
-            <Route path="/configuration" element={<Configuration />} />
-            <Route path="/energyProfile" element={<EnergyProfile />} />
-            <Route path="/scenario" element={<Scenario />} />
-            <Route path="/troubleshooters" element={<Troubleshooter />} />
-            <Route
-              path="/scenario/create/action-rule"
-              element={<ActionRule />}
-            />
-            {/* <Route
-              path="/scenario/create/create-dialogue"
-              element={<CreateRuleDialogue/>}
-            /> */}
-            <Route
-              path="/scenario/create/schedule-rule"
-              element={<SchRule />}
-            />
-            <Route
-              path="/scenario/create/api-rule"
-              element={<ApiRule />}
-            />
-            <Route
-              path="/event/edit/:id"
-              element={<ActionRule />}
-            />
-            <Route
-              path="/schedule/edit/:id"
-              element={<SchRule />}
-            />
-            <Route
-              path="/api/edit/:id"
-              element={<ApiRule />}
-            />
-            <Route path="/config" element={<DeviceConfig />} />
-            <Route path="/analytics" element={<Report />} />
-          </Routes>
-        </Container>
-      </Router>
-    </>
-  );
-  //////////////////
     const toast = useToast();
     useEffect(() => {
     }, []);
@@ -136,17 +93,42 @@ export function App() {
                         <Route path="/energyProfile" element={<EnergyProfile />} />
                         <Route path="/scenario" element={<Scenario />} />
                         <Route path="/API" element={<API />} />
+                        <Route path="/troubleshooters" element={<Troubleshooter />} />
                         <Route
                             path="/scenario/create/action-rule"
                             element={<ActionRule />}
+                        />
+                        <Route
+                            path="/scenario/create/schedule-rule"
+                            element={<SchRule />}
                         />
                         <Route
                             path="/scenario/create/time-rule"
                             element={<SchRule />}
                         />
                         <Route
+                            path="/scenario/create/api-rule"
+                            element={<ApiRule />}
+                        />
+                        <Route
                             path="/scenario/edit/:id"
                             element={<SchRule />}
+                        />
+                        {/* <Route
+                          path="/scenario/create/create-dialogue"
+                          element={<CreateRuleDialogue/>}
+                        /> */}
+                        <Route
+                            path="/event/edit/:id"
+                            element={<ActionRule />}
+                        />
+                        <Route
+                            path="/schedule/edit/:id"
+                            element={<SchRule />}
+                        />
+                        <Route
+                            path="/api/edit/:id"
+                            element={<ApiRule />}
                         />
                         <Route path="/config" element={<DeviceConfig />} />
                         <Route path="/analytics" element={<Report />} />
