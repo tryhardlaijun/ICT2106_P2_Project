@@ -16,6 +16,7 @@ import MenuItems from "components/Rules/MenuItems";
 import axios from "axios";
 import UploadModalButton from "components/Rules/UploadModal";
 import CreateRuleDialogue from "pages/rules/CreateRuleDialogue";
+import { AddIcon,DeleteIcon,EditIcon,ChevronDownIcon } from '@chakra-ui/icons'
 import { v4 as uuidv4 } from "uuid";
 
 export default function Scenarios() {
@@ -238,8 +239,25 @@ export default function Scenarios() {
 
 	return (
 		<Box padding="16">
-			<Heading alignContent="center">Profile : Wen Jun</Heading>
-			
+			<Box width="100%" display="flex" justifyContent="flex-start">			
+				<Heading alignContent="center">Profile : Wen Jun</Heading>
+				
+				<Button ml={2} paddingRight={5}>
+					{currentScenario?(
+						<Link to={`https://localhost:7140/api/Rules/DownloadRules?ScenarioId=${currentScenario.scenarioId}`}>Export</Link>
+					): "Export Rules"}
+				</Button>
+				<UploadModalButton title={"test"} text={"Import"} action={getAllRules} />
+				{/* <Box width="50%" display="flex" justifyContent="flex-end">					 */}
+					<ModalButton
+						title="Simulate Clash"
+						text="This rule will clash with another rule to turn on device at 1500."
+						action="override"
+					/>
+				{/* </Box> */}
+			</Box>		
+			<Box h="20px"></Box>
+					
 			{/*<Input placeholder="Voice Control" display="inline-block" />*/}
 			<Box display="flex">
 				<Input placeholder="Voice Control" display="inline-block" onChange={(e)=>{handleVoiceInput({ScenarioName: e.target.value})}} value={scenarioDetail.ScenarioName} />
@@ -248,11 +266,14 @@ export default function Scenarios() {
 				</Button>
 			</Box>
 
+			<Box h="10px"></Box>
+
 			<Box width="50%" display="flex" justifyContent="flex-start">
 				{/* This will be the list of scenarios */}
 				<Box h="60px">
 					<Menu isLazy>
 						<MenuButton
+							rightIcon={<ChevronDownIcon/>}
 							margin = "2"
 							as={Button}
 							variant="solid"
@@ -265,11 +286,36 @@ export default function Scenarios() {
 						<MenuItems.MenuItems scenarios={allScenario} buttonUpdate={scenarioSelect}/>
 					</Menu>
 				</Box>
+				
 				{/* This will be the 3 types of rules*/}
+				<Box h="100px"></Box>
+				
 				<Box h="60px">
+				
+				<Button ml={2}  margin={2} colorScheme="blue">					
+					<Link to="/scenario/edit/edit-dialogue-scenario">Edit Scenario<EditIcon paddingLeft={1}></EditIcon>	</Link>	
+				</Button>
+				</Box>			
+				<Box h="60px">
+				<Button ml={2}  margin={2} colorScheme="red" onClick={() => {
+					deleteScenario(localStorage.getItem("currentScenarioId")).catch((error) => {
+						console.error(error);
+					});
+				}}>
+					
+				Delete Scenario
+				<DeleteIcon paddingLeft={1}></DeleteIcon>
+				</Button>
+				</Box>
+				{/* </Box> */}
+			</Box>
+			<Box margin={2}>
+			{/* <Box h="60px" > */}
 					<Menu isLazy>
 						<MenuButton
-							margin = "2"
+							// margin = "2"
+							// marginLeft={2}
+							rightIcon={<ChevronDownIcon/>}
 							as={Button}
 							variant="solid"
 							backgroundColor="gray.300"
@@ -279,57 +325,23 @@ export default function Scenarios() {
 						</MenuButton>
 						{/* MenuItems are not rendered unless Menu is open */}
 						<MenuItems.RulesMenuItems typeOfRules={allTypes} buttonUpdate={ruleTypeSelect}/>
-					</Menu>
-				</Box>
-			</Box>
+					</Menu>				
+					
 			<JsonToTable ruleData = {allRules} deleteRule = {deleteRule} editButton={renderUpdateButton}/>
-			<Box padding="3" display="flex">
-				<Box width="50%" display="flex" justifyContent="flex-start">
-					<Button ml={2} colorScheme="whatsapp"
+			<Box h="60px">
+				<Button ml={2} margin={2} colorScheme="green" justifyContent='flex-start'>
+				
+					<Link to="/scenario/create/create-dialogue-scenario">Add Scenario<AddIcon paddingLeft={1}></AddIcon></Link>
+				</Button>	
+				<Button ml={2} colorScheme="green"
 						onClick={() => {
 							setShowRuleOption(true);
 						}}>		
-						Add Rule				
-					</Button>
-					<Button ml={2} colorScheme="whatsapp">
-					<Link to="/scenario/create/create-dialogue-scenario">Add Scenario</Link>
-					</Button>
-					<Button ml={2} colorScheme="blue">
-					<Link to="/scenario/edit/edit-dialogue-scenario">Edit Scenario</Link>
-					</Button>
-					<Button ml={2} colorScheme="red" onClick={() => {
-					deleteScenario(localStorage.getItem("currentScenarioId")).catch((error) => {
-						console.error(error);
-					});
-				}}>
-				Delete Scenario
-			</Button>
-				</Box>
+						Add Rule	
+						<AddIcon paddingLeft={1}></AddIcon>			
+					</Button>					
+				</Box>		
 				
-				<Box width="50%" display="flex" justifyContent="flex-start">
-					<Button ml={2} colorScheme="whatsapp">
-						{currentScenario?(
-							<Link to={`https://localhost:7140/api/Rules/DownloadRules?ScenarioId=${currentScenario.scenarioId}`}>Export Rules</Link>
-						): "Export Rules"}
-					</Button>
-					<UploadModalButton title={"test"} text={"Import Rules"} action={getAllRules}/>
-					<ModalButton
-						title="Simulate Clash"
-						text="This rule will clash with another rule to turn on device at 1500."
-						action="override"
-					/>
-					{/* <ModalButton
-						title="Simulate Troubleshooting"
-						text="Device fan seems to be unable to oscillate"
-						action="Try again"
-						redirectTo={{
-							pathname: "/troubleshooters",
-							// state: { deviceTypeFilter, configurationKeyFilter },
-						}}
-						deviceType="Fan"
-						configMsg="Unable to oscillate"
-					/> */}
-				</Box>
 			</Box>
 			{showRuleOption && (
 				<CreateRuleDialogue				

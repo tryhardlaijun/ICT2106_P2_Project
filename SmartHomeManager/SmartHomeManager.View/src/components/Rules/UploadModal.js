@@ -70,7 +70,7 @@ function UploadModalButton({ title, text, action }) {
 
   return (
     <>
-      <Button onClick={handleOpen}>{text}</Button>
+      <Button ml={2} onClick={handleOpen}>{text}</Button>
       <FileUploadModal isOpen={isOpen} onClose={handleClose} onUpload={action}/>
     </>
   );

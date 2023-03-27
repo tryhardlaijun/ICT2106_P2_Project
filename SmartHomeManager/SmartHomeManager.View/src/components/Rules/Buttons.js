@@ -2,6 +2,7 @@ import { Button, Td } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import ModalButton from "components/Rules/ModalButton";
+import { AddIcon,DeleteIcon,EditIcon,WarningTwoIcon } from '@chakra-ui/icons'
 import axios from "axios";
 
 import ConfirmationScreen from "../../pages/rules/ConfirmationScreen";
@@ -13,19 +14,20 @@ function Buttons({props, deleteRule,editButton, deviceName}) {
 	return (
 		<Td>
 			<Button ml={2} colorScheme="blue">
-				{editButton({props})}
+				{editButton({props})} <EditIcon marginLeft={1}></EditIcon>
 			</Button>
 			<Button
 				ml={2}
-				colorScheme="red"
+				colorScheme={"red"}
 				onClick={() => {
 					setShowConfirmation(true);
 				}}
 			>
 				Delete
+				<DeleteIcon marginLeft={1} ></DeleteIcon>
 			</Button>
 			<ModalButton
-						title="Troubleshooting"
+						title="Troubleshoot"
 						text= {"Device " + deviceName + "'s "+ props.configurationKey.toLowerCase() +" is not operating!"}
 						action="Try again"
 						deviceType= {deviceName}
@@ -33,7 +35,7 @@ function Buttons({props, deleteRule,editButton, deviceName}) {
 						redirectTo={{
 							pathname: "/troubleshooters",
 							// state: { deviceName, deviceName},
-						}}
+						}}						
 					/>
 			{showConfirmation && (
 				<ConfirmationScreen

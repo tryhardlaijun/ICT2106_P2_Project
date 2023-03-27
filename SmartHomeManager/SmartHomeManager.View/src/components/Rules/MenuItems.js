@@ -1,10 +1,13 @@
-import { MenuItem, MenuList } from "@chakra-ui/react";
+import { Button, MenuItem, MenuList } from "@chakra-ui/react";
 import React from "react";
+import { AddIcon,DeleteIcon,EditIcon } from '@chakra-ui/icons'
 
 function MenuItems({scenarios, buttonUpdate}){
     
 	const DisplayData = scenarios.map((scenario=>{
-		return <MenuItem key={scenario.scenarioId} onClick={()=>buttonUpdate(scenario)}>{scenario.scenarioName}</MenuItem>
+		return (
+		<MenuItem key={scenario.scenarioId} onClick={()=>buttonUpdate(scenario)}>{scenario.scenarioName} 		
+		</MenuItem>);
 	}))
 	return(
 		<MenuList>

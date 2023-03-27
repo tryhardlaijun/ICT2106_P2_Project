@@ -15,7 +15,7 @@ function ModalButton(props) {
     return (
         <>
 
-            <Button onClick={onOpen} ml={2} colorScheme="whatsapp">{props.title}</Button>
+            <Button onClick={onOpen} ml={2} colorScheme={"blackAlpha"}>{props.title}</Button>
 
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
