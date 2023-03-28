@@ -50,7 +50,7 @@ export default function Notification() {
     
     // On Component Load...
     useEffect(() => {
-        getNotifications();
+        //getNotifications();
     }, [])
 
     const toast = useToast();

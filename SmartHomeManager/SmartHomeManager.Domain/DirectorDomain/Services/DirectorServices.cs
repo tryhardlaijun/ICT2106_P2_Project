@@ -76,6 +76,8 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
             scenarioList = new ScenarioList((await _scenarioInterface.GetAllScenarios()).ToList());
             ruleList = new RuleList((await _ruleInterface.GetAllRules()).ToList());
 
+            Console.WriteLine(ruleList.getRuleList().Count());
+
             //_backupInterface.createBackup(rules, scenarios);
             await Task.Delay(1000);
 
@@ -116,14 +118,14 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
 
         private async void CheckIfRuleTriggered()
         {
-            Console.WriteLine(string.Format("System Time: {0}", DateTime.UtcNow.ToString("HH:mm:ss.fff")));
+            Console.WriteLine(string.Format("System Time: {0}", DateTime.Now.ToString("HH:mm:ss.fff")));
             var ruleListClone = ruleList!.Clone().getRuleList();
             var apiData = await _apiInterface.getAPIData();
 
             if (ruleListClone.Any())
             {
                 var rLength = ruleListClone.Count();
-                var now = DateTime.UtcNow.ToString("HH:mm");
+                var now = DateTime.Now.ToString("HH:mm");
                 foreach (var rule in ruleListClone)
                 {
                     // Check if rule's scenario is Active
@@ -137,7 +139,6 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
                         if (now.Equals(endTime))
                         {
                             ruleTriggerManager.Notify(rule.DeviceId, "STATE", 0);
-                            continue;
                         }
                     }
 
@@ -236,7 +237,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
                     History h = new History
                     {
                         Message = configMeaning,
-                        Timestamp = DateTime.UtcNow,
+                        Timestamp = DateTime.Now,
                         DeviceAdjustedConfiguration = adjustedConfigValue,
                         ProfileId = rule.Scenario.ProfileId,
                         RuleHistoryId = ruleHistoryId,

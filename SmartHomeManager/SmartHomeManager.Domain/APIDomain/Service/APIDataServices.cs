@@ -89,7 +89,7 @@ namespace SmartHomeManager.Domain.APIDomain.Service
 		{
 			Guid apiId = Guid.NewGuid();
 			Guid apiId2 = Guid.NewGuid();
-			String now = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
+			String now = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 			now = now.Replace(" ", "T");
 			now = now.Replace(":", "%3A");
 			var client = new HttpClient();
@@ -120,7 +120,7 @@ namespace SmartHomeManager.Domain.APIDomain.Service
 						Type = "Temperature",
 						Value = temp.ToString(),
 						Specification = spec,
-						TimeStamp = DateTime.UtcNow
+						TimeStamp = DateTime.Now
                     };
 					await _APIDataRepository.CreateAPIData(TempData);
 				}
@@ -133,7 +133,7 @@ namespace SmartHomeManager.Domain.APIDomain.Service
 						Type = "Weather",
 						Value = weather_1.forecast,
 						Specification = spec,
-						TimeStamp = DateTime.UtcNow
+						TimeStamp = DateTime.Now
                     };
 					await _APIDataRepository.CreateAPIData(WeatherData);
 				}
@@ -145,19 +145,19 @@ namespace SmartHomeManager.Domain.APIDomain.Service
 						{
 							temp_item.Value = temp.ToString();
 							temp_item.Specification = "same";
-							temp_item.TimeStamp = DateTime.UtcNow;
+							temp_item.TimeStamp = DateTime.Now;
 						}
 						else if (Int32.Parse(temp_item.Value) < temp)
 						{
 							temp_item.Value = temp.ToString();
 							temp_item.Specification = "increase";
-							temp_item.TimeStamp = DateTime.UtcNow;
+							temp_item.TimeStamp = DateTime.Now;
 						}
 						else if (Int32.Parse(temp_item.Value) > temp)
 						{
 							temp_item.Value = temp.ToString();
 							temp_item.Specification = "decrease";
-							temp_item.TimeStamp = DateTime.UtcNow;
+							temp_item.TimeStamp = DateTime.Now;
 						}
 						
 						
@@ -171,12 +171,12 @@ namespace SmartHomeManager.Domain.APIDomain.Service
 						{
 							weather_item.Value = weather_1.forecast;
 							weather_item.Specification = "changed";
-							weather_item.TimeStamp = DateTime.UtcNow;
+							weather_item.TimeStamp = DateTime.Now;
 						}
 						else {
 							weather_item.Value = weather_1.forecast;
 							weather_item.Specification = "same";
-							weather_item.TimeStamp = DateTime.UtcNow;
+							weather_item.TimeStamp = DateTime.Now;
 						}
 						await _APIDataRepository.UpdateAPIData(weather_item);
 					}

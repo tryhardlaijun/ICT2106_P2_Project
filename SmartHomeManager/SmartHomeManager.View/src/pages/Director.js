@@ -27,7 +27,11 @@ export default function Director() {
     function fetchHistory() {
         fetch("https://localhost:7140/api/History/GetAllHistory/")
             .then((response) => response.json())
-            .then((data) => getHistory(data));
+            .then((data) => {
+                getHistory(data)
+                console.log(data)
+            });
+
     }
 
     useEffect(() => {
@@ -50,7 +54,7 @@ export default function Director() {
                             <Heading as='h2' >
                                 <AccordionButton>
                                     <Box as="span" flex='1' textAlign='left'>
-                                        <strong>Rule #{historyLength - i}: </strong> {history.message}                                                                               
+                                        <strong>Trigger #{historyLength - i}: </strong> {history.message}                                                                               
                                     </Box>
                                     <AccordionIcon />
                                 </AccordionButton>
@@ -83,7 +87,7 @@ export default function Director() {
                                             </Tr>
                                             <Tr>
                                                 <Td>Config Value</Td>
-                                                <Td>{history.ruleHistory.configurationValue}</Td>
+                                                <Td>{history.ruleHistory.deviceConfiguration}</Td>
                                             </Tr>
                                         </Tbody>
                                     </Table>

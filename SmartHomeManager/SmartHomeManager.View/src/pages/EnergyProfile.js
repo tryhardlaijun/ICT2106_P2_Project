@@ -231,9 +231,9 @@ export default function EnergyProfile() {
             "factor": 1
         },
         "option_fan": {
-            "default": 5,
+            "default": 3,
             "min": 1,
-            "max": 10,
+            "max": 5,
             "step": 1,
             "factor": -1
         },
@@ -270,6 +270,7 @@ export default function EnergyProfile() {
         let option = demoSliderSettings[setting]
         let factor = energyProfileSelectedValue ?? energyProfileSelected
         let calculation = val * factor * .05 * option["factor"] + val
+        calculation = Math.floor(calculation)
         setReccoValue(calculation)
     };
 
