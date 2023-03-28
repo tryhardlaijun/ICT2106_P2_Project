@@ -16,18 +16,18 @@ namespace SmartHomeManager.API.Controllers.HistoryAPIs
     [ApiController]
     public class HistoryController : ControllerBase
     {
-        private readonly HistoryServices _ruleHistoryService;
+        private readonly HistoryServices _historyService;
 
         public HistoryController(Domain.DirectorDomain.Interfaces.IHistoryRepository historyRepo)
         {
-            _ruleHistoryService = new(historyRepo);
+            _historyService = new(historyRepo);
         }
 
         // GET: api/History
         [HttpGet("GetAllHistory")]
         public async Task<IEnumerable<History>> GetRuleHistories()
         {
-            return await _ruleHistoryService.GetAllRulesAsync();
+            return await _historyService.GetAllRulesAsync();
         }
         
     }
