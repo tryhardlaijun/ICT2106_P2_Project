@@ -15,7 +15,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace SmartHomeManager.Domain.APIDomain.Service
 {
-	public class APIDataServices : IAPIDataService, IAPIConfigurationInformationService
+	public class APIServices : IAPIService, IAPIConfigurationInformationService
 	{
 
 		private readonly IAPIDataRepository _APIDataRepository;
@@ -24,7 +24,7 @@ namespace SmartHomeManager.Domain.APIDomain.Service
 
 		private ICollection<IAPIFactory> APIFactories;
 
-		public APIDataServices(IAPIDataRepository APIDataRepository, IAPIKeyRepository APIKeyRepository, IAPIValueRepository APIValueRepository)
+		public APIServices(IAPIDataRepository APIDataRepository, IAPIKeyRepository APIKeyRepository, IAPIValueRepository APIValueRepository)
 		{
 			_APIDataRepository = APIDataRepository;
 			_APIKeyRepository = APIKeyRepository;
@@ -35,6 +35,7 @@ namespace SmartHomeManager.Domain.APIDomain.Service
             APIFactories.Add(new WeatherAPIFactory(_APIDataRepository));
         }
 
+        // For each API type (factory), retrieve and execute the call to get data from web
         public async Task updateAPIData()
         {
             foreach (var fact in APIFactories)
@@ -59,8 +60,6 @@ namespace SmartHomeManager.Domain.APIDomain.Service
             
             return combinedApiData;
         }
-
-        //Sending dictionary to director for rule checking
   
         //getting all the Key 
         public async Task<IEnumerable<APIKey>> GetAllAPIKey()

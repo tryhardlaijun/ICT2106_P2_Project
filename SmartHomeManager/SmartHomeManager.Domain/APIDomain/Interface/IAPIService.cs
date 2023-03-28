@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SmartHomeManager.Domain.APIDomain.Interface
 {
-	public interface IAPIDataService
+	public interface IAPIService
 	{
 		public Task<IDictionary<string, string>> getAPIData();
         public Task updateAPIData();

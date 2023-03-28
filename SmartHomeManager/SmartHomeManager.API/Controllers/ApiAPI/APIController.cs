@@ -11,7 +11,7 @@ namespace SmartHomeManager.API.Controllers.ApiAPI
 	[Route("api/API")]
 	[ApiController]
 	public class APIController : ControllerBase { 
-		public readonly APIDataServices _apiServices;
+		public readonly APIServices _apiServices;
 		
 		public APIController(IAPIDataRepository dataRepository, IAPIKeyRepository keyRepository, IAPIValueRepository valueRepository)
 		{

@@ -86,7 +86,7 @@ public class Program
         builder.Services.AddScoped<IEnergyProfileServices, EnergyProfileServices>();        
         //builder.Services.AddScoped<IUpdateBackupService, BackupServices>();
         builder.Services.AddScoped<IBackupService, BackupServices>();
-        builder.Services.AddScoped<IAPIDataService, APIDataServices>();
+        builder.Services.AddScoped<IAPIService, APIServices>();
         builder.Services.AddScoped<IDirectorControlDeviceService, DirectorControlDeviceService>();
 
         // TEAM 3

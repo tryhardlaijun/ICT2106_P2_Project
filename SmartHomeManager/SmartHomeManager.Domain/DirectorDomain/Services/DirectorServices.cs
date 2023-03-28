@@ -30,7 +30,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
         private readonly IGetScenariosService _scenarioInterface;
         private readonly IEnergyProfileServices _energyProfileInterface;
         private readonly IBackupService _backupInterface;
-        private readonly IAPIDataService _apiInterface;
+        private readonly IAPIService _apiInterface;
 
         private readonly IRuleHistoryRepository _ruleHistoryRepository;
         private readonly IHistoryRepository _historyRepository;
@@ -60,7 +60,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
             _backupInterface = scope.ServiceProvider.GetRequiredService<IBackupService>();
             _directorControlDeviceInterface = scope.ServiceProvider.GetRequiredService<IDirectorControlDeviceService>();
             _troubleshooterInterface = scope.ServiceProvider.GetRequiredService<ITroubleshooterServices>();
-            _apiInterface = scope.ServiceProvider.GetRequiredService<IAPIDataService>();
+            _apiInterface = scope.ServiceProvider.GetRequiredService<IAPIService>();
 
             timeMark = DateTime.Now.AddMinutes(-1);
             backUpFlag = false;

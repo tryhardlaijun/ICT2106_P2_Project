@@ -19,7 +19,6 @@ namespace SmartHomeManager.Domain.APIDomain.Service
         }
         public async Task callAPIFromWeb()
         {
-            Console.WriteLine("help");
             Guid apiId = Guid.NewGuid();
             String now = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             now = now.Replace(" ", "T");
