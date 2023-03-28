@@ -32,7 +32,7 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
         {
             if(await _scenarioRepository.AddAsync(scenario) == true)
             {
-                //_informDirectorServices.InformScenarioChangesAsync(scenario.ScenarioId, 'c');
+                _informDirectorServices.InformScenarioChangesAsync(scenario.ScenarioId, 'c');
                 return true;
             }
 
@@ -44,7 +44,7 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
 		{
             if (await _scenarioRepository.UpdateAsync(scenario))
             {
-                //_informDirectorServices.InformScenarioChangesAsync(scenario.ScenarioId, 'u');
+                _informDirectorServices.InformScenarioChangesAsync(scenario.ScenarioId, 'u');
                 return true;
             }
 
@@ -56,7 +56,7 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
 		{
 			if (await _scenarioRepository.DeleteByIdAsync(id))
 			{
-                //_informDirectorServices.InformScenarioChangesAsync(id, 'd');
+                _informDirectorServices.InformScenarioChangesAsync(id, 'd');
 				return true;
 
             }
