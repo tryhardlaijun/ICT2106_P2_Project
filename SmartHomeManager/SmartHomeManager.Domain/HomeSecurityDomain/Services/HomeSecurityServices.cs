@@ -28,12 +28,12 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
             "Camera", "Microphone"
         };
 
-        private IHomeSecurityRepository<HomeSecurity> _homeSecurityRepository;
-        private IHomeSecuritySettingRepository<HomeSecuritySetting> _homeSecuritySettingRepository;
-        private IHomeSecurityDeviceDefinitionRepository<HomeSecurityDeviceDefinition> _homeSecurityDeviceDefinitionRepository;
+        private IHomeSecurityRepository _homeSecurityRepository;
+        private IHomeSecuritySettingRepository _homeSecuritySettingRepository;
+        private IHomeSecurityDeviceDefinitionRepository _homeSecurityDeviceDefinitionRepository;
 
         private readonly IDirectorServices _directorInterface;
-        public HomeSecurityServices(IHomeSecurityRepository<HomeSecurity> homeSecurityRepo, IHomeSecuritySettingRepository<HomeSecuritySetting> homeSecuritySettingRepo, IHomeSecurityDeviceDefinitionRepository<HomeSecurityDeviceDefinition> homeSecurityDeviceDefinitionRepo, IDirectorServices directorServices)
+        public HomeSecurityServices(IHomeSecurityRepository homeSecurityRepo, IHomeSecuritySettingRepository homeSecuritySettingRepo, IHomeSecurityDeviceDefinitionRepository homeSecurityDeviceDefinitionRepo, IDirectorServices directorServices)
         {
             _homeSecurityRepository = homeSecurityRepo;
             _homeSecuritySettingRepository = homeSecuritySettingRepo;

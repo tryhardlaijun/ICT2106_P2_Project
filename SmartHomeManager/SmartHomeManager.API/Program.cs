@@ -70,13 +70,13 @@ public class Program
         // TEAM 1
         builder.Services.AddScoped<IHistoryRepository, DataSource.HistoryDataSource.HistoryRepository>();
         builder.Services.AddScoped<IRuleHistoryRepository, RuleHistoryRepository>();
-        builder.Services.AddScoped<IEnergyProfileRepository<EnergyProfile>, EnergyProfileRepository>();
+        builder.Services.AddScoped<IEnergyProfileRepository, EnergyProfileRepository>();
         builder.Services.AddScoped<IAPIDataRepository, APIDataRepository>();
         builder.Services.AddScoped<IAPIKeyRepository, APIKeyRepository>();
         builder.Services.AddScoped<IAPIValueRepository, APIValueRepository>();
-        builder.Services.AddScoped<IHomeSecurityRepository<HomeSecurity>, HomeSecurityRepository>();
-        builder.Services.AddScoped<IHomeSecuritySettingRepository<HomeSecuritySetting>, HomeSecuritySettingRepository>();
-        builder.Services.AddScoped<IHomeSecurityDeviceDefinitionRepository<HomeSecurityDeviceDefinition>, HomeSecurityDeviceDefinitionRepository>();
+        builder.Services.AddScoped<IHomeSecurityRepository, HomeSecurityRepository>();
+        builder.Services.AddScoped<IHomeSecuritySettingRepository, HomeSecuritySettingRepository>();
+        builder.Services.AddScoped<IHomeSecurityDeviceDefinitionRepository, HomeSecurityDeviceDefinitionRepository>();
         builder.Services.AddScoped<IBackupRuleRepository, BackupRuleRepository>();
         builder.Services.AddScoped<IBackupScenarioRepository, BackupScenarioRepository>();
 

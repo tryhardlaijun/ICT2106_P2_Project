@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SmartHomeManager.DataSource.HomeSecuritySettingsDataSource
 {
-    public class HomeSecuritySettingRepository : IHomeSecuritySettingRepository<HomeSecuritySetting>
+    public class HomeSecuritySettingRepository : IHomeSecuritySettingRepository
     {
         private readonly ApplicationDbContext _applicationDbContext;
 

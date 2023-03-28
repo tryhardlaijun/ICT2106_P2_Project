@@ -14,10 +14,10 @@ namespace SmartHomeManager.Domain.EnergyProfileDomain.Services
 {
     public class EnergyProfileServices : IEnergyProfileServices
     {
-        private readonly IEnergyProfileRepository<EnergyProfile> _energyProfileRepository;
+        private readonly IEnergyProfileRepository _energyProfileRepository;
         private Dictionary<string, List<string>> whiteListConfigValues = new Dictionary<string, List<string>>();
 
-        public EnergyProfileServices(IEnergyProfileRepository<EnergyProfile> energyProfileRepository)
+        public EnergyProfileServices(IEnergyProfileRepository energyProfileRepository)
         {
             _energyProfileRepository = energyProfileRepository;
             whiteListConfigValues.Add("TEMPERATURE", new List<string> { "16", "32", "negative" });

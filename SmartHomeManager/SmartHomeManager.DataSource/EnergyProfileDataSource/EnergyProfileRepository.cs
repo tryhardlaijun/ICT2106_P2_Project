@@ -12,8 +12,7 @@ using System.Threading.Tasks;
 
 namespace SmartHomeManager.DataSource.EnergyProfileDataSource
 {
-
-    public class EnergyProfileRepository : IEnergyProfileRepository<EnergyProfile>
+    public class EnergyProfileRepository : IEnergyProfileRepository
     {
         private readonly ApplicationDbContext _applicationDbContext;
 
@@ -128,20 +127,6 @@ namespace SmartHomeManager.DataSource.EnergyProfileDataSource
             return existingEnergyProfile!;
         }
 
-        public Task<bool> DeleteAsync(EnergyProfile entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> DeleteByIdAsync(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> SaveAsync()
-        {
-            throw new NotImplementedException();
-        }
 
     }
 }

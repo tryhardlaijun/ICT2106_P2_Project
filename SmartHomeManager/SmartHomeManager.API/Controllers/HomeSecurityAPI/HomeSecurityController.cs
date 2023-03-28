@@ -21,7 +21,7 @@ namespace SmartHomeManager.API.Controllers.HomeSecurityAPI
     {
         private readonly HomeSecurityServices _homeSecurityService;
 
-        public HomeSecurityController(IHomeSecurityRepository<HomeSecurity> homeSecurityRepo, IHomeSecuritySettingRepository<HomeSecuritySetting> homeSecuritySettingRepo, IHomeSecurityDeviceDefinitionRepository<HomeSecurityDeviceDefinition> homeSecurityDeviceDefinitionRepo, IDirectorServices directorServices)
+        public HomeSecurityController(IHomeSecurityRepository homeSecurityRepo, IHomeSecuritySettingRepository homeSecuritySettingRepo, IHomeSecurityDeviceDefinitionRepository homeSecurityDeviceDefinitionRepo, IDirectorServices directorServices)
         {
             _homeSecurityService = new(homeSecurityRepo, homeSecuritySettingRepo, homeSecurityDeviceDefinitionRepo, directorServices);
         }

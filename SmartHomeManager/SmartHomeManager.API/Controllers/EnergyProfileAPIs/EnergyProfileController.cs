@@ -22,7 +22,7 @@ namespace SmartHomeManager.API.Controllers.EnergyProfileAPIs
     {
         private readonly EnergyProfileServices _energyProfileService;
 
-        public EnergyProfileController(IEnergyProfileRepository<EnergyProfile> energyProfileRepo)
+        public EnergyProfileController(IEnergyProfileRepository energyProfileRepo)
         {
             _energyProfileService = new(energyProfileRepo);
         }
