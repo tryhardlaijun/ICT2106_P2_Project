@@ -35,8 +35,8 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
         private readonly IRuleHistoryRepository _ruleHistoryRepository;
         private readonly IHistoryRepository _historyRepository;
 
-        private RuleList? ruleList;
-        private ScenarioList? scenarioList;
+        private IRuleList? ruleList;
+        private IScenarioList? scenarioList;
 
         private DateTime timeMark;
         private bool backUpFlag;

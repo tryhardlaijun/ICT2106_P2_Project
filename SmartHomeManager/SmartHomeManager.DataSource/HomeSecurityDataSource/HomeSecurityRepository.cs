@@ -38,27 +38,13 @@ namespace SmartHomeManager.DataSource.HomeSecurityDataSource
             return await _applicationDbContext.HomeSecurities.Where(r => r.AccountId == accountId).FirstOrDefaultAsync();
         }
 
-
-
-        public async Task<bool> SaveAsync()
-        {
-            try
-            {
-                await _applicationDbContext.SaveChangesAsync();
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
         public async Task<bool> UpdateAsync(HomeSecurity homeSecurity)
         {
             try
             {
                 _applicationDbContext.Update(homeSecurity);
-                return await SaveAsync();
+                await _applicationDbContext.SaveChangesAsync();
+                return true;
             }
             catch
             {

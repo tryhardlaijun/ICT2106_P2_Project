@@ -12,6 +12,5 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Interfaces
         public Task<bool> AddAsync(HomeSecurity hs);
         public Task<bool> UpdateAsync(HomeSecurity hs);
         public Task<HomeSecurity?> GetByAccountIdAsync(Guid accountId);
-        public Task<bool> SaveAsync();
     }
 }
