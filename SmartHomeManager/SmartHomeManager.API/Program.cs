@@ -65,8 +65,6 @@ public class Program
             options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
         });
 
-        builder.Services.AddTransient(typeof(Lazy<>));
-
         // MODULE 3
         //3
         builder.Services.AddScoped<IGenericRepository<Rule>, RuleRepository>();
@@ -96,7 +94,6 @@ public class Program
         builder.Services.AddScoped<IBackupRuleRepository, BackupRuleRepository>();
         builder.Services.AddScoped<IBackupScenarioRepository, BackupScenarioRepository>();
 
-        builder.Services.AddScoped<IInformDirectorServices, DirectorServices>();
         builder.Services.AddScoped<IDirectorServices, DirectorServices>();
         builder.Services.AddScoped<IEnergyProfileServices, EnergyProfileServices>();
         builder.Services.AddScoped<IEnergyProfileServices, EnergyProfileServices>();        
@@ -104,9 +101,14 @@ public class Program
         builder.Services.AddScoped<ICreateBackupService, CreateBackupServices>();
         builder.Services.AddScoped<IAPIDataService, APIDataServices>();
 
-        builder.Services.AddScoped<IDirectorControlDeviceService, DirectorControlDeviceService>();       
+        builder.Services.AddScoped<IDirectorControlDeviceService, DirectorControlDeviceService>();
 
-        builder.Services.AddHostedService<DirectorServices>();
+
+        builder.Services.AddSingleton<DirectorServices>();
+        builder.Services.AddSingleton<IHostedService>(p => p.GetService<DirectorServices>());
+        builder.Services.AddSingleton<IInformDirectorServices, DirectorServices>(p => p.GetService<DirectorServices>());
+
+        //builder.Services.AddHostedService<DirectorServices>();
 
         // DEVICE
         builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();

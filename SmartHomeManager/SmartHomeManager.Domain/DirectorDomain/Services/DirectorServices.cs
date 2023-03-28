@@ -263,7 +263,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
             return false;
         }
 
-        public async void InformRuleChangesAsync(Guid ruleID, char operation)
+        public async Task<bool> InformRuleChangesAsync(Guid ruleID, char operation)
         {
             var ruleListClone = ruleList!.Clone().getRuleList();
             switch (operation)
@@ -299,9 +299,10 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
             }
 
             ruleList.replaceRuleList(ruleListClone);
+            return true;
         }
 
-        public async void InformScenarioChangesAsync(Guid scenarioID, char operation)
+        public async Task<bool> InformScenarioChangesAsync(Guid scenarioID, char operation)
         {
             var scenarioListClone = scenarioList!.Clone().getScenarioList();
             switch (operation)
@@ -322,6 +323,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
                     break;
             }
             scenarioList.replaceScenarioList(scenarioListClone);
+            return true;
         }
 
         public async void executeSecurityProtocol(Guid accountId, bool setTo, HomeSecurityDeviceDefinition homeSecurityDeviceDefinition)

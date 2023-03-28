@@ -12,8 +12,9 @@ namespace SmartHomeManager.DataSource.RulesDataSource
 		public BackupRulesRepository(ApplicationDbContext applicationDbContext)
 		{
             _applicationDbContext = applicationDbContext;
-		}
-        
+            _applicationDbContext.ChangeTracker.QueryTrackingBehavior = Microsoft.EntityFrameworkCore.QueryTrackingBehavior.NoTracking;
+        }
+
         public async Task<bool> DeleteRule(Domain.SceneDomain.Entities.Rule rule)
         {
             _applicationDbContext.Rules.Remove(rule);

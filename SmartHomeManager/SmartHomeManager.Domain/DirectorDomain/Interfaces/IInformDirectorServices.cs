@@ -8,7 +8,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Interfaces
 {
     public interface IInformDirectorServices
     {
-        void InformRuleChangesAsync(Guid ruleID, char operation);
-        void InformScenarioChangesAsync(Guid scenarioID, char operation);
+        Task<bool> InformRuleChangesAsync(Guid ruleID, char operation);
+        Task<bool> InformScenarioChangesAsync(Guid scenarioID, char operation);
     }
 }

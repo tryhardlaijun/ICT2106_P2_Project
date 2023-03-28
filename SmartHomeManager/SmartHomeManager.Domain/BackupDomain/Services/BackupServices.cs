@@ -32,9 +32,10 @@ namespace SmartHomeManager.Domain.BackupDomain.Services
             var rulesList = new List<Rule>();
             var backupRulesList = await _backupRuleRepository.GetAllBackupRuleByBackupId(backupId);
 
+
             foreach (var backupRule in backupRulesList)
             {
-                if (!scenarioIdList.Any() && scenarioIdList.Contains(backupRule.ScenarioId))
+                if (scenarioIdList.Any() && scenarioIdList.Contains(backupRule.ScenarioId))
                 {
                     Rule rule = new Rule
                     {
@@ -55,7 +56,7 @@ namespace SmartHomeManager.Domain.BackupDomain.Services
                 }
 
             }
-
+            Console.WriteLine(rulesList.Count().ToString());
             await _backupRuleInterface.LoadRulesBackup(profileId, rulesList);
             return backupRulesList;
         }
@@ -67,7 +68,7 @@ namespace SmartHomeManager.Domain.BackupDomain.Services
             var backupScenarioList = await _backupScenarioRepository.GetAllBackupScenarioByProfileId(profileId);
             foreach (var backupScenario in backupScenarioList)
             {
-                if (!scenarioIdList.Any() && scenarioIdList.Contains(backupScenario.ScenarioId))
+                if (scenarioIdList.Any() && scenarioIdList.Contains(backupScenario.ScenarioId))
                 {
                     Scenario scenario = new Scenario
                     {

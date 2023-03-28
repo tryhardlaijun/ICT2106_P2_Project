@@ -11,9 +11,12 @@ namespace SmartHomeManager.DataSource.RulesDataSource
         public BackupScenariosRepository(ApplicationDbContext applicationDbContext)
         {
             _applicationDbContext = applicationDbContext;
+            _applicationDbContext.ChangeTracker.QueryTrackingBehavior = Microsoft.EntityFrameworkCore.QueryTrackingBehavior.NoTracking;
+
         }
         public async Task<bool> DeleteScenario(Scenario scenario)
         {
+            _applicationDbContext.Scenarios. Attach(scenario);
             _applicationDbContext.Scenarios.Remove(scenario);
             await _applicationDbContext.SaveChangesAsync();
             return true;

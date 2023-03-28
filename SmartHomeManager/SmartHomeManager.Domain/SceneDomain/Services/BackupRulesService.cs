@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Data;
 using SmartHomeManager.Domain.DirectorDomain.Interfaces;
 using SmartHomeManager.Domain.SceneDomain.Entities;
 using SmartHomeManager.Domain.SceneDomain.Interfaces;
+using Rule = SmartHomeManager.Domain.SceneDomain.Entities.Rule;
 
 namespace SmartHomeManager.Domain.SceneDomain.Services
 {
@@ -16,16 +18,19 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
             _informDirectorServices = informDirectorServices;
         }
 
-        public async Task<bool> LoadRulesBackup(Guid profileId, IEnumerable<Rule> rules)
+        public async Task<bool> LoadRulesBackup(Guid profileId, List<Rule> rules)
         {
+            Console.WriteLine(rules.Count.ToString());
             try
             {
+                
                 foreach (var rule in rules)
                 {
+                    Console.WriteLine(rule.RuleName);
                     await _backupRulesRepository.DeleteRule(rule);
-                    _informDirectorServices.InformRuleChangesAsync(rule.RuleId, 'd');
+                    await _informDirectorServices.InformRuleChangesAsync(rule.RuleId, 'd');
                     await _backupRulesRepository.CreateRule(rule);
-                    _informDirectorServices.InformRuleChangesAsync(rule.RuleId, 'c');
+                    await _informDirectorServices.InformRuleChangesAsync(rule.RuleId, 'c');
                 }
                 return true;
             }

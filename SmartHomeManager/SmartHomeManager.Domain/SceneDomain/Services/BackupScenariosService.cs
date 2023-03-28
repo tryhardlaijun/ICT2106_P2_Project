@@ -23,9 +23,9 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
                 foreach (var scenario in scenarios)
                 {
                     await _backupScenariosRepository.DeleteScenario(scenario);
-                    _informDirectorServices.InformScenarioChangesAsync(scenario.ScenarioId, 'd');
+                    await _informDirectorServices.InformScenarioChangesAsync(scenario.ScenarioId, 'd');
                     await _backupScenariosRepository.CreateScenario(scenario);
-                    _informDirectorServices.InformScenarioChangesAsync(scenario.ScenarioId, 'c');
+                    await _informDirectorServices.InformScenarioChangesAsync(scenario.ScenarioId, 'c');
                 }
                 return true;
             } catch (Exception ex)
