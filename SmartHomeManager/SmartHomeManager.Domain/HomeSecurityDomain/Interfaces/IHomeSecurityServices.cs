@@ -8,6 +8,6 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Interfaces
 {
     public interface IHomeSecurityServices
     {
-        void processEventAsync(Guid accountID, String deviceGroup, String configurationKey, int configurationValue);
+        public void processEventAsync(Guid accountID, String deviceGroup, String configurationKey, int configurationValue);
     }
 }

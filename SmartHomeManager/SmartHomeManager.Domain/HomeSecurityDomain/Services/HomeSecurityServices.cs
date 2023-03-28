@@ -271,7 +271,7 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
         }
 
         /*
-         * Called by Frontend to get a boolean based on if accountId is found in alertedAccounts.
+         * Called by Frontend
          */
         public void setPoliceContacted(Guid accountId)
         {
@@ -279,7 +279,7 @@ namespace SmartHomeManager.Domain.HomeSecurityDomain.Services
         }
 
         /*
-         * Called by Frontend to get a boolean based on if accountId is found in alertedAccounts.
+         * Called by Frontend
          */
         public IEnumerable<string> getPoliceContacted(Guid accountId)
         {
