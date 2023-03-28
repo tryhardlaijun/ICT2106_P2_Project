@@ -41,6 +41,7 @@ export default function HomeSecuritySettings() {
     const [homeSecuritySettings, setHomeSecuritySettings] = useState([])
     const [deviceLog, setDeviceLog] = useState([])
     const [dataLoaded, setDataLoaded] = useState(false);
+    const toast = useToast();
 
     async function getAlertedState() {
         try {
@@ -183,6 +184,15 @@ export default function HomeSecuritySettings() {
         }
     };
 
+    function renderPolicePopup() {
+        toast({
+            title: "Police Contacted!",
+            status: "info",
+            duration: 5000,
+            isClosable: true,
+        });
+    }
+
     function renderDeviceGroups() {
         const tableRows = []
         homeSecuritySettings.forEach(function (obj) {
@@ -256,7 +266,7 @@ export default function HomeSecuritySettings() {
                                     <Button colorScheme='yellow' ref={cancelRef} onClick={() => { onClose(); PutLockdownState(accountId, false); location.reload(); }} ml={3}>
                                         Cancel Alert
                                     </Button>
-                                    <Button colorScheme='blue' onClick={onClose} ml={3}>
+                                    <Button colorScheme='blue' onClick={() => { renderPolicePopup(); }} ml={3}>
                                         Contact Police
                                     </Button>
                                 </AlertDialogFooter>

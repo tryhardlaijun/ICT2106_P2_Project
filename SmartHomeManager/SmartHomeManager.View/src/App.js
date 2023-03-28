@@ -54,7 +54,6 @@ export function App() {
         if (await getIsAccountAlerted()) {
             toast({
                 title: "Potential Intrusion Detected!",
-                description: "Click to head to Intrusion Page",
                 status: "error",
                 duration: 5000,
                 isClosable: true,
