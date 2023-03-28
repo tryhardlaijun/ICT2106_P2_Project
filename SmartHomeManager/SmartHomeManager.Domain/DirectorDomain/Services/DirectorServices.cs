@@ -76,15 +76,13 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
             scenarioList = new ScenarioList((await _scenarioInterface.GetAllScenarios()).ToList());
             ruleList = new RuleList((await _ruleInterface.GetAllRules()).ToList());
 
-            Console.WriteLine(ruleList.getRuleList().Count());
-
             //_backupInterface.createBackup(rules, scenarios);
             await Task.Delay(1000);
 
             while (!stoppingToken.IsCancellationRequested)
             {
                 if (TriggerTimeCheck()) CheckIfRuleTriggered();
-                //if (BackupTimeCheck()) _backupInterface.createBackup(ruleList!.Clone().getRuleList(), scenarioList!.Clone().getScenarioList());
+                if (BackupTimeCheck()) _backupInterface.createBackup(ruleList!.Clone().getRuleList(), scenarioList!.Clone().getScenarioList());
                 await Task.Delay(10000);
             }
         }
@@ -104,7 +102,7 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
         private bool BackupTimeCheck()
         {
             var now = Int16.Parse(DateTime.Now.ToString("mm"));
-            if (now == 49)
+            if (now == 0)
             {
                 if (!backUpFlag)
                 {
@@ -120,7 +118,8 @@ namespace SmartHomeManager.Domain.DirectorDomain.Services
         {
             Console.WriteLine(string.Format("System Time: {0}", DateTime.Now.ToString("HH:mm:ss.fff")));
             var ruleListClone = ruleList!.Clone().getRuleList();
-            var apiData = await _apiInterface.getAPIData();
+            await _apiInterface.updateAPIData();
+            IDictionary<string, string> apiData = await _apiInterface.getAPIData();
 
             if (ruleListClone.Any())
             {
