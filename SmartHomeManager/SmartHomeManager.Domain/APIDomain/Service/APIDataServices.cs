@@ -107,7 +107,7 @@ namespace SmartHomeManager.Domain.APIDomain.Service
 				dynamic weather_1 = day.general;
 				dynamic temperature = day.general.temperature;
 
-				int temp = temperature.high;
+				int temp = (temperature.high + temperature.low)/2;
 				IEnumerable<APIData> temp_data = await _APIDataRepository.GetAPIType("Temperature");
 				IEnumerable<APIData> weather_data = await _APIDataRepository.GetAPIType("Weather");
 				var spec = "";
