@@ -51,7 +51,7 @@ namespace SmartHomeManager.Domain.APIDomain.Service
 		public async Task<IDictionary<string, string>> getAPIData()
 		{
 			IDictionary<string, string> sendKeyValue = new Dictionary<string, string>();
-			//await updateAPIDetails();
+			await updateAPIDetails();
 			IEnumerable<APIData> test = await _APIDataRepository.GetAPIType("Temperature");
 			foreach (APIData testItem in test)
 			{
