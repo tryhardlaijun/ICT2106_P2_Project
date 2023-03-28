@@ -83,8 +83,6 @@ public class Program
         builder.Services.AddScoped<IInformDirectorServices, DirectorServices>();
         builder.Services.AddScoped<IDirectorServices, DirectorServices>();
         builder.Services.AddScoped<IEnergyProfileServices, EnergyProfileServices>();
-        builder.Services.AddScoped<IEnergyProfileServices, EnergyProfileServices>();        
-        //builder.Services.AddScoped<IUpdateBackupService, BackupServices>();
         builder.Services.AddScoped<IBackupService, BackupServices>();
         builder.Services.AddScoped<IAPIService, APIServices>();
         builder.Services.AddScoped<IDirectorControlDeviceService, DirectorControlDeviceService>();
