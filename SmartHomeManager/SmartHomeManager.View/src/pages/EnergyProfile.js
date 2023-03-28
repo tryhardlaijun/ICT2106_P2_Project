@@ -227,7 +227,7 @@ export default function EnergyProfile() {
             "default": 26,
             "min": 16,
             "max": 32,
-            "step": .5,
+            "step": 1,
             "factor": 1
         },
         "option_fan": {
@@ -241,7 +241,7 @@ export default function EnergyProfile() {
             "default": 32,
             "min": 32,
             "max": 40,
-            "step": .5,
+            "step": 1,
             "factor": -1
         }
     }
