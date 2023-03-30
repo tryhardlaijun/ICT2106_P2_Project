@@ -3,11 +3,10 @@ using SmartHomeManager.Domain.SceneDomain.Interfaces;
 
 namespace SmartHomeManager.Domain.SceneDomain.Services
 {
-    public class RuleAdapter: IRuleAdapter
+    public class RuleAdapter: IAdapter<Rule,RuleRequest>
     {
-        public RuleRequest ToRuleRequest(Rule rule)
+        public RuleRequest ToRequest(Rule rule)
         {
-            Console.WriteLine(rule);
             return new RuleRequest
             {
                 RuleId = rule.RuleId,
@@ -24,7 +23,7 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
             };
         }
 
-        public Rule ToRule(RuleRequest ruleRequest)
+        public Rule ToEntity(RuleRequest ruleRequest)
         {
             return new Rule
             {
@@ -42,5 +41,4 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
             };
         }
     }
-
 }

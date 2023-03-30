@@ -29,15 +29,7 @@ namespace SmartHomeManager.API.Controllers.ScenariosAPIs
         [HttpGet("GetAllScenarios")]
         public async Task<IEnumerable<ScenarioRequest>> GetAllScenarios()
         {
-            var scenarios = await _scenarioServices.GetAllScenariosAsync();
-            //var scenarios = await _getScenarioService.GetAllScenarios();
-            var resp = scenarios.Select(scenario => new ScenarioRequest
-            {
-                ScenarioId = scenario.ScenarioId,
-                ScenarioName = scenario.ScenarioName,
-                ProfileId = scenario.ProfileId,
-                isActive = scenario.isActive
-            }).ToList();
+            var resp = await _scenarioServices.GetAllScenariosAsync();
             return resp;
         }
 
@@ -57,14 +49,7 @@ namespace SmartHomeManager.API.Controllers.ScenariosAPIs
         [HttpPost("CreateScenario")]
         public async Task<ActionResult<Scenario>> CreateScenario([FromBody] ScenarioRequest scenarioRequest)
         { 
-            var scenario = new Scenario
-            {
-                ScenarioId = scenarioRequest.ScenarioId,
-                ScenarioName = scenarioRequest.ScenarioName,
-                ProfileId = scenarioRequest.ProfileId,
-                isActive = scenarioRequest.isActive
-            };
-            await _scenarioServices.CreateScenarioAsync(scenario);
+            await _scenarioServices.CreateScenarioAsync(scenarioRequest);
             return StatusCode(200, scenarioRequest);
         }
 
@@ -72,14 +57,7 @@ namespace SmartHomeManager.API.Controllers.ScenariosAPIs
         [HttpPut("EditScenario")]
         public async Task<ActionResult> EditScenario(ScenarioRequest scenarioRequest)
         {
-            var scenario = new Scenario
-            {
-                ScenarioId = scenarioRequest.ScenarioId,
-                ScenarioName = scenarioRequest.ScenarioName,
-                ProfileId = scenarioRequest.ProfileId,
-                isActive = scenarioRequest.isActive
-            };
-            await _scenarioServices.EditScenarioAsync(scenario);
+            await _scenarioServices.EditScenarioAsync(scenarioRequest);
             return StatusCode(200, scenarioRequest);
         }
 
