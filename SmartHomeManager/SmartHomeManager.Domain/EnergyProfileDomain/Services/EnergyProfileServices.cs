@@ -24,24 +24,9 @@ namespace SmartHomeManager.Domain.EnergyProfileDomain.Services
             whiteListConfigValues.Add("SPEED", new List<string> { "1", "10", "positive" });
         }
 
-        public async Task<IEnumerable<EnergyProfile>> GetAllEnergyProfilesAsync()
-        {
-            return await _energyProfileRepository.GetAllAsync();
-        }
-
         public async Task<EnergyProfile?> GetEnergyProfileAsync(Guid accountId)
         {
             return await _energyProfileRepository.GetByIdAsync(accountId);
-        }
-
-        public async Task<bool> PostEnergyProfileAsync(EnergyProfile energyProfile)
-        {
-            return await _energyProfileRepository.AddAsync(energyProfile);
-        }
-
-        public async Task<bool> PutEnergyProfileAsync(EnergyProfile energyProfile)
-        {
-            return await _energyProfileRepository.UpdateAsync(energyProfile);
         }
 
         public async Task<bool> PutEnergyProfileConfigValueAsync(Guid accountId, int configValue)
@@ -60,7 +45,7 @@ namespace SmartHomeManager.Domain.EnergyProfileDomain.Services
             //Simulate another function from IDeviceInfoService
             List<int> configValues = ConfigValueRange(whiteListConfigValues[configurationKey]);
 
-            EnergyProfile energyProfile = await GetEnergyProfileAsync(accountID);
+            EnergyProfile? energyProfile = await GetEnergyProfileAsync(accountID);
 
             if (energyProfile == null)
             {
