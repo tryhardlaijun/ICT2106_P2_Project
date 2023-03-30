@@ -15,6 +15,7 @@ namespace SmartHomeManager.Domain.EnergyProfileDomain.Services
     public class EnergyProfileServices : IEnergyProfileServices
     {
         private readonly IEnergyProfileRepository _energyProfileRepository;
+        //private readonly IEnergyEfficiencyAnalytics _energyEfficiencyAnalytics;
         private Dictionary<string, List<string>> whiteListConfigValues = new Dictionary<string, List<string>>();
 
         public EnergyProfileServices(IEnergyProfileRepository energyProfileRepository)
@@ -40,6 +41,8 @@ namespace SmartHomeManager.Domain.EnergyProfileDomain.Services
             if(!whiteListConfigValues.ContainsKey(configurationKey)) return configurationValue;
 
             // Simulate using function from EnergyEfficiency Analytics
+            //EnergyEfficiency efficiencyProfile = GetDeviceEnergyEfficiency(deviceID);
+            //double efficiencyIndex = efficiencyProfile.EnergyEfficiencyIndex;
             double efficiencyIndex = GetDeviceEnergyEfficiency(deviceID);
 
             //Simulate another function from IDeviceInfoService
