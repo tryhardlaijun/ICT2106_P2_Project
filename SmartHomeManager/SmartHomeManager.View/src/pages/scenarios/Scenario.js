@@ -19,6 +19,7 @@ import CreateRuleDialogue from "pages/rules/CreateRuleDialogue";
 import { AddIcon,DeleteIcon,EditIcon,ChevronDownIcon } from '@chakra-ui/icons'
 import { Badge,Divider } from '@chakra-ui/react'
 import { v4 as uuidv4 } from "uuid";
+import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, useDisclosure } from "@chakra-ui/react";
 
 export default function Scenarios() {
 	const [ allRules, setAllRules] = useState([])
@@ -30,6 +31,7 @@ export default function Scenarios() {
 	let [searchParams, setSearchParams] = useSearchParams();
 	const [showRuleOption, setShowRuleOption] = useState(false);
 	const [inputValue, setInputValue] = useState("");
+	const [showConfirmation, setShowConfirmation] = useState(false);
 
 	const toast = useToast();
 	const deviceTypeFilter = "Fan";
@@ -40,6 +42,45 @@ export default function Scenarios() {
 		ProfileId: "22222222-2222-2222-2222-222222222222",
 		isActive: false,
 	});
+
+	function ConfirmationScreen({ onConfirm,Close }) {
+		const { isOpen, onOpen, onClose } = useDisclosure();
+		
+		const handleClose =()=>{
+		  Close();
+		  onClose()
+		}
+		const handleConfirm = () => {
+		  onConfirm();
+		  onClose();
+		};
+	  
+		useEffect(() => {
+			onOpen();
+		}, [onOpen]);
+	  
+		return (
+		  <>
+			<Modal isOpen={isOpen} onClose={onClose}>
+			  <ModalOverlay />
+			  <ModalContent>
+				<ModalHeader>Delete Scenario?</ModalHeader>
+				<ModalBody>
+				  Are you sure you want to proceed with this action?
+				</ModalBody>
+				<ModalFooter>
+				  <Button variant="ghost" mr={3} onClick={handleClose}>
+					Cancel
+				  </Button>
+				  <Button colorScheme="red" onClick={handleConfirm}>
+					Confirm
+				  </Button>
+				</ModalFooter>
+			  </ModalContent>
+			</Modal>
+		  </>
+		);
+	  }
 
 	/**
 	 * @param {string} id
@@ -253,9 +294,9 @@ export default function Scenarios() {
 					</Button>
 					<UploadModalButton title={"test"} text={"Import"} action={getAllRules} />
 						<ModalButton
-						 	color="red"
-							title="Simulate Clash"
-							text="This rule will clash with another rule to turn on device at 1500."
+						 	color="green"
+							title="Activate Scenario"
+							text="Scenario activated successfully!"
 							action="override"
 						/>
 				</Box>						
@@ -300,15 +341,28 @@ export default function Scenarios() {
 				</Box>			
 				<Box h="60px">
 				<Button ml={2}  margin={2} colorScheme="red" onClick={() => {
-					deleteScenario(localStorage.getItem("currentScenarioId")).catch((error) => {
-						console.error(error);
-					});
+					setShowConfirmation(true)
 				}}>
 					
 				Delete Scenario
 				<DeleteIcon paddingLeft={1}></DeleteIcon>
 				</Button>
 				</Box>
+				{showConfirmation && (
+				<ConfirmationScreen
+					onConfirm={() => {
+						console.log(localStorage.getItem("currentScenarioId"))
+						deleteScenario(localStorage.getItem("currentScenarioId")).catch((error) => {
+							console.error(error);
+							});
+						setShowConfirmation(false);
+					}}
+					Close={()=>{
+						setShowConfirmation(false);
+					}}
+				/>
+			)}
+			
 				{/* </Box> */}
 			</Box>
 			<Box margin={2}>

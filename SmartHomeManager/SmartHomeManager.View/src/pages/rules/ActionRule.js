@@ -84,8 +84,7 @@ const FormCard = ({ruleInfo, updateForm, updateOption, stateInfo}) => {
 					onChange={(e)=>{
 						updateForm({configurationKey: e.target.value})
 					}}>
-						<option value="speed">Speed</option>
-						<option value="oscillation">Oscillation</option>
+						<option value="speed">Speed</option>						
 					</Select>
 				</FormControl>
 				<FormControl>

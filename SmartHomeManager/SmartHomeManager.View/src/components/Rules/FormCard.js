@@ -121,7 +121,6 @@ function FormCard({ ruleInfo, updateForm, updateOption, stateInfo }) {
 						updateForm({configurationKey: e.target.value})
 					}}>
 						<option value="speed">Speed</option>
-						<option value="oscillation">Oscillation</option>
 					</Select>
 				</FormControl>
 				<FormControl>

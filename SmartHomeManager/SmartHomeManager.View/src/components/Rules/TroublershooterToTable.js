@@ -17,7 +17,7 @@ function troublershooterToTable({ troublershootersData }) {
     const DisplayData = troublershootersData.map((info) => {
         return (
             <Tr key={info.troubleshooterId}>
-                <Td>{info.recommendation}</Td>
+                <Td style={{whiteSpace:"pre-wrap"}}>{info.recommendation}</Td>
                 <Td>{info.deviceType}</Td>
                 <Td>{info.configurationKey}</Td>
             </Tr>

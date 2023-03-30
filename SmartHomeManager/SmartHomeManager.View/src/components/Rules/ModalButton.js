@@ -33,7 +33,8 @@ function ModalButton(props,color) {
                         <Button colorScheme='blue' mr={3} onClick={onClose}>
                             Close
                         </Button>
-                        <Button variant='solid' colorScheme="orange"><Link to={redirectTo}>Troubleshoot</Link></Button>
+                        {props.title == "Activate Scenario"? (<></>):<Button variant='solid' colorScheme="orange"><Link to={redirectTo}>Troubleshoot</Link></Button>}
+                        
 
                     </ModalFooter>
                 </ModalContent>

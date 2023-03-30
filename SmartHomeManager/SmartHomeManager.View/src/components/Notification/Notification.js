@@ -55,13 +55,13 @@ export default function Notification() {
 
     const toast = useToast();
     const handleNotificationAPIError = () => {
-        toast({
-            title: "Error " + errors.statusCode,
-            description: errors.errorMessage,
-            status: "error",
-            duration: 15000,
-            isClosable: true
-        });
+        // toast({
+        //     title: "Error " + errors.statusCode,
+        //     description: errors.errorMessage,
+        //     status: "error",
+        //     duration: 15000,
+        //     isClosable: true
+        // });
     };
 
     return (

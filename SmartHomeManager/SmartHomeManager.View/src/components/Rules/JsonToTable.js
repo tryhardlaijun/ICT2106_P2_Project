@@ -10,8 +10,12 @@ import {
     TableContainer,
     Box
 } from '@chakra-ui/react'
+import { useState ,useEffect } from "react";
 import React from "react";
 import Buttons from "./Buttons" 
+
+
+
 
 function jsonToTable({ruleData, deleteRule, editButton}) {
     const DisplayData = ruleData.map((info) => {
@@ -46,5 +50,7 @@ function returnDeviceName(deviceID){
         return "FAN Room 1"
     }
 }
+
+
 
 export default jsonToTable;
