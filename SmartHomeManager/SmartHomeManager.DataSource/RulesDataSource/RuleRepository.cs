@@ -3,12 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.RoomDomain.Entities;
 using SmartHomeManager.Domain.SceneDomain.Entities;
-using SmartHomeManager.Domain.SceneDomain.Interfaces;
+using SmartHomeManager.Domain.APIDomain.Interface;
 
 namespace SmartHomeManager.DataSource.RulesDataSource
 {
     public class RuleRepository : IGenericRepository<Rule>
     {
+        private readonly IAPIConfigurationInformationService iAPIConfiguration;
         private readonly ApplicationDbContext _applicationDbContext;
         protected DbSet<Rule> _dbSet;
         public RuleRepository(ApplicationDbContext applicationDbContext)
@@ -26,7 +27,7 @@ namespace SmartHomeManager.DataSource.RulesDataSource
                 await _applicationDbContext.AddRangeAsync(rule);
                 return await SaveAsync();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 return false;
@@ -35,6 +36,7 @@ namespace SmartHomeManager.DataSource.RulesDataSource
         // Get all
         public async Task<IEnumerable<Rule>> GetAllAsync()
         {
+
             try
             {
                 return await _applicationDbContext.Rules.Include(d => d.Device).Include(s => s.Scenario).AsNoTracking().ToListAsync();
@@ -44,7 +46,16 @@ namespace SmartHomeManager.DataSource.RulesDataSource
                 Console.WriteLine(ex.Message);
                 return null;
             }
-            
+            try
+            {
+                await iAPIConfiguration.GetAllAPIKey();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+
         }
 
         //Get by Id
@@ -75,7 +86,7 @@ namespace SmartHomeManager.DataSource.RulesDataSource
             try
             {
                 Rule? rule = await _applicationDbContext.Rules.FindAsync(id);
-                if(rule != null)
+                if (rule != null)
                 {
                     _applicationDbContext.Rules.Remove(rule);
                     return await SaveAsync();
@@ -86,7 +97,7 @@ namespace SmartHomeManager.DataSource.RulesDataSource
             {
                 Console.WriteLine(ex.Message);
                 return false;
-            }           
+            }
         }
 
         //Save
@@ -100,7 +111,7 @@ namespace SmartHomeManager.DataSource.RulesDataSource
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return false; 
+                return false;
             }
         }
 
@@ -108,7 +119,7 @@ namespace SmartHomeManager.DataSource.RulesDataSource
         {
             throw new NotImplementedException();
         }
-        
+
         #endregion
 
         #region Provided Inteface
@@ -118,6 +129,6 @@ namespace SmartHomeManager.DataSource.RulesDataSource
         }
         #endregion
 
-        
+
     }
 }
