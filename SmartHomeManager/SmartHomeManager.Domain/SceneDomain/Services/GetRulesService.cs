@@ -1,15 +1,19 @@
 ﻿using System;
+using SmartHomeManager.Domain.APIDomain.Entities;
+using SmartHomeManager.Domain.APIDomain.Interface;
 using SmartHomeManager.Domain.SceneDomain.Entities;
 using SmartHomeManager.Domain.SceneDomain.Interfaces;
 namespace SmartHomeManager.Domain.SceneDomain.Services
 {
-	public class GetRulesService : IGetRulesService
-	{
+	public class GetRulesService : IGetRulesService 
+    {
+
         private readonly IGetRulesRepository _getRuleRepository;
         public GetRulesService(IGetRulesRepository getRulesRepository)
 		{
             _getRuleRepository = getRulesRepository;
         }
+
 
         public async Task<IEnumerable<Rule>> GetAllRulesAsync()
         {
